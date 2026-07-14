@@ -1,13 +1,74 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { login } from "./actions";
+import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 
+// Il link di invito/reset di Supabase torna con i token nel frammento URL (#access_token=...),
+// che non arriva mai al server: va intercettato qui, lato client, per aprire la sessione.
+function useAuthLinkActivation() {
+  const router = useRouter();
+  const [status, setStatus] = useState<"idle" | "activating" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (!hash) return;
+
+    const params = new URLSearchParams(hash.slice(1));
+    const errorDescription = params.get("error_description");
+    if (errorDescription) {
+      window.history.replaceState(null, "", window.location.pathname);
+      setTimeout(() => {
+        setStatus("error");
+        setErrorMessage("Il link non è più valido o è scaduto. Chiedi a un admin di inviartene uno nuovo.");
+      }, 0);
+      return;
+    }
+
+    if (!params.get("access_token")) return;
+
+    setTimeout(() => setStatus("activating"), 0);
+    const supabase = createClient();
+    const timeout = setTimeout(() => {
+      setStatus("error");
+      setErrorMessage("Impossibile completare l'attivazione. Riprova o chiedi un nuovo link.");
+    }, 8000);
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_IN" && session) {
+        clearTimeout(timeout);
+        window.history.replaceState(null, "", window.location.pathname);
+        router.push("/completa-profilo");
+      }
+    });
+
+    return () => {
+      clearTimeout(timeout);
+      subscription.unsubscribe();
+    };
+  }, [router]);
+
+  return { status, errorMessage };
+}
+
 export default function LoginPage() {
   const [state, formAction, pending] = useActionState(login, undefined);
+  const { status, errorMessage } = useAuthLinkActivation();
+
+  if (status === "activating") {
+    return (
+      <div className="flex min-h-full flex-1 items-center justify-center bg-zinc-50 p-4">
+        <p className="text-sm text-zinc-500">Attivazione dell&apos;invito in corso…</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-full flex-1 items-center justify-center bg-zinc-50 p-4">
@@ -19,6 +80,7 @@ export default function LoginPage() {
             <p className="text-xs text-zinc-500">Accedi con l&apos;account della tua band</p>
           </div>
         </div>
+        {errorMessage && <p className="mb-4 text-sm text-red-600">{errorMessage}</p>}
         <form action={formAction} className="space-y-4">
           <div>
             <Label htmlFor="email">Email</Label>
