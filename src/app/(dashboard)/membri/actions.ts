@@ -22,15 +22,34 @@ export async function inviteMember(_prevState: InviteState, formData: FormData):
 
   const origin = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const admin = createAdminClient();
-  const { error } = await admin.auth.admin.inviteUserByEmail(parsed.data.email, {
+  const supabase = await createClient();
+
+  let { error } = await admin.auth.admin.inviteUserByEmail(parsed.data.email, {
     redirectTo: `${origin}/auth/callback`,
   });
 
   if (error) {
-    return { error: "Impossibile inviare l'invito. Controlla l'email e riprova." };
+    // L'email appartiene già a un invito precedente mai completato (nessun nome impostato):
+    // rimuoviamo il vecchio account non confermato e reinvitiamo, senza far intervenire l'admin.
+    const { data: pending } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("email", parsed.data.email)
+      .is("full_name", null)
+      .maybeSingle();
+
+    if (pending) {
+      await admin.auth.admin.deleteUser(pending.id);
+      ({ error } = await admin.auth.admin.inviteUserByEmail(parsed.data.email, {
+        redirectTo: `${origin}/auth/callback`,
+      }));
+    }
   }
 
-  const supabase = await createClient();
+  if (error) {
+    return { error: `Impossibile inviare l'invito: ${error.message}` };
+  }
+
   await logActivity(supabase, userId, "invited", "member", parsed.data.email);
 
   revalidatePath("/membri");
