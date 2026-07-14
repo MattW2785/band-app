@@ -30,29 +30,22 @@ function useAuthLinkActivation() {
       return;
     }
 
-    if (!params.get("access_token")) return;
+    const accessToken = params.get("access_token");
+    const refreshToken = params.get("refresh_token");
+    if (!accessToken || !refreshToken) return;
 
     setTimeout(() => setStatus("activating"), 0);
+    window.history.replaceState(null, "", window.location.pathname);
+
     const supabase = createClient();
-    const timeout = setTimeout(() => {
-      setStatus("error");
-      setErrorMessage("Impossibile completare l'attivazione. Riprova o chiedi un nuovo link.");
-    }, 8000);
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_IN" && session) {
-        clearTimeout(timeout);
-        window.history.replaceState(null, "", window.location.pathname);
-        router.push("/completa-profilo");
+    supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken }).then(({ error }) => {
+      if (error) {
+        setStatus("error");
+        setErrorMessage("Impossibile completare l'attivazione. Riprova o chiedi un nuovo link.");
+        return;
       }
+      router.push("/completa-profilo");
     });
-
-    return () => {
-      clearTimeout(timeout);
-      subscription.unsubscribe();
-    };
   }, [router]);
 
   return { status, errorMessage };
