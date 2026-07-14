@@ -1,0 +1,123 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { z } from "zod";
+import { requireSessionProfile } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
+import { notifyNewSong } from "@/lib/email";
+import { logActivity } from "@/lib/activity-log";
+import type { SongStatus } from "@/types/database";
+
+const DURATION_RE = /^\d{1,2}:\d{2}$/;
+
+function durationToSeconds(value: string): number {
+  const [minutes, seconds] = value.split(":").map(Number);
+  return minutes * 60 + seconds;
+}
+
+const ProposeSongSchema = z.object({
+  title: z.string().trim().min(1, { message: "Inserisci il titolo del brano." }),
+  artist: z.string().trim().optional(),
+  reference_link: z.string().trim().optional(),
+  key: z.string().trim().optional(),
+  bpm: z.string().trim().optional(),
+  duration: z.string().regex(DURATION_RE, { message: "Durata nel formato mm:ss." }),
+  notes: z.string().trim().optional(),
+});
+
+export type ProposeSongState = { error?: string } | undefined;
+
+export async function proposeSong(_prevState: ProposeSongState, formData: FormData): Promise<ProposeSongState> {
+  const { userId } = await requireSessionProfile();
+
+  const parsed = ProposeSongSchema.safeParse({
+    title: formData.get("title"),
+    artist: formData.get("artist"),
+    reference_link: formData.get("reference_link"),
+    key: formData.get("key"),
+    bpm: formData.get("bpm"),
+    duration: formData.get("duration"),
+    notes: formData.get("notes"),
+  });
+
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Dati non validi." };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.from("songs").insert({
+    title: parsed.data.title,
+    artist: parsed.data.artist || null,
+    reference_link: parsed.data.reference_link || null,
+    key: parsed.data.key || null,
+    bpm: parsed.data.bpm ? Number(parsed.data.bpm) : null,
+    duration_seconds: durationToSeconds(parsed.data.duration),
+    notes: parsed.data.notes || null,
+    proposed_by: userId,
+    updated_by: userId,
+  });
+
+  if (error) {
+    console.error("proposeSong insert error:", error);
+    return { error: "Impossibile salvare il brano. Riprova." };
+  }
+
+  const { data: proposer } = await supabase.from("profiles").select("full_name").eq("id", userId).single();
+  await notifyNewSong(supabase, parsed.data.title, proposer?.full_name ?? "Un membro della band", userId);
+  await logActivity(supabase, userId, "created", "song", parsed.data.title);
+
+  revalidatePath("/brani");
+  return undefined;
+}
+
+export async function voteSong(formData: FormData) {
+  const { userId } = await requireSessionProfile();
+  const songId = String(formData.get("song_id"));
+  const score = Number(formData.get("score"));
+
+  if (!songId || score < 1 || score > 5) return;
+
+  const supabase = await createClient();
+  await supabase.from("votes").upsert(
+    { song_id: songId, user_id: userId, score },
+    { onConflict: "song_id,user_id" }
+  );
+
+  const { data: song } = await supabase.from("songs").select("title").eq("id", songId).single();
+  await logActivity(supabase, userId, "voted", "song", song?.title, `punteggio ${score}`);
+
+  revalidatePath("/brani");
+}
+
+export async function updateSongStatus(formData: FormData) {
+  const { userId } = await requireSessionProfile();
+  const songId = String(formData.get("song_id"));
+  const status = String(formData.get("status")) as SongStatus;
+
+  const supabase = await createClient();
+  await supabase
+    .from("songs")
+    .update({ status, updated_by: userId, updated_at: new Date().toISOString() })
+    .eq("id", songId);
+
+  const { data: song } = await supabase.from("songs").select("title").eq("id", songId).single();
+  await logActivity(supabase, userId, "status_changed", "song", song?.title, status);
+
+  revalidatePath("/brani");
+}
+
+export async function deleteSong(formData: FormData) {
+  const { userId } = await requireSessionProfile();
+  const songId = String(formData.get("song_id"));
+
+  const supabase = await createClient();
+  const [{ data: song }, { data: votes }] = await Promise.all([
+    supabase.from("songs").select("*").eq("id", songId).single(),
+    supabase.from("votes").select("*").eq("song_id", songId),
+  ]);
+
+  await supabase.from("songs").delete().eq("id", songId);
+  await logActivity(supabase, userId, "deleted", "song", song?.title, null, song ? { row: song, votes } : null);
+
+  revalidatePath("/brani");
+}

@@ -1,0 +1,186 @@
+"use client";
+
+import { useMemo, useState, useTransition } from "react";
+import { DndContext, PointerSensor, useDraggable, useDroppable, useSensor, useSensors, type DragEndEvent } from "@dnd-kit/core";
+import { updateTaskStatus, deleteTask } from "@/app/(dashboard)/task/actions";
+import { Select } from "@/components/ui/input";
+import { Avatar } from "@/components/ui/avatar";
+import { LastEdited } from "@/components/ui/last-edited";
+import { CollapsibleComments, type CommentWithAuthor } from "@/components/comments/comments-section";
+import { cn } from "@/lib/utils";
+import type { TaskStatus } from "@/types/database";
+
+export interface KanbanTask {
+  id: string;
+  title: string;
+  description: string | null;
+  due_date: string | null;
+  status: TaskStatus;
+  assigned_to: string | null;
+  assigneeName: string | null;
+  updatedByName: string | null;
+  updatedAt: string;
+  comments: CommentWithAuthor[];
+}
+
+const COLUMNS: { status: TaskStatus; label: string }[] = [
+  { status: "da_fare", label: "Da fare" },
+  { status: "in_corso", label: "In corso" },
+  { status: "fatto", label: "Fatto" },
+];
+
+function TaskCard({ task, onDelete }: { task: KanbanTask; onDelete: (taskId: string) => void }) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id: task.id });
+
+  return (
+    <div
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      style={{
+        transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
+      }}
+      className={cn(
+        "group relative cursor-grab touch-none rounded-lg border border-zinc-200/80 bg-white p-3 shadow-sm transition-shadow hover:shadow-md",
+        isDragging && "opacity-50 shadow-md"
+      )}
+    >
+      <button
+        type="button"
+        onPointerDown={(e) => e.stopPropagation()}
+        onClick={() => {
+          if (confirm("Eliminare questo task?")) onDelete(task.id);
+        }}
+        className="absolute right-2 top-2 hidden text-xs text-zinc-300 hover:text-red-500 group-hover:block"
+        aria-label="Elimina task"
+      >
+        ✕
+      </button>
+      <p className="pr-4 text-sm font-medium text-zinc-900">{task.title}</p>
+      {task.description && <p className="mt-1 text-xs text-zinc-500">{task.description}</p>}
+      <div className="mt-2.5 flex items-center justify-between text-xs text-zinc-400">
+        {task.assigneeName ? (
+          <span className="flex items-center gap-1.5">
+            <Avatar name={task.assigneeName} className="h-5 w-5 text-[10px]" />
+            {task.assigneeName}
+          </span>
+        ) : (
+          <span>Non assegnato</span>
+        )}
+        {task.due_date && <span>{task.due_date}</span>}
+      </div>
+      <LastEdited name={task.updatedByName} at={task.updatedAt} className="mt-1.5 text-[11px] text-zinc-300" />
+      <div onPointerDown={(e) => e.stopPropagation()} className="cursor-auto">
+        <CollapsibleComments
+          comments={task.comments}
+          parentType="task"
+          parentId={task.id}
+          revalidatePath="/task"
+        />
+      </div>
+    </div>
+  );
+}
+
+function Column({
+  status,
+  label,
+  tasks,
+  onDelete,
+}: {
+  status: TaskStatus;
+  label: string;
+  tasks: KanbanTask[];
+  onDelete: (taskId: string) => void;
+}) {
+  const { setNodeRef, isOver } = useDroppable({ id: status });
+
+  return (
+    <div
+      ref={setNodeRef}
+      className={cn(
+        "flex-1 rounded-xl border border-zinc-200/80 bg-zinc-100/60 p-3 transition-colors",
+        isOver && "border-indigo-200 bg-indigo-50/60"
+      )}
+    >
+      <h3 className="mb-3 text-sm font-semibold text-zinc-700">
+        {label} <span className="font-normal text-zinc-400">({tasks.length})</span>
+      </h3>
+      <div className="space-y-2">
+        {tasks.map((t) => (
+          <TaskCard key={t.id} task={t} onDelete={onDelete} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function KanbanBoard({
+  initialTasks,
+  members,
+}: {
+  initialTasks: KanbanTask[];
+  members: { id: string; full_name: string | null }[];
+}) {
+  const [tasks, setTasks] = useState(initialTasks);
+  const [assigneeFilter, setAssigneeFilter] = useState("");
+  const [, startTransition] = useTransition();
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }));
+
+  const filtered = useMemo(
+    () => (assigneeFilter ? tasks.filter((t) => t.assigned_to === assigneeFilter) : tasks),
+    [tasks, assigneeFilter]
+  );
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (!over) return;
+    const newStatus = over.id as TaskStatus;
+    const taskId = active.id as string;
+
+    setTasks((current) => current.map((t) => (t.id === taskId ? { ...t, status: newStatus } : t)));
+    startTransition(() => {
+      updateTaskStatus(taskId, newStatus);
+    });
+  }
+
+  function handleDelete(taskId: string) {
+    setTasks((current) => current.filter((t) => t.id !== taskId));
+    startTransition(() => {
+      deleteTask(taskId);
+    });
+  }
+
+  return (
+    <div>
+      <div className="mb-4 flex items-center gap-2">
+        <label className="text-sm text-zinc-600">Filtra per assegnatario:</label>
+        <Select
+          value={assigneeFilter}
+          onChange={(e) => setAssigneeFilter(e.target.value)}
+          className="w-auto"
+        >
+          <option value="">Tutti</option>
+          {members.map((m) => (
+            <option key={m.id} value={m.id}>
+              {m.full_name}
+            </option>
+          ))}
+        </Select>
+      </div>
+      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+        <div className="flex flex-col gap-3 sm:flex-row">
+          {COLUMNS.map((col) => (
+            <Column
+              key={col.status}
+              status={col.status}
+              label={col.label}
+              tasks={filtered.filter((t) => t.status === col.status)}
+              onDelete={handleDelete}
+            />
+          ))}
+        </div>
+      </DndContext>
+    </div>
+  );
+}

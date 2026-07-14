@@ -1,0 +1,118 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { format, isMatch, parseISO } from "date-fns";
+import { it } from "date-fns/locale";
+import { createClient } from "@/lib/supabase/server";
+import { requireSessionProfile } from "@/lib/auth";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { EventTypeIcon } from "@/components/events/event-type-icon";
+import type { AvailabilityStatus } from "@/types/database";
+import { AvailabilityForm } from "./form";
+
+const STATUS_BADGE: Record<AvailabilityStatus, { label: string; variant: "success" | "warning" | "danger" }> = {
+  disponibile: { label: "Disponibile", variant: "success" },
+  forse: { label: "Forse", variant: "warning" },
+  non_disponibile: { label: "Non disponibile", variant: "danger" },
+};
+
+export default async function CalendarioDatePage({ params }: { params: Promise<{ date: string }> }) {
+  const { date } = await params;
+  if (!isMatch(date, "yyyy-MM-dd")) notFound();
+
+  const { userId } = await requireSessionProfile();
+  const supabase = await createClient();
+
+  const [{ data: members }, { data: availability }, { data: events }] = await Promise.all([
+    supabase.from("profiles").select("id,full_name").order("full_name"),
+    supabase.from("availability").select("*").eq("date", date),
+    supabase.from("events").select("*").eq("date", date),
+  ]);
+
+  const byUser = new Map<string, Record<string, AvailabilityStatus>>();
+  for (const a of availability ?? []) {
+    if (!byUser.has(a.user_id)) byUser.set(a.user_id, {});
+    byUser.get(a.user_id)![a.time_slot] = a.status;
+  }
+
+  const own = byUser.get(userId) ?? {};
+
+  return (
+    <div className="max-w-2xl">
+      <Link href="/calendario" className="text-sm font-medium text-indigo-600 hover:text-indigo-700">
+        ← Torna al calendario
+      </Link>
+      <h1 className="mb-6 mt-2 text-2xl font-semibold capitalize tracking-tight text-zinc-900">
+        {format(parseISO(date), "EEEE d MMMM yyyy", { locale: it })}
+      </h1>
+
+      {events && events.length > 0 && (
+        <Card className="mb-4">
+          <h2 className="mb-2 font-medium text-zinc-900">Eventi in questa data</h2>
+          <ul className="space-y-1 text-sm">
+            {events.map((e) => (
+              <li key={e.id} className="flex items-center gap-2">
+                <EventTypeIcon type={e.type} className="h-3.5 w-3.5 text-indigo-600" />
+                {e.title}
+                {e.start_time && <span className="text-zinc-500"> · {e.start_time.slice(0, 5)}</span>}
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
+
+      <Card className="mb-4">
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="font-medium text-zinc-900">Disponibilità dei membri</h2>
+          <Link href={`/eventi/nuovo?date=${date}`}>
+            <Button variant="secondary">+ Crea evento</Button>
+          </Link>
+        </div>
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-left text-zinc-500">
+              <th className="py-1 font-normal">Membro</th>
+              <th className="py-1 font-normal">Mattina</th>
+              <th className="py-1 font-normal">Pomeriggio</th>
+              <th className="py-1 font-normal">Sera</th>
+            </tr>
+          </thead>
+          <tbody>
+            {members?.map((m) => {
+              const statuses = byUser.get(m.id) ?? {};
+              return (
+                <tr key={m.id} className="border-t border-zinc-100">
+                  <td className="py-1.5 text-zinc-800">{m.full_name ?? "—"}</td>
+                  {(["mattina", "pomeriggio", "sera"] as const).map((slot) => (
+                    <td className="py-1.5" key={slot}>
+                      {statuses[slot] ? (
+                        <Badge variant={STATUS_BADGE[statuses[slot]].variant} dot>
+                          {STATUS_BADGE[statuses[slot]].label}
+                        </Badge>
+                      ) : (
+                        <span className="text-zinc-300">—</span>
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </Card>
+
+      <Card>
+        <h2 className="mb-3 font-medium text-zinc-900">La tua disponibilità</h2>
+        <AvailabilityForm
+          date={date}
+          initial={{
+            mattina: own.mattina ?? "",
+            pomeriggio: own.pomeriggio ?? "",
+            sera: own.sera ?? "",
+          }}
+        />
+      </Card>
+    </div>
+  );
+}
