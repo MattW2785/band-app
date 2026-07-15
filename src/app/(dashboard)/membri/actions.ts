@@ -92,3 +92,80 @@ export async function deleteMember(_prevState: DeleteMemberState, formData: Form
   revalidatePath("/membri");
   return undefined;
 }
+
+export type ToggleHiddenState = { error?: string } | undefined;
+
+export async function toggleMemberHidden(
+  _prevState: ToggleHiddenState,
+  formData: FormData
+): Promise<ToggleHiddenState> {
+  const { userId } = await requireAdmin();
+  const memberId = String(formData.get("member_id"));
+  const hidden = formData.get("hidden") === "true";
+
+  const supabase = await createClient();
+  const { data: target } = await supabase.from("profiles").select("full_name").eq("id", memberId).single();
+
+  const { error } = await supabase.from("profiles").update({ hidden }).eq("id", memberId);
+  if (error) {
+    return { error: "Impossibile aggiornare la visibilità del membro." };
+  }
+
+  await logActivity(
+    supabase,
+    userId,
+    "updated",
+    "member",
+    target?.full_name,
+    hidden ? "reso invisibile" : "reso visibile"
+  );
+
+  revalidatePath("/membri");
+  return undefined;
+}
+
+export type ToggleSuspendedState = { error?: string } | undefined;
+
+export async function toggleMemberSuspended(
+  _prevState: ToggleSuspendedState,
+  formData: FormData
+): Promise<ToggleSuspendedState> {
+  const { userId } = await requireAdmin();
+  const memberId = String(formData.get("member_id"));
+  const suspended = formData.get("suspended") === "true";
+
+  if (memberId === userId) {
+    return { error: "Non puoi bloccare il tuo stesso account." };
+  }
+
+  const supabase = await createClient();
+  const { data: target } = await supabase.from("profiles").select("role, full_name").eq("id", memberId).single();
+
+  if (suspended && target?.role === "admin") {
+    const { count: adminCount } = await supabase
+      .from("profiles")
+      .select("id", { count: "exact", head: true })
+      .eq("role", "admin");
+
+    if ((adminCount ?? 0) <= 1) {
+      return { error: "Non puoi bloccare l'unico admin rimasto." };
+    }
+  }
+
+  const { error } = await supabase.from("profiles").update({ suspended }).eq("id", memberId);
+  if (error) {
+    return { error: "Impossibile aggiornare l'accesso del membro." };
+  }
+
+  await logActivity(
+    supabase,
+    userId,
+    "updated",
+    "member",
+    target?.full_name,
+    suspended ? "accesso bloccato" : "accesso sbloccato"
+  );
+
+  revalidatePath("/membri");
+  return undefined;
+}

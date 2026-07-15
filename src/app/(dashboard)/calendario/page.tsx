@@ -18,6 +18,7 @@ import { requireSessionProfile } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { PageHeader } from "@/components/ui/page-header";
 import { EventTypeIcon } from "@/components/events/event-type-icon";
+import { getHiddenUserIds } from "@/lib/visibility";
 
 const WEEKDAYS = ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"];
 
@@ -39,7 +40,7 @@ export default async function CalendarioPage({
 }: {
   searchParams: Promise<{ month?: string }>;
 }) {
-  await requireSessionProfile();
+  const { userId, profile } = await requireSessionProfile();
 
   const { month: monthParam } = await searchParams;
   const monthDate = monthParam ? parse(`${monthParam}-01`, "yyyy-MM-dd", new Date()) : new Date();
@@ -53,14 +54,20 @@ export default async function CalendarioPage({
   const rangeEnd = format(gridEnd, "yyyy-MM-dd");
 
   const supabase = await createClient();
-  const [{ count: totalMembers }, { data: availability }, { data: events }] = await Promise.all([
-    supabase.from("profiles").select("id", { count: "exact", head: true }),
+  const isAdmin = profile.role === "admin";
+  const hiddenIds = await getHiddenUserIds(supabase, userId, isAdmin);
+  const [{ data: allProfiles }, { data: rawAvailability }, { data: rawEvents }] = await Promise.all([
+    supabase.from("profiles").select("id"),
     supabase.from("availability").select("*").gte("date", rangeStart).lte("date", rangeEnd),
-    supabase.from("events").select("id,date,type,title").gte("date", rangeStart).lte("date", rangeEnd),
+    supabase.from("events").select("id,date,type,title,created_by").gte("date", rangeStart).lte("date", rangeEnd),
   ]);
 
+  const totalMembers = (allProfiles ?? []).filter((p) => !hiddenIds.has(p.id)).length;
+  const availability = (rawAvailability ?? []).filter((a) => !hiddenIds.has(a.user_id));
+  const events = (rawEvents ?? []).filter((e) => !e.created_by || !hiddenIds.has(e.created_by));
+
   const byDay = new Map<string, Map<string, string[]>>();
-  for (const a of availability ?? []) {
+  for (const a of availability) {
     if (!byDay.has(a.date)) byDay.set(a.date, new Map());
     const perUser = byDay.get(a.date)!;
     if (!perUser.has(a.user_id)) perUser.set(a.user_id, []);
@@ -68,7 +75,7 @@ export default async function CalendarioPage({
   }
 
   const eventsByDay = new Map<string, typeof events>();
-  for (const e of events ?? []) {
+  for (const e of events) {
     if (!eventsByDay.has(e.date)) eventsByDay.set(e.date, []);
     eventsByDay.get(e.date)!.push(e);
   }

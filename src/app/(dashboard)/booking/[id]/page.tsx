@@ -10,33 +10,39 @@ import { BookingStatusSelect } from "@/components/booking/booking-status-select"
 import { DeleteBookingButton } from "@/components/booking/delete-booking-button";
 import { CommentsSection } from "@/components/comments/comments-section";
 import { updateBookingDetails } from "../actions";
+import { getHiddenUserIds } from "@/lib/visibility";
 
 export default async function BookingLeadDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  await requireSessionProfile();
+  const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
+  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
 
   const { data: lead } = await supabase.from("booking_leads").select("*, venues(name)").eq("id", id).single();
   if (!lead) notFound();
 
-  const [{ data: venues }, { data: members }, { data: rawComments }] = await Promise.all([
+  const [{ data: venues }, { data: rawMembers }, { data: rawComments }] = await Promise.all([
     supabase.from("venues").select("id,name").order("name"),
     supabase.from("profiles").select("id,full_name").order("full_name"),
     supabase.from("comments").select("*").eq("parent_type", "booking_lead").eq("parent_id", id).order("created_at"),
   ]);
 
-  const nameById = new Map((members ?? []).map((m) => [m.id, m.full_name]));
-  const comments = (rawComments ?? []).map((c) => ({
-    id: c.id,
-    text: c.text,
-    created_at: c.created_at,
-    authorName: c.user_id ? (nameById.get(c.user_id) ?? null) : null,
-  }));
+  const members = (rawMembers ?? []).filter((m) => !hiddenIds.has(m.id));
+  const nameById = new Map(members.map((m) => [m.id, m.full_name]));
+  const comments = (rawComments ?? [])
+    .filter((c) => !c.user_id || !hiddenIds.has(c.user_id))
+    .map((c) => ({
+      id: c.id,
+      text: c.text,
+      created_at: c.created_at,
+      authorName: c.user_id ? (nameById.get(c.user_id) ?? null) : null,
+    }));
 
-  const editorName = lead.updated_by
-    ? (await supabase.from("profiles").select("full_name").eq("id", lead.updated_by).single()).data?.full_name ??
-      null
-    : null;
+  const editorName =
+    lead.updated_by && !hiddenIds.has(lead.updated_by)
+      ? (await supabase.from("profiles").select("full_name").eq("id", lead.updated_by).single()).data?.full_name ??
+        null
+      : null;
 
   const venueName = (lead.venues as unknown as { name: string } | null)?.name ?? "—";
 
@@ -66,7 +72,7 @@ export default async function BookingLeadDetailPage({ params }: { params: Promis
           action={updateBookingDetails}
           initial={lead}
           venues={venues ?? []}
-          members={members ?? []}
+          members={members}
           submitLabel="Salva modifiche"
         />
       </Card>

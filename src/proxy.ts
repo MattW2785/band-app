@@ -1,12 +1,13 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import type { Database } from "@/types/database";
 
 const PUBLIC_PATHS = ["/login", "/auth/callback", "/epk"];
 
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
 
-  const supabase = createServerClient(
+  const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -30,6 +31,20 @@ export async function proxy(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  if (user) {
+    const { data: profile } = await supabase.from("profiles").select("suspended").eq("id", user.id).maybeSingle();
+    if (profile?.suspended) {
+      // Invalida la sessione prima di reindirizzare: senza signOut il cookie resterebbe
+      // valido e il redirect "user loggato su /login → /" qui sotto causerebbe un loop.
+      await supabase.auth.signOut();
+      const redirectResponse = NextResponse.redirect(new URL("/login?error=suspended", request.url));
+      for (const cookie of response.cookies.getAll()) {
+        redirectResponse.cookies.set(cookie.name, cookie.value, cookie);
+      }
+      return redirectResponse;
+    }
+  }
 
   const path = request.nextUrl.pathname;
   const isPublic = PUBLIC_PATHS.some((p) => path.startsWith(p));

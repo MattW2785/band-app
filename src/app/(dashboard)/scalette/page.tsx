@@ -8,13 +8,15 @@ import { LastEdited } from "@/components/ui/last-edited";
 import { GenerateSetlistForm } from "@/components/setlist/generate-form";
 import { DeleteSetlistButton } from "@/components/setlist/delete-setlist-button";
 import { duplicateSetlist } from "./actions";
+import { getHiddenUserIds } from "@/lib/visibility";
 
 export default async function ScaletteePage() {
-  await requireSessionProfile();
+  const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
+  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
 
   const [{ data: events }, { data: setlists }, { data: profiles }] = await Promise.all([
-    supabase.from("events").select("id,title,date").order("date"),
+    supabase.from("events").select("id,title,date,created_by").order("date"),
     supabase
       .from("setlists")
       .select("*, setlist_items(song_id), events(title)")
@@ -22,7 +24,9 @@ export default async function ScaletteePage() {
     supabase.from("profiles").select("id,full_name"),
   ]);
 
-  const nameById = new Map((profiles ?? []).map((p) => [p.id, p.full_name]));
+  const nameById = new Map((profiles ?? []).filter((p) => !hiddenIds.has(p.id)).map((p) => [p.id, p.full_name]));
+  const visibleEvents = (events ?? []).filter((e) => !e.created_by || !hiddenIds.has(e.created_by));
+  const visibleSetlists = (setlists ?? []).filter((s) => !s.created_by || !hiddenIds.has(s.created_by));
 
   return (
     <div className="max-w-3xl">
@@ -30,11 +34,11 @@ export default async function ScaletteePage() {
 
       <Card className="mb-6">
         <h2 className="mb-3 font-medium text-zinc-900">Genera nuova scaletta</h2>
-        <GenerateSetlistForm events={events ?? []} />
+        <GenerateSetlistForm events={visibleEvents} />
       </Card>
 
       <div className="space-y-3">
-        {setlists?.map((s) => {
+        {visibleSetlists.map((s) => {
           const itemCount = (s.setlist_items as unknown as { song_id: string }[]).length;
           const eventTitle = (s.events as unknown as { title: string } | null)?.title;
           return (
@@ -66,7 +70,7 @@ export default async function ScaletteePage() {
           );
         })}
 
-        {(!setlists || setlists.length === 0) && <p className="text-sm text-zinc-500">Nessuna scaletta creata ancora.</p>}
+        {visibleSetlists.length === 0 && <p className="text-sm text-zinc-500">Nessuna scaletta creata ancora.</p>}
       </div>
     </div>
   );

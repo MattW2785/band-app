@@ -6,6 +6,14 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
 import { InviteMemberForm } from "./form";
 import { DeleteMemberButton } from "./delete-member-button";
+import { HiddenCheckbox } from "./hidden-checkbox";
+import { SuspendCheckbox } from "./suspend-checkbox";
+
+function memberStatus(m: { hidden: boolean; suspended: boolean }) {
+  if (m.suspended) return { label: "Bloccato", variant: "danger" as const };
+  if (m.hidden) return { label: "Invisibile", variant: "warning" as const };
+  return { label: "Attivo", variant: "success" as const };
+}
 
 export default async function MembriPage() {
   const { userId } = await requireAdmin();
@@ -35,6 +43,13 @@ export default async function MembriPage() {
                 <Badge variant={m.role === "admin" ? "indigo" : "neutral"} dot>
                   {m.role}
                 </Badge>
+                <Badge variant={memberStatus(m).variant} dot>
+                  Status: {memberStatus(m).label}
+                </Badge>
+                {m.id !== userId && (
+                  <SuspendCheckbox key={`suspended-${m.suspended}`} memberId={m.id} suspended={m.suspended} />
+                )}
+                {m.id !== userId && <HiddenCheckbox key={`hidden-${m.hidden}`} memberId={m.id} hidden={m.hidden} />}
                 {m.id !== userId && (
                   <DeleteMemberButton memberId={m.id} memberName={m.full_name ?? "questo membro"} />
                 )}

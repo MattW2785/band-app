@@ -10,6 +10,7 @@ import { DeleteEventButton } from "@/components/events/delete-event-button";
 import { LastEdited } from "@/components/ui/last-edited";
 import { CommentsSection } from "@/components/comments/comments-section";
 import { updateEvent } from "../actions";
+import { getHiddenUserIds } from "@/lib/visibility";
 
 const STATUS_BADGE = {
   da_confermare: { label: "Da confermare", variant: "warning" as const },
@@ -20,15 +21,16 @@ const STATUS_BADGE = {
 
 export default async function EventoDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  await requireSessionProfile();
+  const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
+  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
 
   const { data: event } = await supabase.from("events").select("*").eq("id", id).single();
   if (!event) notFound();
 
   const [editorNameResult, setlistResult, bookingLeadResult, venuesResult, commentsResult, profilesResult] =
     await Promise.all([
-      event.updated_by
+      event.updated_by && !hiddenIds.has(event.updated_by)
         ? supabase.from("profiles").select("full_name").eq("id", event.updated_by).single()
         : null,
       event.setlist_id ? supabase.from("setlists").select("id,title").eq("id", event.setlist_id).single() : null,
@@ -43,13 +45,17 @@ export default async function EventoDetailPage({ params }: { params: Promise<{ i
   const bookingLead = bookingLeadResult.data;
   const venues = venuesResult.data ?? [];
   const statusBadge = STATUS_BADGE[event.status];
-  const nameById = new Map((profilesResult.data ?? []).map((p) => [p.id, p.full_name]));
-  const comments = (commentsResult.data ?? []).map((c) => ({
-    id: c.id,
-    text: c.text,
-    created_at: c.created_at,
-    authorName: c.user_id ? (nameById.get(c.user_id) ?? null) : null,
-  }));
+  const nameById = new Map(
+    (profilesResult.data ?? []).filter((p) => !hiddenIds.has(p.id)).map((p) => [p.id, p.full_name])
+  );
+  const comments = (commentsResult.data ?? [])
+    .filter((c) => !c.user_id || !hiddenIds.has(c.user_id))
+    .map((c) => ({
+      id: c.id,
+      text: c.text,
+      created_at: c.created_at,
+      authorName: c.user_id ? (nameById.get(c.user_id) ?? null) : null,
+    }));
 
   return (
     <div className="max-w-2xl">

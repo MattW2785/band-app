@@ -32,6 +32,8 @@ create table profiles (
   full_name text,
   email text,
   role user_role not null default 'membro',
+  hidden boolean not null default false,
+  suspended boolean not null default false,
   created_at timestamptz not null default now()
 );
 

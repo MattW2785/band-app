@@ -7,34 +7,44 @@ import { LastEdited } from "@/components/ui/last-edited";
 import { SetlistEditor, type SetlistSongItem } from "@/components/setlist/setlist-editor";
 import { AddSongForm } from "@/components/setlist/add-song-form";
 import { DeleteSetlistButton } from "@/components/setlist/delete-setlist-button";
+import { getHiddenUserIds } from "@/lib/visibility";
 
 export default async function SetlistDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  await requireSessionProfile();
+  const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
+  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
 
   const { data: setlist } = await supabase.from("setlists").select("*, events(title)").eq("id", id).single();
   if (!setlist) notFound();
 
-  const editorName = setlist.updated_by
-    ? (await supabase.from("profiles").select("full_name").eq("id", setlist.updated_by).single()).data
-        ?.full_name ?? null
-    : null;
+  const editorName =
+    setlist.updated_by && !hiddenIds.has(setlist.updated_by)
+      ? (await supabase.from("profiles").select("full_name").eq("id", setlist.updated_by).single()).data
+          ?.full_name ?? null
+      : null;
 
   const { data: items } = await supabase
     .from("setlist_items")
-    .select("song_id, position, songs(title, artist, duration_seconds)")
+    .select("song_id, position, songs(proposed_by, title, artist, duration_seconds)")
     .eq("setlist_id", id)
     .order("position");
 
-  const initialItems: SetlistSongItem[] = (items ?? []).map((item) => {
-    const song = item.songs as unknown as { title: string; artist: string | null; duration_seconds: number };
-    return { songId: item.song_id, title: song.title, artist: song.artist, durationSeconds: song.duration_seconds };
-  });
+  const initialItems: SetlistSongItem[] = (items ?? [])
+    .filter((item) => {
+      const song = item.songs as unknown as { proposed_by: string | null };
+      return !song.proposed_by || !hiddenIds.has(song.proposed_by);
+    })
+    .map((item) => {
+      const song = item.songs as unknown as { title: string; artist: string | null; duration_seconds: number };
+      return { songId: item.song_id, title: song.title, artist: song.artist, durationSeconds: song.duration_seconds };
+    });
 
   const includedIds = new Set(initialItems.map((i) => i.songId));
-  const { data: allSongs } = await supabase.from("songs").select("id,title,artist").order("title");
-  const availableSongs = (allSongs ?? []).filter((s) => !includedIds.has(s.id));
+  const { data: allSongs } = await supabase.from("songs").select("id,title,artist,proposed_by").order("title");
+  const availableSongs = (allSongs ?? []).filter(
+    (s) => !includedIds.has(s.id) && (!s.proposed_by || !hiddenIds.has(s.proposed_by))
+  );
 
   const eventTitle = (setlist.events as unknown as { title: string } | null)?.title;
 

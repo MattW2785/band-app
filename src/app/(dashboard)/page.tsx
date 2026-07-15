@@ -20,6 +20,7 @@ import { requireSessionProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { Card } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
+import { Badge } from "@/components/ui/badge";
 
 const modules = [
   { href: "/calendario", title: "Calendario", description: "Disponibilità per prove e concerti", icon: Calendar },
@@ -62,7 +63,15 @@ export default async function HomePage() {
 
   return (
     <div>
-      <PageHeader title={`Ciao ${profile.full_name}`} description="Cosa vuoi organizzare oggi?" />
+      <PageHeader
+        title={
+          <span className="flex items-center gap-2">
+            {`Ciao ${profile.full_name}`}
+            {profile.hidden && <Badge variant="warning">Modalità invisibile</Badge>}
+          </span>
+        }
+        description="Cosa vuoi organizzare oggi?"
+      />
 
       <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
         {stats.map((s) => (

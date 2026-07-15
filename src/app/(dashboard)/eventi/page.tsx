@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { EventTypeIcon } from "@/components/events/event-type-icon";
+import { getHiddenUserIds } from "@/lib/visibility";
 
 const STATUS_BADGE = {
   da_confermare: { label: "da confermare", variant: "warning" as const },
@@ -17,10 +18,12 @@ const STATUS_BADGE = {
 };
 
 export default async function EventiPage() {
-  await requireSessionProfile();
+  const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
+  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
 
-  const { data: events } = await supabase.from("events").select("*").order("date");
+  const { data: rawEvents } = await supabase.from("events").select("*").order("date");
+  const events = (rawEvents ?? []).filter((e) => !e.created_by || !hiddenIds.has(e.created_by));
 
   return (
     <div className="max-w-2xl">
@@ -35,7 +38,7 @@ export default async function EventiPage() {
       />
 
       <div className="space-y-2">
-        {events?.map((e) => (
+        {events.map((e) => (
           <Link key={e.id} href={`/eventi/${e.id}`}>
             <Card className="flex items-center justify-between hover:border-indigo-200 hover:shadow-md">
               <div className="flex items-center gap-3">
@@ -59,7 +62,7 @@ export default async function EventiPage() {
           </Link>
         ))}
 
-        {(!events || events.length === 0) && (
+        {events.length === 0 && (
           <p className="text-sm text-zinc-500">Nessun evento in programma.</p>
         )}
       </div>

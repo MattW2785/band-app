@@ -7,6 +7,7 @@ import { AddEquipmentForm } from "@/components/attrezzatura/add-equipment-form";
 import { DeleteEquipmentButton } from "@/components/attrezzatura/delete-equipment-button";
 import { UpdateMaintenanceForm } from "@/components/attrezzatura/update-maintenance-form";
 import type { EquipmentCategory } from "@/types/database";
+import { getHiddenUserIds } from "@/lib/visibility";
 
 const CATEGORY_LABEL: Record<EquipmentCategory, string> = {
   chitarra: "Chitarra",
@@ -19,18 +20,21 @@ const CATEGORY_LABEL: Record<EquipmentCategory, string> = {
 };
 
 export default async function AttrezzaturaPage() {
-  await requireSessionProfile();
+  const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
+  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
 
-  const [{ data: equipment }, { data: members }] = await Promise.all([
+  const [{ data: rawEquipment }, { data: rawMembers }] = await Promise.all([
     supabase.from("equipment").select("*").order("category").order("name"),
     supabase.from("profiles").select("id,full_name").order("full_name"),
   ]);
 
-  const nameById = new Map((members ?? []).map((m) => [m.id, m.full_name]));
+  const members = (rawMembers ?? []).filter((m) => !hiddenIds.has(m.id));
+  const nameById = new Map(members.map((m) => [m.id, m.full_name]));
+  const equipment = (rawEquipment ?? []).filter((e) => !e.created_by || !hiddenIds.has(e.created_by));
 
   const byCategory = new Map<EquipmentCategory, typeof equipment>();
-  for (const item of equipment ?? []) {
+  for (const item of equipment) {
     if (!byCategory.has(item.category)) byCategory.set(item.category, []);
     byCategory.get(item.category)!.push(item);
   }
@@ -41,7 +45,7 @@ export default async function AttrezzaturaPage() {
 
       <Card className="mb-6">
         <h2 className="mb-3 font-medium text-zinc-900">Nuova attrezzatura</h2>
-        <AddEquipmentForm members={members ?? []} />
+        <AddEquipmentForm members={members} />
       </Card>
 
       <div className="space-y-6">
@@ -73,7 +77,7 @@ export default async function AttrezzaturaPage() {
           </div>
         ))}
 
-        {(!equipment || equipment.length === 0) && (
+        {equipment.length === 0 && (
           <p className="text-sm text-zinc-500">Nessuna attrezzatura censita ancora.</p>
         )}
       </div>

@@ -9,6 +9,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { UploadMediaForm } from "@/components/media/upload-media-form";
 import { DeleteMediaButton } from "@/components/media/delete-media-button";
 import type { MediaType } from "@/types/database";
+import { getHiddenUserIds } from "@/lib/visibility";
 
 const TYPE_LABEL: Record<MediaType, string> = {
   audio: "Audio",
@@ -24,22 +25,29 @@ function formatFileSize(bytes: number | null) {
 }
 
 export default async function MediaPage({ searchParams }: { searchParams: Promise<{ type?: string }> }) {
-  await requireSessionProfile();
+  const { userId, profile } = await requireSessionProfile();
   const { type: typeFilter } = await searchParams;
   const supabase = await createClient();
+  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
 
-  const [{ data: items }, { data: songs }, { data: events }, { data: members }] = await Promise.all([
+  const [{ data: items }, { data: rawSongs }, { data: rawEvents }, { data: rawMembers }] = await Promise.all([
     supabase.from("media_items").select("*").order("uploaded_at", { ascending: false }),
-    supabase.from("songs").select("id,title").order("title"),
-    supabase.from("events").select("id,title").order("date", { ascending: false }),
+    supabase.from("songs").select("id,title,proposed_by").order("title"),
+    supabase.from("events").select("id,title,created_by").order("date", { ascending: false }),
     supabase.from("profiles").select("id,full_name"),
   ]);
 
-  const nameById = new Map((members ?? []).map((m) => [m.id, m.full_name]));
-  const songTitleById = new Map((songs ?? []).map((s) => [s.id, s.title]));
-  const eventTitleById = new Map((events ?? []).map((e) => [e.id, e.title]));
+  const members = (rawMembers ?? []).filter((m) => !hiddenIds.has(m.id));
+  const songs = (rawSongs ?? []).filter((s) => !s.proposed_by || !hiddenIds.has(s.proposed_by));
+  const events = (rawEvents ?? []).filter((e) => !e.created_by || !hiddenIds.has(e.created_by));
 
-  const filtered = (items ?? []).filter((item) => !typeFilter || item.type === typeFilter);
+  const nameById = new Map(members.map((m) => [m.id, m.full_name]));
+  const songTitleById = new Map(songs.map((s) => [s.id, s.title]));
+  const eventTitleById = new Map(events.map((e) => [e.id, e.title]));
+
+  const filtered = (items ?? [])
+    .filter((item) => !item.uploaded_by || !hiddenIds.has(item.uploaded_by))
+    .filter((item) => !typeFilter || item.type === typeFilter);
   const withUrls = await Promise.all(
     filtered.map(async (item) => ({ ...item, url: await getMediaSignedUrl(supabase, item.file_path) }))
   );
@@ -50,7 +58,7 @@ export default async function MediaPage({ searchParams }: { searchParams: Promis
 
       <Card className="mb-6">
         <h2 className="mb-3 font-medium text-zinc-900">Carica un file</h2>
-        <UploadMediaForm songs={songs ?? []} events={events ?? []} />
+        <UploadMediaForm songs={songs} events={events} />
       </Card>
 
       <div className="mb-3 flex flex-wrap gap-2 text-sm">

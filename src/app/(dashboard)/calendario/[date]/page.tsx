@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { EventTypeIcon } from "@/components/events/event-type-icon";
 import type { AvailabilityStatus } from "@/types/database";
 import { AvailabilityForm } from "./form";
+import { getHiddenUserIds } from "@/lib/visibility";
 
 const STATUS_BADGE: Record<AvailabilityStatus, { label: string; variant: "success" | "warning" | "danger" }> = {
   disponibile: { label: "Disponibile", variant: "success" },
@@ -21,17 +22,22 @@ export default async function CalendarioDatePage({ params }: { params: Promise<{
   const { date } = await params;
   if (!isMatch(date, "yyyy-MM-dd")) notFound();
 
-  const { userId } = await requireSessionProfile();
+  const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
+  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
 
-  const [{ data: members }, { data: availability }, { data: events }] = await Promise.all([
+  const [{ data: rawMembers }, { data: availability }, { data: rawEvents }] = await Promise.all([
     supabase.from("profiles").select("id,full_name").order("full_name"),
     supabase.from("availability").select("*").eq("date", date),
     supabase.from("events").select("*").eq("date", date),
   ]);
 
+  const members = (rawMembers ?? []).filter((m) => !hiddenIds.has(m.id));
+  const events = (rawEvents ?? []).filter((e) => !e.created_by || !hiddenIds.has(e.created_by));
+
   const byUser = new Map<string, Record<string, AvailabilityStatus>>();
   for (const a of availability ?? []) {
+    if (hiddenIds.has(a.user_id)) continue;
     if (!byUser.has(a.user_id)) byUser.set(a.user_id, {});
     byUser.get(a.user_id)![a.time_slot] = a.status;
   }
@@ -47,7 +53,7 @@ export default async function CalendarioDatePage({ params }: { params: Promise<{
         {format(parseISO(date), "EEEE d MMMM yyyy", { locale: it })}
       </h1>
 
-      {events && events.length > 0 && (
+      {events.length > 0 && (
         <Card className="mb-4">
           <h2 className="mb-2 font-medium text-zinc-900">Eventi in questa data</h2>
           <ul className="space-y-1 text-sm">
@@ -79,7 +85,7 @@ export default async function CalendarioDatePage({ params }: { params: Promise<{
             </tr>
           </thead>
           <tbody>
-            {members?.map((m) => {
+            {members.map((m) => {
               const statuses = byUser.get(m.id) ?? {};
               return (
                 <tr key={m.id} className="border-t border-zinc-100">

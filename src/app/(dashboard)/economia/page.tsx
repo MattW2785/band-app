@@ -7,6 +7,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { AddTransactionForm } from "@/components/economia/add-transaction-form";
 import { DeleteTransactionButton } from "@/components/economia/delete-transaction-button";
+import { getHiddenUserIds } from "@/lib/visibility";
 
 const CATEGORY_LABEL: Record<string, string> = {
   cachet: "Cachet",
@@ -23,22 +24,24 @@ export default async function EconomiaPage({
 }: {
   searchParams: Promise<{ category?: string; event?: string }>;
 }) {
-  await requireSessionProfile();
+  const { userId, profile } = await requireSessionProfile();
   const { category, event: eventFilter } = await searchParams;
   const supabase = await createClient();
+  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
 
-  const [{ data: transactions }, { data: events }, { data: members }] = await Promise.all([
+  const [{ data: transactions }, { data: events }, { data: rawMembers }] = await Promise.all([
     supabase.from("transactions").select("*").order("date", { ascending: false }),
     supabase.from("events").select("id,title").order("date", { ascending: false }),
     supabase.from("profiles").select("id,full_name").order("full_name"),
   ]);
 
-  const nameById = new Map((members ?? []).map((m) => [m.id, m.full_name]));
+  const members = (rawMembers ?? []).filter((m) => !hiddenIds.has(m.id));
+  const nameById = new Map(members.map((m) => [m.id, m.full_name]));
   const eventTitleById = new Map((events ?? []).map((e) => [e.id, e.title]));
 
-  const all = transactions ?? [];
+  const all = (transactions ?? []).filter((t) => !t.created_by || !hiddenIds.has(t.created_by));
   const saldoTotale = all.reduce((sum, t) => sum + (t.type === "entrata" ? t.amount : -t.amount), 0);
-  const quotaATesta = members && members.length > 0 ? saldoTotale / members.length : 0;
+  const quotaATesta = members.length > 0 ? saldoTotale / members.length : 0;
 
   const marginePerEvento = new Map<string, number>();
   for (const t of all) {
@@ -67,7 +70,7 @@ export default async function EconomiaPage({
         <Card className="p-4">
           <p className="text-xs font-medium text-zinc-400">Quota a testa</p>
           <p className="mt-1 text-xl font-semibold text-zinc-900">{quotaATesta.toFixed(2)}€</p>
-          <p className="mt-0.5 text-xs text-zinc-500">su {members?.length ?? 0} membri</p>
+          <p className="mt-0.5 text-xs text-zinc-500">su {members.length} membri</p>
         </Card>
         <Card className="p-4">
           <p className="text-xs font-medium text-zinc-400">Movimenti registrati</p>
@@ -91,7 +94,7 @@ export default async function EconomiaPage({
 
       <Card className="mb-6">
         <h2 className="mb-3 font-medium text-zinc-900">Nuovo movimento</h2>
-        <AddTransactionForm events={events ?? []} members={members ?? []} />
+        <AddTransactionForm events={events ?? []} members={members} />
       </Card>
 
       <Card>

@@ -4,39 +4,51 @@ import { requireSessionProfile } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
 import { Avatar } from "@/components/ui/avatar";
+import { getHiddenUserIds } from "@/lib/visibility";
 
 function euro(n: number) {
   return `${n.toFixed(2)}€`;
 }
 
 export default async function StatistichePage() {
-  await requireSessionProfile();
+  const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
+  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
 
   const [
-    { data: transactions },
-    { data: events },
+    { data: rawTransactions },
+    { data: rawEvents },
     { data: bookingLeads },
-    { data: setlistItems },
-    { data: songs },
-    { data: availability },
-    { data: members },
+    { data: rawSetlistItems },
+    { data: rawSongs },
+    { data: rawAvailability },
+    { data: rawMembers },
   ] = await Promise.all([
-    supabase.from("transactions").select("type, amount, related_event_id"),
-    supabase.from("events").select("id, type, date, status, fee_amount"),
+    supabase.from("transactions").select("type, amount, related_event_id, created_by"),
+    supabase.from("events").select("id, type, date, status, fee_amount, created_by"),
     supabase.from("booking_leads").select("status"),
-    supabase.from("setlist_items").select("song_id"),
-    supabase.from("songs").select("id, title, votes(score)"),
+    supabase.from("setlist_items").select("song_id, songs(proposed_by)"),
+    supabase.from("songs").select("id, title, proposed_by, votes(user_id, score)"),
     supabase.from("availability").select("user_id, date"),
     supabase.from("profiles").select("id, full_name").order("full_name"),
   ]);
 
+  const members = (rawMembers ?? []).filter((m) => !hiddenIds.has(m.id));
+  const transactions = (rawTransactions ?? []).filter((t) => !t.created_by || !hiddenIds.has(t.created_by));
+  const events = (rawEvents ?? []).filter((e) => !e.created_by || !hiddenIds.has(e.created_by));
+  const songs = (rawSongs ?? []).filter((s) => !s.proposed_by || !hiddenIds.has(s.proposed_by));
+  const availability = (rawAvailability ?? []).filter((a) => !hiddenIds.has(a.user_id));
+  const setlistItems = (rawSetlistItems ?? []).filter((item) => {
+    const song = item.songs as unknown as { proposed_by: string | null } | null;
+    return !song?.proposed_by || !hiddenIds.has(song.proposed_by);
+  });
+
   // ---- Economia per concerto ----
-  const concertEvents = (events ?? []).filter((e) => e.type === "concerto");
+  const concertEvents = events.filter((e) => e.type === "concerto");
   const concertEventIds = new Set(concertEvents.map((e) => e.id));
 
   const txByEvent = new Map<string, { entrate: number; uscite: number }>();
-  for (const t of transactions ?? []) {
+  for (const t of transactions) {
     if (!t.related_event_id || !concertEventIds.has(t.related_event_id)) continue;
     const bucket = txByEvent.get(t.related_event_id) ?? { entrate: 0, uscite: 0 };
     if (t.type === "entrata") bucket.entrate += t.amount;
@@ -79,19 +91,19 @@ export default async function StatistichePage() {
   // ---- Affidabilità disponibilità per membro (ultimi 90 giorni) ----
   const rangeStart = subDays(now, 90);
   const eventDatesInRange = new Set(
-    (events ?? [])
+    events
       .filter((e) => isWithinInterval(parseISO(e.date), { start: rangeStart, end: now }))
       .map((e) => e.date)
   );
 
   const availByUserDate = new Map<string, Set<string>>();
-  for (const a of availability ?? []) {
+  for (const a of availability) {
     if (!eventDatesInRange.has(a.date)) continue;
     if (!availByUserDate.has(a.user_id)) availByUserDate.set(a.user_id, new Set());
     availByUserDate.get(a.user_id)!.add(a.date);
   }
 
-  const affidabilita = (members ?? []).map((m) => {
+  const affidabilita = members.map((m) => {
     const answered = availByUserDate.get(m.id)?.size ?? 0;
     const total = eventDatesInRange.size;
     return { name: m.full_name, pct: total > 0 ? (answered / total) * 100 : null };
@@ -99,19 +111,21 @@ export default async function StatistichePage() {
 
   // ---- Top brani suonati dal vivo ----
   const playCount = new Map<string, number>();
-  for (const item of setlistItems ?? []) {
+  for (const item of setlistItems) {
     playCount.set(item.song_id, (playCount.get(item.song_id) ?? 0) + 1);
   }
-  const songTitleById = new Map((songs ?? []).map((s) => [s.id, s.title]));
+  const songTitleById = new Map(songs.map((s) => [s.id, s.title]));
   const topPlayed = Array.from(playCount.entries())
     .map(([songId, count]) => ({ title: songTitleById.get(songId) ?? "—", count }))
     .sort((a, b) => b.count - a.count)
     .slice(0, 5);
 
   // ---- Top brani votati ----
-  const topVoted = (songs ?? [])
+  const topVoted = songs
     .map((s) => {
-      const votes = s.votes as unknown as { score: number }[];
+      const votes = (s.votes as unknown as { user_id: string; score: number }[]).filter(
+        (v) => !hiddenIds.has(v.user_id)
+      );
       const avg = votes.length ? votes.reduce((sum, v) => sum + v.score, 0) / votes.length : 0;
       return { title: s.title, avg, count: votes.length };
     })

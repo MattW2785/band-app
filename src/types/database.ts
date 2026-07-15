@@ -28,6 +28,8 @@ export type Profile = {
   full_name: string | null;
   email: string | null;
   role: UserRole;
+  hidden: boolean;
+  suspended: boolean;
   created_at: string;
 };
 

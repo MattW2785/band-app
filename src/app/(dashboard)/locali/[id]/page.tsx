@@ -9,25 +9,29 @@ import { LastEdited } from "@/components/ui/last-edited";
 import { VenueForm } from "@/components/venues/venue-form";
 import { DeleteVenueButton } from "@/components/venues/delete-venue-button";
 import { updateVenue } from "../actions";
+import { getHiddenUserIds } from "@/lib/visibility";
 
 export default async function LocaleDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  await requireSessionProfile();
+  const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
+  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
 
   const { data: venue } = await supabase.from("venues").select("*").eq("id", id).single();
   if (!venue) notFound();
 
-  const { data: pastEvents } = await supabase
+  const { data: rawPastEvents } = await supabase
     .from("events")
-    .select("id,title,date,type")
+    .select("id,title,date,type,created_by")
     .eq("venue_id", id)
     .order("date", { ascending: false });
+  const pastEvents = (rawPastEvents ?? []).filter((e) => !e.created_by || !hiddenIds.has(e.created_by));
 
-  const editorName = venue.updated_by
-    ? (await supabase.from("profiles").select("full_name").eq("id", venue.updated_by).single()).data?.full_name ??
-      null
-    : null;
+  const editorName =
+    venue.updated_by && !hiddenIds.has(venue.updated_by)
+      ? (await supabase.from("profiles").select("full_name").eq("id", venue.updated_by).single()).data?.full_name ??
+        null
+      : null;
 
   return (
     <div className="max-w-2xl">
@@ -44,7 +48,7 @@ export default async function LocaleDetailPage({ params }: { params: Promise<{ i
 
       <Card className="mb-4">
         <h2 className="mb-3 font-medium text-zinc-900">Storico concerti/prove qui</h2>
-        {pastEvents && pastEvents.length > 0 ? (
+        {pastEvents.length > 0 ? (
           <ul className="divide-y divide-zinc-100 text-sm">
             {pastEvents.map((e) => (
               <li key={e.id} className="py-2">

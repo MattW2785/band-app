@@ -10,6 +10,7 @@ import { StatusSelect } from "@/components/songs/status-select";
 import { DeleteSongButton } from "@/components/songs/delete-song-button";
 import { LastEdited } from "@/components/ui/last-edited";
 import { CollapsibleComments } from "@/components/comments/comments-section";
+import { getHiddenUserIds } from "@/lib/visibility";
 
 function formatDuration(totalSeconds: number) {
   const minutes = Math.floor(totalSeconds / 60);
@@ -18,8 +19,9 @@ function formatDuration(totalSeconds: number) {
 }
 
 export default async function BraniPage() {
-  const { userId } = await requireSessionProfile();
+  const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
+  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
 
   const [{ data: songs }, { data: profiles }, { data: rawComments }] = await Promise.all([
     supabase.from("songs").select("*, votes(user_id, score)").order("created_at", { ascending: false }),
@@ -27,10 +29,11 @@ export default async function BraniPage() {
     supabase.from("comments").select("*").eq("parent_type", "song").order("created_at"),
   ]);
 
-  const nameById = new Map((profiles ?? []).map((p) => [p.id, p.full_name]));
+  const nameById = new Map((profiles ?? []).filter((p) => !hiddenIds.has(p.id)).map((p) => [p.id, p.full_name]));
 
   const commentsBySong = new Map<string, { id: string; text: string; created_at: string; authorName: string | null }[]>();
   for (const c of rawComments ?? []) {
+    if (c.user_id && hiddenIds.has(c.user_id)) continue;
     if (!commentsBySong.has(c.parent_id)) commentsBySong.set(c.parent_id, []);
     commentsBySong.get(c.parent_id)!.push({
       id: c.id,
@@ -41,8 +44,11 @@ export default async function BraniPage() {
   }
 
   const ranked = (songs ?? [])
+    .filter((song) => !song.proposed_by || !hiddenIds.has(song.proposed_by))
     .map((song) => {
-      const votes = song.votes as unknown as { user_id: string; score: number }[];
+      const votes = (song.votes as unknown as { user_id: string; score: number }[]).filter(
+        (v) => !hiddenIds.has(v.user_id)
+      );
       const count = votes.length;
       const avg = count ? votes.reduce((sum, v) => sum + v.score, 0) / count : 0;
       const ownScore = votes.find((v) => v.user_id === userId)?.score ?? null;
