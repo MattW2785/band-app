@@ -24,9 +24,8 @@ export default async function CalendarioDatePage({ params }: { params: Promise<{
 
   const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
-  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
-
-  const [{ data: rawMembers }, { data: availability }, { data: rawEvents }] = await Promise.all([
+  const [hiddenIds, { data: rawMembers }, { data: availability }, { data: rawEvents }] = await Promise.all([
+    getHiddenUserIds(supabase, userId, profile.role === "admin"),
     supabase.from("profiles").select("id,full_name").order("full_name"),
     supabase.from("availability").select("*").eq("date", date),
     supabase.from("events").select("*").eq("date", date),

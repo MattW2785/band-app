@@ -23,9 +23,10 @@ export default async function EventoDetailPage({ params }: { params: Promise<{ i
   const { id } = await params;
   const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
-  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
-
-  const { data: event } = await supabase.from("events").select("*").eq("id", id).single();
+  const [hiddenIds, { data: event }] = await Promise.all([
+    getHiddenUserIds(supabase, userId, profile.role === "admin"),
+    supabase.from("events").select("*").eq("id", id).single(),
+  ]);
   if (!event) notFound();
 
   const [editorNameResult, setlistResult, bookingLeadResult, venuesResult, commentsResult, profilesResult] =

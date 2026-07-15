@@ -21,9 +21,8 @@ function formatDuration(totalSeconds: number) {
 export default async function BraniPage() {
   const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
-  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
-
-  const [{ data: songs }, { data: profiles }, { data: rawComments }] = await Promise.all([
+  const [hiddenIds, { data: songs }, { data: profiles }, { data: rawComments }] = await Promise.all([
+    getHiddenUserIds(supabase, userId, profile.role === "admin"),
     supabase.from("songs").select("*, votes(user_id, score)").order("created_at", { ascending: false }),
     supabase.from("profiles").select("id,full_name"),
     supabase.from("comments").select("*").eq("parent_type", "song").order("created_at"),

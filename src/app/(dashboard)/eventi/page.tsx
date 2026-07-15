@@ -20,9 +20,10 @@ const STATUS_BADGE = {
 export default async function EventiPage() {
   const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
-  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
-
-  const { data: rawEvents } = await supabase.from("events").select("*").order("date");
+  const [hiddenIds, { data: rawEvents }] = await Promise.all([
+    getHiddenUserIds(supabase, userId, profile.role === "admin"),
+    supabase.from("events").select("*").order("date"),
+  ]);
   const events = (rawEvents ?? []).filter((e) => !e.created_by || !hiddenIds.has(e.created_by));
 
   return (

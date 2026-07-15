@@ -22,9 +22,8 @@ const CATEGORY_LABEL: Record<EquipmentCategory, string> = {
 export default async function AttrezzaturaPage() {
   const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
-  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
-
-  const [{ data: rawEquipment }, { data: rawMembers }] = await Promise.all([
+  const [hiddenIds, { data: rawEquipment }, { data: rawMembers }] = await Promise.all([
+    getHiddenUserIds(supabase, userId, profile.role === "admin"),
     supabase.from("equipment").select("*").order("category").order("name"),
     supabase.from("profiles").select("id,full_name").order("full_name"),
   ]);

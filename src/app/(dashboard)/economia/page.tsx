@@ -27,9 +27,8 @@ export default async function EconomiaPage({
   const { userId, profile } = await requireSessionProfile();
   const { category, event: eventFilter } = await searchParams;
   const supabase = await createClient();
-  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
-
-  const [{ data: transactions }, { data: events }, { data: rawMembers }] = await Promise.all([
+  const [hiddenIds, { data: transactions }, { data: events }, { data: rawMembers }] = await Promise.all([
+    getHiddenUserIds(supabase, userId, profile.role === "admin"),
     supabase.from("transactions").select("*").order("date", { ascending: false }),
     supabase.from("events").select("id,title").order("date", { ascending: false }),
     supabase.from("profiles").select("id,full_name").order("full_name"),

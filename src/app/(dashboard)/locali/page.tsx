@@ -9,9 +9,10 @@ import { getHiddenUserIds } from "@/lib/visibility";
 export default async function LocaliPage() {
   const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
-  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
-
-  const { data: rawVenues } = await supabase.from("venues").select("*").order("name");
+  const [hiddenIds, { data: rawVenues }] = await Promise.all([
+    getHiddenUserIds(supabase, userId, profile.role === "admin"),
+    supabase.from("venues").select("*").order("name"),
+  ]);
   const venues = (rawVenues ?? []).filter((v) => !v.created_by || !hiddenIds.has(v.created_by));
 
   return (

@@ -28,14 +28,14 @@ export default async function MediaPage({ searchParams }: { searchParams: Promis
   const { userId, profile } = await requireSessionProfile();
   const { type: typeFilter } = await searchParams;
   const supabase = await createClient();
-  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
-
-  const [{ data: items }, { data: rawSongs }, { data: rawEvents }, { data: rawMembers }] = await Promise.all([
-    supabase.from("media_items").select("*").order("uploaded_at", { ascending: false }),
-    supabase.from("songs").select("id,title,proposed_by").order("title"),
-    supabase.from("events").select("id,title,created_by").order("date", { ascending: false }),
-    supabase.from("profiles").select("id,full_name"),
-  ]);
+  const [hiddenIds, { data: items }, { data: rawSongs }, { data: rawEvents }, { data: rawMembers }] =
+    await Promise.all([
+      getHiddenUserIds(supabase, userId, profile.role === "admin"),
+      supabase.from("media_items").select("*").order("uploaded_at", { ascending: false }),
+      supabase.from("songs").select("id,title,proposed_by").order("title"),
+      supabase.from("events").select("id,title,created_by").order("date", { ascending: false }),
+      supabase.from("profiles").select("id,full_name"),
+    ]);
 
   const members = (rawMembers ?? []).filter((m) => !hiddenIds.has(m.id));
   const songs = (rawSongs ?? []).filter((s) => !s.proposed_by || !hiddenIds.has(s.proposed_by));

@@ -13,9 +13,8 @@ import { getHiddenUserIds } from "@/lib/visibility";
 export default async function ScaletteePage() {
   const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
-  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
-
-  const [{ data: events }, { data: setlists }, { data: profiles }] = await Promise.all([
+  const [hiddenIds, { data: events }, { data: setlists }, { data: profiles }] = await Promise.all([
+    getHiddenUserIds(supabase, userId, profile.role === "admin"),
     supabase.from("events").select("id,title,date,created_by").order("date"),
     supabase
       .from("setlists")

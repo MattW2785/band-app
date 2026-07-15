@@ -10,9 +10,8 @@ import { getHiddenUserIds } from "@/lib/visibility";
 export default async function SiaePage() {
   const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
-  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
-
-  const [{ data: rawSongs }, { data: rawWorks }, { data: rawMembers }] = await Promise.all([
+  const [hiddenIds, { data: rawSongs }, { data: rawWorks }, { data: rawMembers }] = await Promise.all([
+    getHiddenUserIds(supabase, userId, profile.role === "admin"),
     supabase.from("songs").select("id,title,artist,proposed_by").order("title"),
     supabase.from("original_works").select("*"),
     supabase.from("profiles").select("id,full_name").order("full_name"),

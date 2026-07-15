@@ -9,12 +9,10 @@ import { getHiddenUserIds } from "@/lib/visibility";
 export default async function BookingPage() {
   const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
-  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
-
-  const { data: leads } = await supabase
-    .from("booking_leads")
-    .select("*, venues(name, city)")
-    .order("created_at", { ascending: false });
+  const [hiddenIds, { data: leads }] = await Promise.all([
+    getHiddenUserIds(supabase, userId, profile.role === "admin"),
+    supabase.from("booking_leads").select("*, venues(name, city)").order("created_at", { ascending: false }),
+  ]);
 
   const cards: BookingCardData[] = (leads ?? [])
     .filter((l) => !l.created_by || !hiddenIds.has(l.created_by))

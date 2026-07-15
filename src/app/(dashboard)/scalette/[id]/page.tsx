@@ -13,9 +13,16 @@ export default async function SetlistDetailPage({ params }: { params: Promise<{ 
   const { id } = await params;
   const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
-  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
-
-  const { data: setlist } = await supabase.from("setlists").select("*, events(title)").eq("id", id).single();
+  const [hiddenIds, { data: setlist }, { data: items }, { data: allSongs }] = await Promise.all([
+    getHiddenUserIds(supabase, userId, profile.role === "admin"),
+    supabase.from("setlists").select("*, events(title)").eq("id", id).single(),
+    supabase
+      .from("setlist_items")
+      .select("song_id, position, songs(proposed_by, title, artist, duration_seconds)")
+      .eq("setlist_id", id)
+      .order("position"),
+    supabase.from("songs").select("id,title,artist,proposed_by").order("title"),
+  ]);
   if (!setlist) notFound();
 
   const editorName =
@@ -23,12 +30,6 @@ export default async function SetlistDetailPage({ params }: { params: Promise<{ 
       ? (await supabase.from("profiles").select("full_name").eq("id", setlist.updated_by).single()).data
           ?.full_name ?? null
       : null;
-
-  const { data: items } = await supabase
-    .from("setlist_items")
-    .select("song_id, position, songs(proposed_by, title, artist, duration_seconds)")
-    .eq("setlist_id", id)
-    .order("position");
 
   const initialItems: SetlistSongItem[] = (items ?? [])
     .filter((item) => {
@@ -41,7 +42,6 @@ export default async function SetlistDetailPage({ params }: { params: Promise<{ 
     });
 
   const includedIds = new Set(initialItems.map((i) => i.songId));
-  const { data: allSongs } = await supabase.from("songs").select("id,title,artist,proposed_by").order("title");
   const availableSongs = (allSongs ?? []).filter(
     (s) => !includedIds.has(s.id) && (!s.proposed_by || !hiddenIds.has(s.proposed_by))
   );

@@ -15,16 +15,17 @@ export default async function LocaleDetailPage({ params }: { params: Promise<{ i
   const { id } = await params;
   const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
-  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
-
-  const { data: venue } = await supabase.from("venues").select("*").eq("id", id).single();
+  const [hiddenIds, { data: venue }, { data: rawPastEvents }] = await Promise.all([
+    getHiddenUserIds(supabase, userId, profile.role === "admin"),
+    supabase.from("venues").select("*").eq("id", id).single(),
+    supabase
+      .from("events")
+      .select("id,title,date,type,created_by")
+      .eq("venue_id", id)
+      .order("date", { ascending: false }),
+  ]);
   if (!venue) notFound();
 
-  const { data: rawPastEvents } = await supabase
-    .from("events")
-    .select("id,title,date,type,created_by")
-    .eq("venue_id", id)
-    .order("date", { ascending: false });
   const pastEvents = (rawPastEvents ?? []).filter((e) => !e.created_by || !hiddenIds.has(e.created_by));
 
   const editorName =

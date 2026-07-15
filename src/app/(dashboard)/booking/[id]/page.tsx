@@ -16,16 +16,20 @@ export default async function BookingLeadDetailPage({ params }: { params: Promis
   const { id } = await params;
   const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
-  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
-
-  const { data: lead } = await supabase.from("booking_leads").select("*, venues(name)").eq("id", id).single();
+  const [hiddenIds, { data: lead }, { data: venues }, { data: rawMembers }, { data: rawComments }] =
+    await Promise.all([
+      getHiddenUserIds(supabase, userId, profile.role === "admin"),
+      supabase.from("booking_leads").select("*, venues(name)").eq("id", id).single(),
+      supabase.from("venues").select("id,name").order("name"),
+      supabase.from("profiles").select("id,full_name").order("full_name"),
+      supabase
+        .from("comments")
+        .select("*")
+        .eq("parent_type", "booking_lead")
+        .eq("parent_id", id)
+        .order("created_at"),
+    ]);
   if (!lead) notFound();
-
-  const [{ data: venues }, { data: rawMembers }, { data: rawComments }] = await Promise.all([
-    supabase.from("venues").select("id,name").order("name"),
-    supabase.from("profiles").select("id,full_name").order("full_name"),
-    supabase.from("comments").select("*").eq("parent_type", "booking_lead").eq("parent_id", id).order("created_at"),
-  ]);
 
   const members = (rawMembers ?? []).filter((m) => !hiddenIds.has(m.id));
   const nameById = new Map(members.map((m) => [m.id, m.full_name]));

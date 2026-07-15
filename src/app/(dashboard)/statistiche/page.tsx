@@ -13,9 +13,8 @@ function euro(n: number) {
 export default async function StatistichePage() {
   const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
-  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
-
   const [
+    hiddenIds,
     { data: rawTransactions },
     { data: rawEvents },
     { data: bookingLeads },
@@ -24,6 +23,7 @@ export default async function StatistichePage() {
     { data: rawAvailability },
     { data: rawMembers },
   ] = await Promise.all([
+    getHiddenUserIds(supabase, userId, profile.role === "admin"),
     supabase.from("transactions").select("type, amount, related_event_id, created_by"),
     supabase.from("events").select("id, type, date, status, fee_amount, created_by"),
     supabase.from("booking_leads").select("status"),

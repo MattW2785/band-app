@@ -10,9 +10,8 @@ import { getHiddenUserIds } from "@/lib/visibility";
 export default async function TaskPage() {
   const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
-  const hiddenIds = await getHiddenUserIds(supabase, userId, profile.role === "admin");
-
-  const [{ data: tasks }, { data: members }, { data: events }, { data: rawComments }] = await Promise.all([
+  const [hiddenIds, { data: tasks }, { data: members }, { data: events }, { data: rawComments }] = await Promise.all([
+    getHiddenUserIds(supabase, userId, profile.role === "admin"),
     supabase.from("tasks").select("*, profiles(full_name)").order("created_at", { ascending: false }),
     supabase.from("profiles").select("id,full_name").order("full_name"),
     supabase.from("events").select("id,title").order("date"),
