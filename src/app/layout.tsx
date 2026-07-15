@@ -1,10 +1,27 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const squidBoy = localFont({
+  variable: "--font-squidboy",
+  src: [
+    {
+      path: "./fonts/SquidBoy/SquidBoy-Thin.woff2",
+      weight: "100",
+      style: "normal",
+    },
+    {
+      path: "./fonts/SquidBoy/SquidBoy.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./fonts/SquidBoy/SquidBoy-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+  ],
 });
 
 const geistMono = Geist_Mono({
@@ -25,7 +42,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${squidBoy.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

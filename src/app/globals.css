@@ -8,8 +8,20 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-squidboy);
   --font-mono: var(--font-geist-mono);
+
+  /* SquidBoy ships only Thin(100)/Regular(400)/Bold(700): rebind the
+     nominal Tailwind weight scale to the closest real weight instead of
+     letting the browser fake-bold or snap unpredictably per engine. */
+  --font-weight-medium: 400;
+  --font-weight-semibold: 700;
+
+  /* Low x-height at small sizes hurts lowercase legibility (badges, list
+     captions, timestamps) more than it does headings/uppercase labels, so
+     nudge just the xs step up rather than the whole scale. */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: calc(1.25 / 0.8125);
 }
 
 body {
