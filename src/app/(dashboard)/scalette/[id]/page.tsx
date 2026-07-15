@@ -13,7 +13,7 @@ export default async function SetlistDetailPage({ params }: { params: Promise<{ 
   const { id } = await params;
   const { userId, profile } = await requireSessionProfile();
   const supabase = await createClient();
-  const [hiddenIds, { data: setlist }, { data: items }, { data: allSongs }] = await Promise.all([
+  const [hiddenIds, setlistResult, { data: items }, { data: allSongs }] = await Promise.all([
     getHiddenUserIds(supabase, userId, profile.role === "admin"),
     supabase.from("setlists").select("*, events(title)").eq("id", id).single(),
     supabase
@@ -23,7 +23,11 @@ export default async function SetlistDetailPage({ params }: { params: Promise<{ 
       .order("position"),
     supabase.from("songs").select("id,title,artist,proposed_by").order("title"),
   ]);
-  if (!setlist) notFound();
+  const { data: setlist, error: setlistError } = setlistResult;
+  if (!setlist) {
+    if (setlistError) console.error("scalette/[id] fetch error:", setlistError);
+    notFound();
+  }
 
   const editorName =
     setlist.updated_by && !hiddenIds.has(setlist.updated_by)
