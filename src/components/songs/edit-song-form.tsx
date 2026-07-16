@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { updateSong } from "@/app/(dashboard)/brani/actions";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Textarea } from "@/components/ui/input";
@@ -20,9 +20,18 @@ type EditableSong = Pick<
 export function EditSongForm({ song }: { song: EditableSong }) {
   const [state, formAction, pending] = useActionState(updateSong, undefined);
   const [isOriginal, setIsOriginal] = useState(song.is_original);
+  const detailsRef = useRef<HTMLDetailsElement>(null);
+  const wasPending = useRef(false);
+
+  useEffect(() => {
+    if (wasPending.current && !pending && !state?.error && detailsRef.current) {
+      detailsRef.current.open = false;
+    }
+    wasPending.current = pending;
+  }, [pending, state]);
 
   return (
-    <details className="text-sm">
+    <details ref={detailsRef} className="text-sm">
       <summary className="cursor-pointer list-none text-xs text-zinc-400 hover:text-zinc-600">Modifica</summary>
       <form action={formAction} className="mt-2 grid grid-cols-1 gap-3 border-t border-zinc-100 pt-3 sm:grid-cols-2">
         <input type="hidden" name="song_id" value={song.id} />

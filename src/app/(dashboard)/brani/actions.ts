@@ -31,7 +31,7 @@ const SongFieldsSchema = z.object({
   bpm: z.string().trim().optional(),
   duration: z.string().regex(DURATION_RE, { message: "Durata nel formato mm:ss." }),
   notes: z.string().trim().optional(),
-  is_original: z.string().optional(),
+  is_original: z.string().nullish(),
 });
 
 function readSongFields(formData: FormData) {
