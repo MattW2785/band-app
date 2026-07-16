@@ -12,7 +12,10 @@ export default async function TaskPage() {
   const supabase = await createClient();
   const [hiddenIds, { data: tasks }, { data: members }, { data: events }, { data: rawComments }] = await Promise.all([
     getHiddenUserIds(supabase, userId, profile.role === "admin"),
-    supabase.from("tasks").select("*, profiles(full_name)").order("created_at", { ascending: false }),
+    supabase
+      .from("tasks")
+      .select("*, profiles!tasks_assigned_to_fkey(full_name)")
+      .order("created_at", { ascending: false }),
     supabase.from("profiles").select("id,full_name").order("full_name"),
     supabase.from("events").select("id,title").order("date"),
     supabase.from("comments").select("*").eq("parent_type", "task").order("created_at"),
@@ -60,7 +63,11 @@ export default async function TaskPage() {
         <AddTaskForm members={visibleMembers} events={events ?? []} />
       </Card>
 
-      <KanbanBoard initialTasks={kanbanTasks} members={visibleMembers} />
+      <KanbanBoard
+        key={kanbanTasks.map((t) => t.id).join(",")}
+        initialTasks={kanbanTasks}
+        members={visibleMembers}
+      />
     </div>
   );
 }

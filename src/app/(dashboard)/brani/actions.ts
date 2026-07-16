@@ -159,16 +159,24 @@ export async function updateSongStatus(formData: FormData) {
   const songId = String(formData.get("song_id"));
   const status = String(formData.get("status")) as SongStatus;
 
+  console.log("updateSongStatus called:", { songId, status });
+
   const supabase = await createClient();
-  await supabase
+  const { error } = await supabase
     .from("songs")
     .update({ status, updated_by: userId, updated_at: new Date().toISOString() })
     .eq("id", songId);
+
+  if (error) {
+    console.error("updateSongStatus update error:", error);
+    return;
+  }
 
   const { data: song } = await supabase.from("songs").select("title").eq("id", songId).single();
   await logActivity(supabase, userId, "status_changed", "song", song?.title, status);
 
   revalidatePath("/brani");
+  console.log("updateSongStatus done, revalidated /brani");
 }
 
 export async function deleteSong(formData: FormData) {

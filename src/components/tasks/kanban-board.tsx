@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
+import { format, parseISO } from "date-fns";
 import { DndContext, PointerSensor, useDraggable, useDroppable, useSensor, useSensors, type DragEndEvent } from "@dnd-kit/core";
 import { updateTaskStatus, deleteTask } from "@/app/(dashboard)/task/actions";
 import { Select } from "@/components/ui/input";
@@ -67,7 +68,7 @@ function TaskCard({ task, onDelete }: { task: KanbanTask; onDelete: (taskId: str
         ) : (
           <span>Non assegnato</span>
         )}
-        {task.due_date && <span>{task.due_date}</span>}
+        {task.due_date && <span>{format(parseISO(task.due_date), "dd-MM-yyyy")}</span>}
       </div>
       <LastEdited name={task.updatedByName} at={task.updatedAt} className="mt-1.5 text-[11px] text-zinc-300" />
       <div onPointerDown={(e) => e.stopPropagation()} className="cursor-auto">

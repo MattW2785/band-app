@@ -45,6 +45,7 @@ export async function addTask(_prevState: AddTaskState, formData: FormData): Pro
   });
 
   if (error) {
+    console.error("addTask insert error:", error);
     return { error: "Impossibile creare il task. Riprova." };
   }
 
