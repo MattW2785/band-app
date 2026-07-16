@@ -25,7 +25,7 @@ export function GenerateSetlistForm({ events }: { events: { id: string; title: s
           <option value="">Nessuno</option>
           {events.map((e) => (
             <option key={e.id} value={e.id}>
-              {e.title} — {format(parseISO(e.date), "dd.MM.yyyy")}
+              {e.title} — {format(parseISO(e.date), "dd-MM-yyyy")}
             </option>
           ))}
         </Select>
