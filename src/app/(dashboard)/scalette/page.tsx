@@ -18,7 +18,7 @@ export default async function ScaletteePage() {
     supabase.from("events").select("id,title,date,created_by").order("date"),
     supabase
       .from("setlists")
-      .select("*, setlist_items(song_id), events(title)")
+      .select("*, setlist_items(song_id), events!setlists_event_id_fkey(title)")
       .order("created_at", { ascending: false }),
     supabase.from("profiles").select("id,full_name"),
   ]);

@@ -15,7 +15,7 @@ export default async function SetlistDetailPage({ params }: { params: Promise<{ 
   const supabase = await createClient();
   const [hiddenIds, setlistResult, { data: items }, { data: allSongs }] = await Promise.all([
     getHiddenUserIds(supabase, userId, profile.role === "admin"),
-    supabase.from("setlists").select("*, events(title)").eq("id", id).single(),
+    supabase.from("setlists").select("*, events!setlists_event_id_fkey(title)").eq("id", id).single(),
     supabase
       .from("setlist_items")
       .select("song_id, position, songs(proposed_by, title, artist, duration_seconds)")
@@ -25,7 +25,7 @@ export default async function SetlistDetailPage({ params }: { params: Promise<{ 
   ]);
   const { data: setlist, error: setlistError } = setlistResult;
   if (!setlist) {
-    if (setlistError) console.error("scalette/[id] fetch error:", setlistError);
+    if (setlistError) console.error("scalette/[id] fetch error:", setlistError.message);
     notFound();
   }
 

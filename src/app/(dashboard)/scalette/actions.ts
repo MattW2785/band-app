@@ -68,7 +68,7 @@ export async function generateSetlist(
     .single();
 
   if (error || !setlist) {
-    console.error("generateSetlist insert error:", error);
+    if (error) console.error("generateSetlist insert error:", error.message);
     return { error: "Impossibile creare la scaletta. Riprova." };
   }
 

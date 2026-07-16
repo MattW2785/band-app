@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { requireSessionProfile } from "@/lib/auth";
 import { signOut } from "@/lib/auth-actions";
 import { MainNav } from "@/components/nav/main-nav";
@@ -11,9 +12,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     <div className="flex min-h-full flex-1 flex-col md:flex-row">
       <header className="flex flex-col bg-white md:w-60 md:border-r md:border-zinc-200/70">
         <div className="flex items-center gap-2 px-4 pt-5 pb-2">
-          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-zinc-900 text-sm text-white">
-            ♪
-          </span>
+          <Image src="/logo.png" alt="BandSpace" width={28} height={28} className="h-7 w-7 rounded-lg object-contain" />
           <span className="text-lg font-semibold tracking-tight text-zinc-900">BandSpace</span>
         </div>
         <MainNav isAdmin={profile.role === "admin"} />

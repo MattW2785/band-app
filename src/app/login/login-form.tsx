@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { login } from "./actions";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -68,7 +69,7 @@ export function LoginForm({ suspendedError }: { suspendedError?: string }) {
     <div className="flex min-h-full flex-1 items-center justify-center bg-zinc-50 p-4">
       <Card className="w-full max-w-sm">
         <div className="mb-6 flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white">♪</span>
+          <Image src="/logo.png" alt="BandSpace" width={32} height={32} className="h-8 w-8 rounded-lg object-contain" />
           <div>
             <h1 className="text-lg font-semibold leading-tight text-zinc-900">BandSpace</h1>
             <p className="text-xs text-zinc-500">Accedi con l&apos;account della tua band</p>
