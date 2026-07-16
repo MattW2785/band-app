@@ -132,6 +132,7 @@ create table songs (
   duration_seconds integer not null,
   status song_status not null default 'proposto',
   notes text,
+  is_original boolean not null default false,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );

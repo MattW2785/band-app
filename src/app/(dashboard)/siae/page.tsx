@@ -12,7 +12,7 @@ export default async function SiaePage() {
   const supabase = await createClient();
   const [hiddenIds, { data: rawSongs }, { data: rawWorks }, { data: rawMembers }] = await Promise.all([
     getHiddenUserIds(supabase, userId, profile.role === "admin"),
-    supabase.from("songs").select("id,title,artist,proposed_by").order("title"),
+    supabase.from("songs").select("id,title,artist,proposed_by").eq("is_original", true).order("title"),
     supabase.from("original_works").select("*"),
     supabase.from("profiles").select("id,full_name").order("full_name"),
   ]);
@@ -24,7 +24,10 @@ export default async function SiaePage() {
 
   return (
     <div className="max-w-3xl">
-      <PageHeader title="SIAE" description="Deposito e ripartizione dei diritti d'autore per i brani originali" />
+      <PageHeader
+        title="SIAE / SOUNDREEF"
+        description="Deposito e ripartizione dei diritti d'autore per i brani propri della band"
+      />
 
       <div className="space-y-3">
         {songs.map((song) => {
@@ -68,7 +71,15 @@ export default async function SiaePage() {
           );
         })}
 
-        {songs.length === 0 && <p className="text-sm text-zinc-500">Nessun brano in repertorio ancora.</p>}
+        {songs.length === 0 && (
+          <p className="text-sm text-zinc-500">
+            Nessun brano proprio ancora. Marca un brano come &quot;Brano proprio&quot; da{" "}
+            <a href="/brani" className="text-indigo-600 hover:underline">
+              /brani
+            </a>{" "}
+            per vederlo qui.
+          </p>
+        )}
       </div>
     </div>
   );

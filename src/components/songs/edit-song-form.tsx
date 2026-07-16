@@ -14,7 +14,7 @@ function formatDuration(totalSeconds: number) {
 
 type EditableSong = Pick<
   Song,
-  "id" | "title" | "artist" | "duration_seconds" | "reference_links" | "key" | "bpm" | "notes"
+  "id" | "title" | "artist" | "duration_seconds" | "reference_links" | "key" | "bpm" | "notes" | "is_original"
 >;
 
 export function EditSongForm({ song }: { song: EditableSong }) {
@@ -63,6 +63,12 @@ export function EditSongForm({ song }: { song: EditableSong }) {
         <div className="sm:col-span-2">
           <Label htmlFor={`notes_${song.id}`}>Note</Label>
           <Textarea id={`notes_${song.id}`} name="notes" rows={2} defaultValue={song.notes ?? ""} />
+        </div>
+        <div className="sm:col-span-2">
+          <label className="flex items-center gap-2 text-sm text-zinc-700">
+            <input type="checkbox" name="is_original" value="true" defaultChecked={song.is_original} />
+            Brano proprio (composizione originale) — comparirà in SIAE / SOUNDREEF
+          </label>
         </div>
         {state?.error && <p className="text-sm text-red-600 sm:col-span-2">{state.error}</p>}
         <div className="sm:col-span-2">

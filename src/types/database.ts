@@ -82,6 +82,7 @@ export type Song = {
   duration_seconds: number;
   status: SongStatus;
   notes: string | null;
+  is_original: boolean;
   created_at: string;
   updated_at: string;
 };

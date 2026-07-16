@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { requireSessionProfile } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/ui/page-header";
 import { ProposeSongForm } from "@/components/songs/propose-form";
 import { VoteButtons } from "@/components/songs/vote-buttons";
@@ -78,8 +79,11 @@ export default async function BraniPage() {
           <Card key={song.id}>
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <h3 className="font-medium text-zinc-900">
-                  {song.title} {song.artist && <span className="font-normal text-zinc-500">— {song.artist}</span>}
+                <h3 className="flex items-center gap-2 font-medium text-zinc-900">
+                  <span>
+                    {song.title} {song.artist && <span className="font-normal text-zinc-500">— {song.artist}</span>}
+                  </span>
+                  {song.is_original && <Badge variant="indigo">Originale</Badge>}
                 </h3>
                 <p className="mt-0.5 text-xs text-zinc-500">
                   {formatDuration(song.duration_seconds)}

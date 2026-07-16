@@ -56,7 +56,7 @@ const groups: NavGroup[] = [
     items: [
       { href: "/economia", label: "Economia", icon: Wallet },
       { href: "/statistiche", label: "Statistiche", icon: BarChart3 },
-      { href: "/siae", label: "SIAE", icon: FileSignature },
+      { href: "/siae", label: "SIAE / SOUNDREEF", icon: FileSignature },
     ],
   },
   {

@@ -39,7 +39,12 @@ const modules = [
   { href: "/statistiche", title: "Statistiche", description: "Il cruscotto di business", icon: BarChart3 },
   { href: "/media", title: "Archivio media", description: "Registrazioni, basi, foto/video e spartiti", icon: FolderOpen },
   { href: "/attrezzatura", title: "Attrezzatura", description: "Inventario strumenti ed equipaggiamento", icon: Wrench },
-  { href: "/siae", title: "SIAE", description: "Deposito e ripartizione diritti d'autore", icon: FileSignature },
+  {
+    href: "/siae",
+    title: "SIAE / SOUNDREEF",
+    description: "Deposito e ripartizione diritti d'autore",
+    icon: FileSignature,
+  },
 ];
 
 export default async function HomePage() {

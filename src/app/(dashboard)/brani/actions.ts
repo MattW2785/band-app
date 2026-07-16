@@ -31,6 +31,7 @@ const SongFieldsSchema = z.object({
   bpm: z.string().trim().optional(),
   duration: z.string().regex(DURATION_RE, { message: "Durata nel formato mm:ss." }),
   notes: z.string().trim().optional(),
+  is_original: z.string().optional(),
 });
 
 function readSongFields(formData: FormData) {
@@ -42,6 +43,7 @@ function readSongFields(formData: FormData) {
     bpm: formData.get("bpm"),
     duration: formData.get("duration"),
     notes: formData.get("notes"),
+    is_original: formData.get("is_original"),
   };
 }
 
@@ -69,6 +71,7 @@ export async function proposeSong(_prevState: ProposeSongState, formData: FormDa
     bpm: parsed.data.bpm ? Number(parsed.data.bpm) : null,
     duration_seconds: durationToSeconds(parsed.data.duration),
     notes: parsed.data.notes || null,
+    is_original: parsed.data.is_original === "true",
     proposed_by: userId,
     updated_by: userId,
   });
@@ -113,6 +116,7 @@ export async function updateSong(_prevState: UpdateSongState, formData: FormData
       bpm: parsed.data.bpm ? Number(parsed.data.bpm) : null,
       duration_seconds: durationToSeconds(parsed.data.duration),
       notes: parsed.data.notes || null,
+      is_original: parsed.data.is_original === "true",
       updated_by: userId,
       updated_at: new Date().toISOString(),
     })
