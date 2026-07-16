@@ -207,7 +207,9 @@ export type ActivityEntityType =
   | "comment"
   | "media_item"
   | "equipment"
-  | "original_work";
+  | "original_work"
+  | "stage_plot_item"
+  | "tech_rider_channel";
 
 export type CommentParentType = "song" | "event" | "task" | "booking_lead";
 
@@ -230,8 +232,6 @@ export type PressKit = {
   bio_short: string | null;
   bio_long: string | null;
   photo_urls: string[];
-  stage_plot_url: string | null;
-  tech_rider_url: string | null;
   audio_links: string[];
   video_links: string[];
   contact_email: string | null;
@@ -246,6 +246,40 @@ export type Comment = {
   user_id: string | null;
   text: string;
   created_at: string;
+};
+
+export type StagePlotItem = {
+  id: string;
+  instrument: string;
+  position: string;
+  notes: string | null;
+  created_by: string | null;
+  updated_by: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type TechRider = {
+  id: string;
+  pa_requirements: string | null;
+  monitor_requirements: string | null;
+  power_requirements: string | null;
+  notes: string | null;
+  updated_by: string | null;
+  updated_at: string;
+};
+
+export type TechRiderChannel = {
+  id: string;
+  channel_number: number | null;
+  source: string;
+  mic_or_di: string | null;
+  stand: string | null;
+  notes: string | null;
+  created_by: string | null;
+  updated_by: string | null;
+  created_at: string;
+  updated_at: string;
 };
 
 export type MediaItem = {
@@ -353,6 +387,19 @@ export type Database = {
         Row: OriginalWork;
         Insert: Partial<OriginalWork>;
         Update: Partial<OriginalWork>;
+        Relationships: [];
+      };
+      stage_plot_items: {
+        Row: StagePlotItem;
+        Insert: Partial<StagePlotItem>;
+        Update: Partial<StagePlotItem>;
+        Relationships: [];
+      };
+      tech_rider: { Row: TechRider; Insert: Partial<TechRider>; Update: Partial<TechRider>; Relationships: [] };
+      tech_rider_channels: {
+        Row: TechRiderChannel;
+        Insert: Partial<TechRiderChannel>;
+        Update: Partial<TechRiderChannel>;
         Relationships: [];
       };
     };

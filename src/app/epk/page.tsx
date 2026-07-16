@@ -3,7 +3,13 @@ import { PrintButton } from "./print-button";
 
 export default async function PublicEpkPage() {
   const supabase = await createClient();
-  const { data: pressKit } = await supabase.from("press_kit").select("*").maybeSingle();
+  const [{ data: pressKit }, { data: stagePlotItems }, { data: techRider }, { data: techRiderChannels }] =
+    await Promise.all([
+      supabase.from("press_kit").select("*").maybeSingle(),
+      supabase.from("stage_plot_items").select("*").order("created_at"),
+      supabase.from("tech_rider").select("*").maybeSingle(),
+      supabase.from("tech_rider_channels").select("*").order("channel_number", { nullsFirst: false }),
+    ]);
 
   if (!pressKit || (!pressKit.band_name && !pressKit.bio_short && !pressKit.bio_long)) {
     return (
@@ -45,35 +51,78 @@ export default async function PublicEpkPage() {
         </section>
       )}
 
-      {(pressKit.stage_plot_url || pressKit.tech_rider_url) && (
+      {stagePlotItems && stagePlotItems.length > 0 && (
         <section className="mt-8">
-          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-zinc-400">Rider</h2>
-          <ul className="space-y-1 text-sm">
-            {pressKit.stage_plot_url && (
-              <li>
-                <a
-                  href={pressKit.stage_plot_url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="break-all text-indigo-600 hover:underline"
-                >
-                  Stage plot
-                </a>
+          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-zinc-400">Stage plot</h2>
+          <ul className="space-y-1 text-sm text-zinc-700">
+            {stagePlotItems.map((item) => (
+              <li key={item.id}>
+                {item.instrument} — {item.position}
+                {item.notes && <span className="text-zinc-500"> ({item.notes})</span>}
               </li>
-            )}
-            {pressKit.tech_rider_url && (
-              <li>
-                <a
-                  href={pressKit.tech_rider_url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="break-all text-indigo-600 hover:underline"
-                >
-                  Rider tecnico
-                </a>
-              </li>
-            )}
+            ))}
           </ul>
+        </section>
+      )}
+
+      {(techRider?.pa_requirements ||
+        techRider?.monitor_requirements ||
+        techRider?.power_requirements ||
+        techRider?.notes ||
+        (techRiderChannels && techRiderChannels.length > 0)) && (
+        <section className="mt-8">
+          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-zinc-400">Rider tecnico</h2>
+          <dl className="space-y-2 text-sm text-zinc-700">
+            {techRider?.pa_requirements && (
+              <div>
+                <dt className="font-medium text-zinc-900">Impianto audio</dt>
+                <dd className="whitespace-pre-line">{techRider.pa_requirements}</dd>
+              </div>
+            )}
+            {techRider?.monitor_requirements && (
+              <div>
+                <dt className="font-medium text-zinc-900">Monitor</dt>
+                <dd className="whitespace-pre-line">{techRider.monitor_requirements}</dd>
+              </div>
+            )}
+            {techRider?.power_requirements && (
+              <div>
+                <dt className="font-medium text-zinc-900">Alimentazione</dt>
+                <dd className="whitespace-pre-line">{techRider.power_requirements}</dd>
+              </div>
+            )}
+            {techRider?.notes && (
+              <div>
+                <dt className="font-medium text-zinc-900">Note</dt>
+                <dd className="whitespace-pre-line">{techRider.notes}</dd>
+              </div>
+            )}
+          </dl>
+
+          {techRiderChannels && techRiderChannels.length > 0 && (
+            <table className="mt-4 w-full text-left text-sm">
+              <thead>
+                <tr className="text-zinc-500">
+                  <th className="py-1 pr-2 font-normal">Ch.</th>
+                  <th className="py-1 pr-2 font-normal">Sorgente</th>
+                  <th className="py-1 pr-2 font-normal">Mic/DI</th>
+                  <th className="py-1 pr-2 font-normal">Asta</th>
+                  <th className="py-1 font-normal">Note</th>
+                </tr>
+              </thead>
+              <tbody>
+                {techRiderChannels.map((c) => (
+                  <tr key={c.id} className="border-t border-zinc-100">
+                    <td className="py-1 pr-2 text-zinc-700">{c.channel_number ?? "—"}</td>
+                    <td className="py-1 pr-2 text-zinc-700">{c.source}</td>
+                    <td className="py-1 pr-2 text-zinc-600">{c.mic_or_di ?? "—"}</td>
+                    <td className="py-1 pr-2 text-zinc-600">{c.stand ?? "—"}</td>
+                    <td className="py-1 text-zinc-600">{c.notes ?? "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </section>
       )}
 

@@ -48,6 +48,8 @@ const RESTORABLE_ENTITY_TYPES: ActivityEntityType[] = [
   "media_item",
   "equipment",
   "original_work",
+  "stage_plot_item",
+  "tech_rider_channel",
 ];
 
 export function isRestorable(entry: Pick<ActivityLog, "action" | "entity_type" | "snapshot" | "restored_at">) {
@@ -138,6 +140,16 @@ export async function restoreActivity(
       if (error) return { error: "Ripristino fallito: il brano potrebbe avere già un deposito SIAE." };
       break;
     }
+    case "stage_plot_item": {
+      const { error } = await supabase.from("stage_plot_items").insert(snapshot.row);
+      if (error) return { error: "Ripristino fallito." };
+      break;
+    }
+    case "tech_rider_channel": {
+      const { error } = await supabase.from("tech_rider_channels").insert(snapshot.row);
+      if (error) return { error: "Ripristino fallito." };
+      break;
+    }
     default:
       return { error: "Questo tipo di elemento non può essere ripristinato." };
   }
@@ -225,6 +237,14 @@ export function describeActivity(entry: Pick<ActivityLog, "action" | "entity_typ
       if (action === "created") return `ha aggiunto i dati SIAE per ${label}`;
       if (action === "updated") return `ha aggiornato i dati SIAE per ${label}`;
       if (action === "deleted") return `ha eliminato i dati SIAE per ${label}`;
+      break;
+    case "stage_plot_item":
+      if (action === "created") return `ha aggiunto ${label} allo stage plot`;
+      if (action === "deleted") return `ha rimosso ${label} dallo stage plot`;
+      break;
+    case "tech_rider_channel":
+      if (action === "created") return `ha aggiunto il canale ${label} al rider tecnico`;
+      if (action === "deleted") return `ha rimosso il canale ${label} dal rider tecnico`;
       break;
   }
 

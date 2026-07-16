@@ -289,8 +289,6 @@ create table press_kit (
   bio_short text,
   bio_long text,
   photo_urls text[] not null default '{}',
-  stage_plot_url text,
-  tech_rider_url text,
   audio_links text[] not null default '{}',
   video_links text[] not null default '{}',
   contact_email text,
@@ -315,6 +313,51 @@ create table comments (
 create index comments_parent_idx on comments (parent_type, parent_id);
 
 -- ============================================================
+-- stage_plot_items — elenco strumenti/postazioni sul palco
+-- ============================================================
+create table stage_plot_items (
+  id uuid primary key default gen_random_uuid(),
+  instrument text not null,
+  position text not null,
+  notes text,
+  created_by uuid references profiles (id) on delete set null,
+  updated_by uuid references profiles (id) on delete set null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- ============================================================
+-- tech_rider — riga singola (stesso pattern di press_kit), campi generali
+-- ============================================================
+create table tech_rider (
+  id uuid primary key default '00000000-0000-0000-0000-000000000002',
+  pa_requirements text,
+  monitor_requirements text,
+  power_requirements text,
+  notes text,
+  updated_by uuid references profiles (id) on delete set null,
+  updated_at timestamptz not null default now()
+);
+
+insert into tech_rider (id) values ('00000000-0000-0000-0000-000000000002');
+
+-- ============================================================
+-- tech_rider_channels — channel list (un microfono/DI per canale)
+-- ============================================================
+create table tech_rider_channels (
+  id uuid primary key default gen_random_uuid(),
+  channel_number integer,
+  source text not null,
+  mic_or_di text,
+  stand text,
+  notes text,
+  created_by uuid references profiles (id) on delete set null,
+  updated_by uuid references profiles (id) on delete set null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- ============================================================
 -- Row Level Security — gruppo chiuso, tutti gli autenticati leggono/scrivono
 -- ============================================================
 alter table profiles enable row level security;
@@ -332,6 +375,9 @@ alter table event_checklist_templates enable row level security;
 alter table notification_preferences enable row level security;
 alter table press_kit enable row level security;
 alter table comments enable row level security;
+alter table stage_plot_items enable row level security;
+alter table tech_rider enable row level security;
+alter table tech_rider_channels enable row level security;
 
 create policy "profiles: lettura autenticati" on profiles
   for select to authenticated using (true);
@@ -398,6 +444,25 @@ create policy "press_kit: modifica autenticati" on press_kit
 
 create policy "comments: full access autenticati" on comments
   for all to authenticated using (true) with check (true);
+
+create policy "stage_plot_items: lettura pubblica" on stage_plot_items
+  for select to anon, authenticated using (true);
+create policy "stage_plot_items: inserimento autenticati" on stage_plot_items
+  for insert to authenticated with check (true);
+create policy "stage_plot_items: eliminazione autenticati" on stage_plot_items
+  for delete to authenticated using (true);
+
+create policy "tech_rider: lettura pubblica" on tech_rider
+  for select to anon, authenticated using (true);
+create policy "tech_rider: modifica autenticati" on tech_rider
+  for update to authenticated using (true) with check (true);
+
+create policy "tech_rider_channels: lettura pubblica" on tech_rider_channels
+  for select to anon, authenticated using (true);
+create policy "tech_rider_channels: inserimento autenticati" on tech_rider_channels
+  for insert to authenticated with check (true);
+create policy "tech_rider_channels: eliminazione autenticati" on tech_rider_channels
+  for delete to authenticated using (true);
 
 -- ============================================================
 -- Storage: bucket privato per l'archivio media (Fase 4)

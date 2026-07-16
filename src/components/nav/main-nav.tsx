@@ -19,6 +19,8 @@ import {
   FolderOpen,
   Wrench,
   FileSignature,
+  Map,
+  ClipboardList,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -61,6 +63,8 @@ const groups: NavGroup[] = [
     title: "Risorse",
     items: [
       { href: "/press-kit", label: "Press kit", icon: FileText },
+      { href: "/stage-plot", label: "Stage Plot", icon: Map },
+      { href: "/rider-tecnico", label: "Rider tecnico", icon: ClipboardList },
       { href: "/media", label: "Archivio media", icon: FolderOpen },
       { href: "/attrezzatura", label: "Attrezzatura", icon: Wrench },
     ],

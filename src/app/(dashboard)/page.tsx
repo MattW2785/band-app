@@ -15,6 +15,8 @@ import {
   FolderOpen,
   Wrench,
   FileSignature,
+  Map,
+  ClipboardList,
 } from "lucide-react";
 import { requireSessionProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -32,6 +34,8 @@ const modules = [
   { href: "/locali", title: "Locali", description: "Anagrafica locali e promoter", icon: MapPin },
   { href: "/economia", title: "Economia", description: "Entrate, uscite e margine", icon: Wallet },
   { href: "/press-kit", title: "Press kit", description: "EPK per locali e promoter", icon: FileText },
+  { href: "/stage-plot", title: "Stage Plot", description: "Disposizione sul palco", icon: Map },
+  { href: "/rider-tecnico", title: "Rider tecnico", description: "Requisiti tecnici per il concerto", icon: ClipboardList },
   { href: "/statistiche", title: "Statistiche", description: "Il cruscotto di business", icon: BarChart3 },
   { href: "/media", title: "Archivio media", description: "Registrazioni, basi, foto/video e spartiti", icon: FolderOpen },
   { href: "/attrezzatura", title: "Attrezzatura", description: "Inventario strumenti ed equipaggiamento", icon: Wrench },

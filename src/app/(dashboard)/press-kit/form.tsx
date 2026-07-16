@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import Link from "next/link";
 import { updatePressKit } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Textarea } from "@/components/ui/input";
@@ -27,23 +28,17 @@ export function PressKitForm({ initial }: { initial: PressKit | null }) {
         <Label htmlFor="contact_email">Email di contatto</Label>
         <Input id="contact_email" name="contact_email" type="email" defaultValue={initial?.contact_email ?? ""} />
       </div>
-      <div>
-        <Label htmlFor="stage_plot_url">Link stage plot</Label>
-        <Input
-          id="stage_plot_url"
-          name="stage_plot_url"
-          placeholder="https://…"
-          defaultValue={initial?.stage_plot_url ?? ""}
-        />
-      </div>
-      <div className="sm:col-span-2">
-        <Label htmlFor="tech_rider_url">Link rider tecnico</Label>
-        <Input
-          id="tech_rider_url"
-          name="tech_rider_url"
-          placeholder="https://…"
-          defaultValue={initial?.tech_rider_url ?? ""}
-        />
+      <div className="flex flex-wrap gap-2 sm:col-span-2">
+        <Link href="/stage-plot">
+          <Button type="button" variant="secondary">
+            Gestisci lo stage plot →
+          </Button>
+        </Link>
+        <Link href="/rider-tecnico">
+          <Button type="button" variant="secondary">
+            Gestisci il rider tecnico →
+          </Button>
+        </Link>
       </div>
       <div className="sm:col-span-2">
         <Label htmlFor="photo_urls">Link foto (uno per riga)</Label>
