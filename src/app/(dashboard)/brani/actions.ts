@@ -57,8 +57,9 @@ export async function proposeSong(_prevState: ProposeSongState, formData: FormDa
     return { error: parsed.error.issues[0]?.message ?? "Dati non validi." };
   }
 
+  const isOriginal = parsed.data.is_original === "true";
   const links = linesToArray(parsed.data.reference_links);
-  if (links.length === 0) {
+  if (!isOriginal && links.length === 0) {
     return { error: "Inserisci almeno un link di riferimento." };
   }
 
@@ -71,7 +72,7 @@ export async function proposeSong(_prevState: ProposeSongState, formData: FormDa
     bpm: parsed.data.bpm ? Number(parsed.data.bpm) : null,
     duration_seconds: durationToSeconds(parsed.data.duration),
     notes: parsed.data.notes || null,
-    is_original: parsed.data.is_original === "true",
+    is_original: isOriginal,
     proposed_by: userId,
     updated_by: userId,
   });
@@ -100,8 +101,9 @@ export async function updateSong(_prevState: UpdateSongState, formData: FormData
     return { error: parsed.error.issues[0]?.message ?? "Dati non validi." };
   }
 
+  const isOriginal = parsed.data.is_original === "true";
   const links = linesToArray(parsed.data.reference_links);
-  if (links.length === 0) {
+  if (!isOriginal && links.length === 0) {
     return { error: "Inserisci almeno un link di riferimento." };
   }
 
@@ -116,7 +118,7 @@ export async function updateSong(_prevState: UpdateSongState, formData: FormData
       bpm: parsed.data.bpm ? Number(parsed.data.bpm) : null,
       duration_seconds: durationToSeconds(parsed.data.duration),
       notes: parsed.data.notes || null,
-      is_original: parsed.data.is_original === "true",
+      is_original: isOriginal,
       updated_by: userId,
       updated_at: new Date().toISOString(),
     })

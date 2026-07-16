@@ -121,9 +121,11 @@ export default async function BraniPage() {
                 at={song.updated_at}
                 className="text-xs text-zinc-400"
               />
-              <DeleteSongButton songId={song.id} />
+              <div className="flex items-center gap-3">
+                <EditSongForm song={song} />
+                <DeleteSongButton songId={song.id} />
+              </div>
             </div>
-            <EditSongForm song={song} />
             <CollapsibleComments
               comments={commentsBySong.get(song.id) ?? []}
               parentType="song"

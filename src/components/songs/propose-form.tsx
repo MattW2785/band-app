@@ -1,12 +1,13 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { proposeSong } from "@/app/(dashboard)/brani/actions";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Textarea } from "@/components/ui/input";
 
 export function ProposeSongForm() {
   const [state, formAction, pending] = useActionState(proposeSong, undefined);
+  const [isOriginal, setIsOriginal] = useState(false);
 
   return (
     <form action={formAction} className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -23,13 +24,27 @@ export function ProposeSongForm() {
         <Input id="duration" name="duration" placeholder="3:45" required />
       </div>
       <div className="sm:col-span-2">
-        <Label htmlFor="reference_links">Link di riferimento (uno per riga)</Label>
+        <label className="flex items-center gap-2 text-sm text-zinc-700">
+          <input
+            type="checkbox"
+            name="is_original"
+            value="true"
+            checked={isOriginal}
+            onChange={(e) => setIsOriginal(e.target.checked)}
+          />
+          Brano proprio (composizione originale) — comparirà in SIAE / SOUNDREEF
+        </label>
+      </div>
+      <div className="sm:col-span-2">
+        <Label htmlFor="reference_links">
+          Link di riferimento (uno per riga){!isOriginal && " — obbligatorio"}
+        </Label>
         <Textarea
           id="reference_links"
           name="reference_links"
           rows={2}
           placeholder={"https://…\nhttps://…"}
-          required
+          required={!isOriginal}
         />
       </div>
       <div>
@@ -43,12 +58,6 @@ export function ProposeSongForm() {
       <div className="sm:col-span-2">
         <Label htmlFor="notes">Note</Label>
         <Textarea id="notes" name="notes" rows={2} />
-      </div>
-      <div className="sm:col-span-2">
-        <label className="flex items-center gap-2 text-sm text-zinc-700">
-          <input type="checkbox" name="is_original" value="true" />
-          Brano proprio (composizione originale) — comparirà in SIAE / SOUNDREEF
-        </label>
       </div>
       {state?.error && <p className="text-sm text-red-600 sm:col-span-2">{state.error}</p>}
       <div className="sm:col-span-2">

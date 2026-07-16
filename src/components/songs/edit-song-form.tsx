@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { updateSong } from "@/app/(dashboard)/brani/actions";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Textarea } from "@/components/ui/input";
@@ -19,9 +19,10 @@ type EditableSong = Pick<
 
 export function EditSongForm({ song }: { song: EditableSong }) {
   const [state, formAction, pending] = useActionState(updateSong, undefined);
+  const [isOriginal, setIsOriginal] = useState(song.is_original);
 
   return (
-    <details className="mt-2 text-sm">
+    <details className="text-sm">
       <summary className="cursor-pointer list-none text-xs text-zinc-400 hover:text-zinc-600">Modifica</summary>
       <form action={formAction} className="mt-2 grid grid-cols-1 gap-3 border-t border-zinc-100 pt-3 sm:grid-cols-2">
         <input type="hidden" name="song_id" value={song.id} />
@@ -43,13 +44,27 @@ export function EditSongForm({ song }: { song: EditableSong }) {
           />
         </div>
         <div className="sm:col-span-2">
-          <Label htmlFor={`reference_links_${song.id}`}>Link di riferimento (uno per riga)</Label>
+          <label className="flex items-center gap-2 text-sm text-zinc-700">
+            <input
+              type="checkbox"
+              name="is_original"
+              value="true"
+              checked={isOriginal}
+              onChange={(e) => setIsOriginal(e.target.checked)}
+            />
+            Brano proprio (composizione originale) — comparirà in SIAE / SOUNDREEF
+          </label>
+        </div>
+        <div className="sm:col-span-2">
+          <Label htmlFor={`reference_links_${song.id}`}>
+            Link di riferimento (uno per riga){!isOriginal && " — obbligatorio"}
+          </Label>
           <Textarea
             id={`reference_links_${song.id}`}
             name="reference_links"
             rows={2}
             defaultValue={song.reference_links.join("\n")}
-            required
+            required={!isOriginal}
           />
         </div>
         <div>
@@ -63,12 +78,6 @@ export function EditSongForm({ song }: { song: EditableSong }) {
         <div className="sm:col-span-2">
           <Label htmlFor={`notes_${song.id}`}>Note</Label>
           <Textarea id={`notes_${song.id}`} name="notes" rows={2} defaultValue={song.notes ?? ""} />
-        </div>
-        <div className="sm:col-span-2">
-          <label className="flex items-center gap-2 text-sm text-zinc-700">
-            <input type="checkbox" name="is_original" value="true" defaultChecked={song.is_original} />
-            Brano proprio (composizione originale) — comparirà in SIAE / SOUNDREEF
-          </label>
         </div>
         {state?.error && <p className="text-sm text-red-600 sm:col-span-2">{state.error}</p>}
         <div className="sm:col-span-2">
