@@ -79,16 +79,16 @@ const adminGroup: NavGroup = {
   ],
 };
 
-export function MainNav({ isAdmin }: { isAdmin: boolean }) {
+export function MainNav({ isAdmin, onNavigate }: { isAdmin: boolean; onNavigate?: () => void }) {
   const pathname = usePathname();
   const allGroups = isAdmin ? [...groups, adminGroup] : groups;
 
   return (
-    <nav className="flex gap-1 overflow-x-auto whitespace-nowrap px-3 py-2 md:flex-col md:gap-0.5 md:overflow-visible md:whitespace-normal md:px-3 md:py-3">
+    <nav className="flex flex-col gap-0.5 px-3 py-3">
       {allGroups.map((group) => (
         <div key={group.title ?? "root"} className="contents">
           {group.title && (
-            <p className="mt-4 mb-1 hidden px-3 text-[11px] font-semibold uppercase tracking-wider text-zinc-400 first:mt-0 md:block">
+            <p className="mt-4 mb-1 px-3 text-[11px] font-semibold uppercase tracking-wider text-zinc-400 first:mt-0">
               {group.title}
             </p>
           )}
@@ -99,6 +99,7 @@ export function MainNav({ isAdmin }: { isAdmin: boolean }) {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={onNavigate}
                 className={cn(
                   "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                   active ? "bg-zinc-900 text-white" : "text-zinc-600 hover:bg-zinc-100"
