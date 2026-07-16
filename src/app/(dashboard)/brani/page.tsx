@@ -8,6 +8,7 @@ import { ProposeSongForm } from "@/components/songs/propose-form";
 import { VoteButtons } from "@/components/songs/vote-buttons";
 import { StatusSelect } from "@/components/songs/status-select";
 import { DeleteSongButton } from "@/components/songs/delete-song-button";
+import { EditSongForm } from "@/components/songs/edit-song-form";
 import { LastEdited } from "@/components/ui/last-edited";
 import { CollapsibleComments } from "@/components/comments/comments-section";
 import { getHiddenUserIds } from "@/lib/visibility";
@@ -84,12 +85,17 @@ export default async function BraniPage() {
                   {formatDuration(song.duration_seconds)}
                   {song.key && ` · tonalità ${song.key}`}
                   {song.bpm && ` · ${song.bpm} bpm`}
-                  {song.reference_link && (
+                  {song.reference_links.length > 0 && (
                     <>
                       {" · "}
-                      <a href={song.reference_link} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline">
-                        riferimento
-                      </a>
+                      {song.reference_links.map((link, i) => (
+                        <span key={link}>
+                          {i > 0 && " · "}
+                          <a href={link} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline">
+                            riferimento {song.reference_links.length > 1 ? i + 1 : ""}
+                          </a>
+                        </span>
+                      ))}
                     </>
                   )}
                 </p>
@@ -113,6 +119,7 @@ export default async function BraniPage() {
               />
               <DeleteSongButton songId={song.id} />
             </div>
+            <EditSongForm song={song} />
             <CollapsibleComments
               comments={commentsBySong.get(song.id) ?? []}
               parentType="song"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { format, parseISO } from "date-fns";
 import { generateSetlist } from "@/app/(dashboard)/scalette/actions";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Select } from "@/components/ui/input";
@@ -24,7 +25,7 @@ export function GenerateSetlistForm({ events }: { events: { id: string; title: s
           <option value="">Nessuno</option>
           {events.map((e) => (
             <option key={e.id} value={e.id}>
-              {e.title} — {e.date}
+              {e.title} — {format(parseISO(e.date), "dd.MM.yyyy")}
             </option>
           ))}
         </Select>

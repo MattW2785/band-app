@@ -126,7 +126,7 @@ create table songs (
   artist text,
   proposed_by uuid references profiles (id) on delete set null,
   updated_by uuid references profiles (id) on delete set null,
-  reference_link text,
+  reference_links text[] not null default '{}',
   key text,
   bpm integer,
   duration_seconds integer not null,

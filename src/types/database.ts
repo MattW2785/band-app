@@ -76,7 +76,7 @@ export type Song = {
   artist: string | null;
   proposed_by: string | null;
   updated_by: string | null;
-  reference_link: string | null;
+  reference_links: string[];
   key: string | null;
   bpm: number | null;
   duration_seconds: number;

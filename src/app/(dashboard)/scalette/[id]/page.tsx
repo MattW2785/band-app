@@ -62,7 +62,12 @@ export default async function SetlistDetailPage({ params }: { params: Promise<{ 
       <LastEdited name={editorName} at={setlist.updated_at} className="mb-6 mt-1 text-xs text-zinc-400" />
 
       <Card className="mb-4">
-        <SetlistEditor setlistId={id} initialItems={initialItems} targetMinutes={setlist.target_duration_minutes} />
+        <SetlistEditor
+          key={initialItems.map((i) => i.songId).join(",")}
+          setlistId={id}
+          initialItems={initialItems}
+          targetMinutes={setlist.target_duration_minutes}
+        />
       </Card>
 
       <Card className="mb-4">

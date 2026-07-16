@@ -22,9 +22,15 @@ export function ProposeSongForm() {
         <Label htmlFor="duration">Durata (mm:ss)</Label>
         <Input id="duration" name="duration" placeholder="3:45" required />
       </div>
-      <div>
-        <Label htmlFor="reference_link">Link riferimento</Label>
-        <Input id="reference_link" name="reference_link" placeholder="https://…" />
+      <div className="sm:col-span-2">
+        <Label htmlFor="reference_links">Link di riferimento (uno per riga)</Label>
+        <Textarea
+          id="reference_links"
+          name="reference_links"
+          rows={2}
+          placeholder={"https://…\nhttps://…"}
+          required
+        />
       </div>
       <div>
         <Label htmlFor="key">Tonalità</Label>
