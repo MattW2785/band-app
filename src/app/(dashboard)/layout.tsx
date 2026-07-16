@@ -9,8 +9,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const { profile } = await requireSessionProfile();
 
   return (
-    <div className="flex min-h-full flex-1 flex-col md:flex-row">
-      <header className="flex flex-col bg-white md:w-60 md:border-r md:border-zinc-200/70">
+    <div className="flex min-h-full flex-1 flex-col md:h-screen md:min-h-0 md:flex-none md:flex-row md:overflow-hidden">
+      <header className="flex flex-col bg-white md:w-60 md:shrink-0 md:overflow-y-auto md:border-r md:border-zinc-200/70">
         <div className="flex items-center gap-2 px-4 pt-5 pb-2">
           <Image src="/logo.png" alt="BandSpace" width={28} height={28} className="h-7 w-7 rounded-lg object-contain" />
           <span className="text-lg font-semibold tracking-tight text-zinc-900">BandSpace</span>
@@ -28,7 +28,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           </form>
         </div>
       </header>
-      <main className="flex-1 bg-zinc-50/60 p-4 sm:p-6 md:p-10">
+      <main className="flex-1 bg-zinc-50/60 p-4 sm:p-6 md:min-h-0 md:overflow-y-auto md:p-10">
         <div className="mx-auto w-full max-w-5xl">{children}</div>
       </main>
     </div>

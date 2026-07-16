@@ -49,7 +49,7 @@ export default async function MediaPage({ searchParams }: { searchParams: Promis
     .filter((item) => !item.uploaded_by || !hiddenIds.has(item.uploaded_by))
     .filter((item) => !typeFilter || item.type === typeFilter);
   const withUrls = await Promise.all(
-    filtered.map(async (item) => ({ ...item, url: await getMediaSignedUrl(supabase, item.file_path) }))
+    filtered.map(async (item) => ({ ...item, url: await getMediaSignedUrl(supabase, item.file_path, item.file_name) }))
   );
 
   return (
@@ -101,25 +101,9 @@ export default async function MediaPage({ searchParams }: { searchParams: Promis
 
             {item.url && (
               <div className="mt-3 border-t border-zinc-100 pt-3">
-                {item.type === "immagine" && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={item.url} alt={item.title} className="max-h-64 rounded-lg object-contain" />
-                )}
-                {item.type === "audio" && (
-                  <audio controls className="w-full">
-                    <source src={item.url} />
-                  </audio>
-                )}
-                {item.type === "video" && (
-                  <video controls className="max-h-64 w-full rounded-lg">
-                    <source src={item.url} />
-                  </video>
-                )}
-                {item.type === "documento" && (
-                  <a href={item.url} target="_blank" rel="noreferrer" className="text-sm text-indigo-600 hover:underline">
-                    Scarica il documento →
-                  </a>
-                )}
+                <a href={item.url} download={item.file_name} className="text-sm font-medium text-indigo-600 hover:underline">
+                  Scarica →
+                </a>
               </div>
             )}
           </Card>

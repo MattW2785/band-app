@@ -25,7 +25,14 @@ export async function uploadMediaFile(
   return { path };
 }
 
-export async function getMediaSignedUrl(supabase: SupabaseServerClient, path: string, expiresIn = 3600) {
-  const { data } = await supabase.storage.from(MEDIA_BUCKET).createSignedUrl(path, expiresIn);
+export async function getMediaSignedUrl(
+  supabase: SupabaseServerClient,
+  path: string,
+  downloadFileName: string,
+  expiresIn = 3600
+) {
+  const { data } = await supabase.storage
+    .from(MEDIA_BUCKET)
+    .createSignedUrl(path, expiresIn, { download: downloadFileName });
   return data?.signedUrl ?? null;
 }
