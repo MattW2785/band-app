@@ -102,7 +102,7 @@ export function MainNav({ isAdmin, onNavigate }: { isAdmin: boolean; onNavigate?
                 onClick={onNavigate}
                 className={cn(
                   "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                  active ? "bg-zinc-900 text-white" : "text-zinc-600 hover:bg-zinc-100"
+                  active ? "bg-indigo-600 text-white" : "text-zinc-600 hover:bg-zinc-100"
                 )}
               >
                 <Icon className="h-4 w-4 shrink-0" strokeWidth={2} />
