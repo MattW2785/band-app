@@ -52,15 +52,15 @@ export default async function BookingLeadDetailPage({ params }: { params: Promis
 
   return (
     <div className="max-w-2xl">
-      <Link href="/booking" className="text-sm font-medium text-indigo-600 hover:text-indigo-700">
+      <Link href="/booking" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300">
         ← Torna al booking
       </Link>
-      <h1 className="mb-1 mt-2 text-2xl font-semibold tracking-tight text-zinc-900">{venueName}</h1>
-      <LastEdited name={editorName} at={lead.updated_at} className="mb-6 text-xs text-zinc-400" />
+      <h1 className="mb-1 mt-2 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">{venueName}</h1>
+      <LastEdited name={editorName} at={lead.updated_at} className="mb-6 text-xs text-zinc-400 dark:text-zinc-500" />
 
       <Card className="mb-4">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-medium text-zinc-900">Stato trattativa</h2>
+          <h2 className="font-medium text-zinc-900 dark:text-zinc-100">Stato trattativa</h2>
           <BookingStatusSelect bookingId={lead.id} status={lead.status} />
         </div>
         {lead.event_id && (
@@ -71,7 +71,7 @@ export default async function BookingLeadDetailPage({ params }: { params: Promis
       </Card>
 
       <Card className="mb-4">
-        <h2 className="mb-3 font-medium text-zinc-900">Dettagli</h2>
+        <h2 className="mb-3 font-medium text-zinc-900 dark:text-zinc-100">Dettagli</h2>
         <BookingLeadForm
           action={updateBookingDetails}
           initial={lead}

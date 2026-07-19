@@ -43,20 +43,20 @@ export default async function AttrezzaturaPage() {
       <PageHeader title="Attrezzatura" description="Inventario degli strumenti e dell'equipaggiamento della band" />
 
       <Card className="mb-6">
-        <h2 className="mb-3 font-medium text-zinc-900">Nuova attrezzatura</h2>
+        <h2 className="mb-3 font-medium text-zinc-900 dark:text-zinc-100">Nuova attrezzatura</h2>
         <AddEquipmentForm members={members} />
       </Card>
 
       <div className="space-y-6">
         {Array.from(byCategory.entries()).map(([category, items]) => (
           <div key={category}>
-            <h2 className="mb-2 text-sm font-semibold text-zinc-700">{CATEGORY_LABEL[category]}</h2>
-            <Card className="divide-y divide-zinc-100 p-0">
+            <h2 className="mb-2 text-sm font-semibold text-zinc-700 dark:text-zinc-300">{CATEGORY_LABEL[category]}</h2>
+            <Card className="divide-y divide-zinc-100 dark:divide-zinc-800 p-0">
               {items?.map((item) => (
                 <div key={item.id} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
                   <div className="min-w-0">
-                    <p className="font-medium text-zinc-900">{item.name}</p>
-                    <p className="text-xs text-zinc-500">
+                    <p className="font-medium text-zinc-900 dark:text-zinc-100">{item.name}</p>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400">
                       <Badge variant={item.owner_type === "band" ? "indigo" : "neutral"} className="align-middle">
                         {item.owner_type === "band" ? "Band" : (nameById.get(item.owner_id ?? "") ?? "Membro")}
                       </Badge>
@@ -65,7 +65,7 @@ export default async function AttrezzaturaPage() {
                   </div>
                   <div className="flex shrink-0 items-center gap-3">
                     <div className="text-right">
-                      <p className="text-[10px] uppercase tracking-wide text-zinc-400">Ultima manutenzione</p>
+                      <p className="text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-500">Ultima manutenzione</p>
                       <UpdateMaintenanceForm equipmentId={item.id} value={item.last_maintenance_date} />
                     </div>
                     <DeleteEquipmentButton equipmentId={item.id} />
@@ -77,7 +77,7 @@ export default async function AttrezzaturaPage() {
         ))}
 
         {equipment.length === 0 && (
-          <p className="text-sm text-zinc-500">Nessuna attrezzatura censita ancora.</p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">Nessuna attrezzatura censita ancora.</p>
         )}
       </div>
     </div>

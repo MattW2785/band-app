@@ -18,7 +18,7 @@ export function CompleteProfileForm() {
         <Label htmlFor="password">Password</Label>
         <Input id="password" name="password" type="password" minLength={8} required />
       </div>
-      {state?.error && <p className="text-sm text-red-600">{state.error}</p>}
+      {state?.error && <p className="text-sm text-red-600 dark:text-red-400">{state.error}</p>}
       <Button type="submit" disabled={pending} className="w-full">
         {pending ? "Salvataggio…" : "Continua"}
       </Button>

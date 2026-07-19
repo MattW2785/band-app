@@ -13,10 +13,10 @@ export default async function NuovoEventoPage({ searchParams }: { searchParams: 
 
   return (
     <div className="max-w-2xl">
-      <Link href="/eventi" className="text-sm font-medium text-indigo-600 hover:text-indigo-700">
+      <Link href="/eventi" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300">
         ← Torna agli eventi
       </Link>
-      <h1 className="mb-6 mt-2 text-2xl font-semibold tracking-tight text-zinc-900">Nuovo evento</h1>
+      <h1 className="mb-6 mt-2 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">Nuovo evento</h1>
       <Card>
         <EventForm
           action={createEvent}

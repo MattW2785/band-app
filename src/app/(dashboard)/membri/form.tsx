@@ -17,8 +17,8 @@ export function InviteMemberForm() {
       <Button type="submit" disabled={pending}>
         {pending ? "Invio…" : "Invita"}
       </Button>
-      {state?.error && <p className="text-sm text-red-600 sm:ml-3">{state.error}</p>}
-      {state?.success && <p className="text-sm text-emerald-600 sm:ml-3">{state.success}</p>}
+      {state?.error && <p className="text-sm text-red-600 dark:text-red-400 sm:ml-3">{state.error}</p>}
+      {state?.success && <p className="text-sm text-emerald-600 dark:text-emerald-400 sm:ml-3">{state.success}</p>}
     </form>
   );
 }

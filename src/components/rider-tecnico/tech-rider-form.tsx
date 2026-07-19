@@ -42,8 +42,8 @@ export function TechRiderForm({ initial }: { initial: TechRider | null }) {
         <Label htmlFor="notes">Note aggiuntive</Label>
         <Textarea id="notes" name="notes" rows={2} defaultValue={initial?.notes ?? ""} />
       </div>
-      {state?.error && <p className="text-sm text-red-600">{state.error}</p>}
-      {state?.success && <p className="text-sm text-emerald-600">{state.success}</p>}
+      {state?.error && <p className="text-sm text-red-600 dark:text-red-400">{state.error}</p>}
+      {state?.success && <p className="text-sm text-emerald-600 dark:text-emerald-400">{state.success}</p>}
       <div>
         <Button type="submit" disabled={pending}>
           {pending ? "Salvataggio…" : "Salva"}

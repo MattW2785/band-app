@@ -32,8 +32,8 @@ export default async function RegistroPage({
 
       <Card className="mb-4">
         <form className="flex items-center gap-2 text-sm">
-          <label className="text-zinc-600">Filtra per membro:</label>
-          <select name="member" defaultValue={member ?? ""} className="rounded-lg border border-zinc-200 px-2 py-1">
+          <label className="text-zinc-600 dark:text-zinc-400">Filtra per membro:</label>
+          <select name="member" defaultValue={member ?? ""} className="rounded-lg border border-zinc-200 dark:border-zinc-800 px-2 py-1">
             <option value="">Tutti</option>
             {members?.map((m) => (
               <option key={m.id} value={m.id}>
@@ -41,14 +41,14 @@ export default async function RegistroPage({
               </option>
             ))}
           </select>
-          <button type="submit" className="rounded-lg border border-zinc-200 px-3 py-1 hover:bg-zinc-50">
+          <button type="submit" className="rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 py-1 hover:bg-zinc-50 dark:hover:bg-zinc-800">
             Filtra
           </button>
         </form>
       </Card>
 
       <Card>
-        <ul className="divide-y divide-zinc-100">
+        <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
           {filtered.map((entry) => {
             const name = entry.user_id ? nameById.get(entry.user_id) : null;
             return (
@@ -56,10 +56,10 @@ export default async function RegistroPage({
                 <div className="flex items-start gap-3">
                   <Avatar name={name ?? "?"} className="mt-0.5 h-7 w-7 shrink-0" />
                   <div>
-                    <p className="text-zinc-800">
+                    <p className="text-zinc-800 dark:text-zinc-200">
                       <span className="font-medium">{name ?? "Qualcuno"}</span> {describeActivity(entry)}
                     </p>
-                    <p className="text-xs text-zinc-400">
+                    <p className="text-xs text-zinc-400 dark:text-zinc-500">
                       {format(parseISO(entry.created_at), "d MMM yyyy 'alle' HH:mm", { locale: it })}
                       {entry.restored_at && (
                         <Badge variant="success" className="ml-2 align-middle">
@@ -74,7 +74,7 @@ export default async function RegistroPage({
             );
           })}
 
-          {filtered.length === 0 && <p className="py-2 text-sm text-zinc-500">Nessuna attività registrata ancora.</p>}
+          {filtered.length === 0 && <p className="py-2 text-sm text-zinc-500 dark:text-zinc-400">Nessuna attività registrata ancora.</p>}
         </ul>
       </Card>
     </div>

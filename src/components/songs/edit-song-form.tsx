@@ -32,8 +32,8 @@ export function EditSongForm({ song }: { song: EditableSong }) {
 
   return (
     <details ref={detailsRef} className="text-sm">
-      <summary className="cursor-pointer list-none text-xs text-zinc-400 hover:text-zinc-600">Modifica</summary>
-      <form action={formAction} className="mt-2 grid grid-cols-1 gap-3 border-t border-zinc-100 pt-3 sm:grid-cols-2">
+      <summary className="cursor-pointer list-none text-xs text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300">Modifica</summary>
+      <form action={formAction} className="mt-2 grid grid-cols-1 gap-3 border-t border-zinc-100 dark:border-zinc-800 pt-3 sm:grid-cols-2">
         <input type="hidden" name="song_id" value={song.id} />
         <div>
           <Label htmlFor={`title_${song.id}`}>Titolo</Label>
@@ -53,7 +53,7 @@ export function EditSongForm({ song }: { song: EditableSong }) {
           />
         </div>
         <div className="sm:col-span-2">
-          <label className="flex items-center gap-2 text-sm text-zinc-700">
+          <label className="flex items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300">
             <input
               type="checkbox"
               name="is_original"
@@ -88,7 +88,7 @@ export function EditSongForm({ song }: { song: EditableSong }) {
           <Label htmlFor={`notes_${song.id}`}>Note</Label>
           <Textarea id={`notes_${song.id}`} name="notes" rows={2} defaultValue={song.notes ?? ""} />
         </div>
-        {state?.error && <p className="text-sm text-red-600 sm:col-span-2">{state.error}</p>}
+        {state?.error && <p className="text-sm text-red-600 dark:text-red-400 sm:col-span-2">{state.error}</p>}
         <div className="sm:col-span-2">
           <Button type="submit" variant="secondary" disabled={pending}>
             {pending ? "Salvataggio…" : "Salva modifiche"}

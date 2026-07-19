@@ -52,8 +52,8 @@ export function PressKitForm({ initial }: { initial: PressKit | null }) {
         <Label htmlFor="video_links">Link video (uno per riga)</Label>
         <Textarea id="video_links" name="video_links" rows={3} defaultValue={initial?.video_links?.join("\n") ?? ""} />
       </div>
-      {state?.error && <p className="text-sm text-red-600 sm:col-span-2">{state.error}</p>}
-      {state?.success && <p className="text-sm text-emerald-600 sm:col-span-2">{state.success}</p>}
+      {state?.error && <p className="text-sm text-red-600 dark:text-red-400 sm:col-span-2">{state.error}</p>}
+      {state?.success && <p className="text-sm text-emerald-600 dark:text-emerald-400 sm:col-span-2">{state.success}</p>}
       <div className="sm:col-span-2">
         <Button type="submit" disabled={pending}>
           {pending ? "Salvataggio…" : "Salva"}

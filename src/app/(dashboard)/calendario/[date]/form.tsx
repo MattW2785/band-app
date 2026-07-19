@@ -45,7 +45,7 @@ export function AvailabilityForm({
         <Label htmlFor="note">Nota (opzionale)</Label>
         <Textarea id="note" name="note" rows={2} placeholder="Es. disponibile solo dopo le 19" />
       </div>
-      {state?.error && <p className="text-sm text-red-600">{state.error}</p>}
+      {state?.error && <p className="text-sm text-red-600 dark:text-red-400">{state.error}</p>}
       <Button type="submit" disabled={pending}>
         {pending ? "Salvataggio…" : "Salva disponibilità"}
       </Button>

@@ -70,7 +70,7 @@ export default async function BraniPage() {
       />
 
       <Card className="mb-6">
-        <h2 className="mb-3 font-medium text-zinc-900">Proponi un brano</h2>
+        <h2 className="mb-3 font-medium text-zinc-900 dark:text-zinc-100">Proponi un brano</h2>
         <ProposeSongForm />
       </Card>
 
@@ -79,13 +79,13 @@ export default async function BraniPage() {
           <Card key={song.id}>
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <h3 className="flex items-center gap-2 font-medium text-zinc-900">
+                <h3 className="flex items-center gap-2 font-medium text-zinc-900 dark:text-zinc-100">
                   <span>
-                    {song.title} {song.artist && <span className="font-normal text-zinc-500">— {song.artist}</span>}
+                    {song.title} {song.artist && <span className="font-normal text-zinc-500 dark:text-zinc-400">— {song.artist}</span>}
                   </span>
                   {song.is_original && <Badge variant="indigo">Originale</Badge>}
                 </h3>
-                <p className="mt-0.5 text-xs text-zinc-500">
+                <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
                   {formatDuration(song.duration_seconds)}
                   {song.key && ` · tonalità ${song.key}`}
                   {song.bpm && ` · ${song.bpm} bpm`}
@@ -95,7 +95,7 @@ export default async function BraniPage() {
                       {song.reference_links.map((link, i) => (
                         <span key={link}>
                           {i > 0 && " · "}
-                          <a href={link} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline">
+                          <a href={link} target="_blank" rel="noreferrer" className="text-indigo-600 dark:text-indigo-400 hover:underline">
                             riferimento {song.reference_links.length > 1 ? i + 1 : ""}
                           </a>
                         </span>
@@ -103,15 +103,15 @@ export default async function BraniPage() {
                     </>
                   )}
                 </p>
-                {song.notes && <p className="mt-1 text-sm text-zinc-600">{song.notes}</p>}
+                {song.notes && <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{song.notes}</p>}
               </div>
               <StatusSelect songId={song.id} status={song.status} />
             </div>
 
-            <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-zinc-100 pt-3">
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-zinc-100 dark:border-zinc-800 pt-3">
               <VoteButtons songId={song.id} ownScore={song.ownScore} />
-              <span className="text-sm text-zinc-500">
-                media <span className="font-medium text-zinc-700">{song.avg.toFixed(1)}</span> · {song.count}{" "}
+              <span className="text-sm text-zinc-500 dark:text-zinc-400">
+                media <span className="font-medium text-zinc-700 dark:text-zinc-300">{song.avg.toFixed(1)}</span> · {song.count}{" "}
                 {song.count === 1 ? "voto" : "voti"}
               </span>
             </div>
@@ -119,7 +119,7 @@ export default async function BraniPage() {
               <LastEdited
                 name={song.updated_by ? (nameById.get(song.updated_by) ?? null) : null}
                 at={song.updated_at}
-                className="text-xs text-zinc-400"
+                className="text-xs text-zinc-400 dark:text-zinc-500"
               />
               <div className="flex items-center gap-3">
                 <EditSongForm song={song} />
@@ -135,7 +135,7 @@ export default async function BraniPage() {
           </Card>
         ))}
 
-        {ranked.length === 0 && <p className="text-sm text-zinc-500">Nessun brano proposto ancora.</p>}
+        {ranked.length === 0 && <p className="text-sm text-zinc-500 dark:text-zinc-400">Nessun brano proposto ancora.</p>}
       </div>
     </div>
   );

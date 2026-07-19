@@ -25,13 +25,13 @@ const WEEKDAYS = ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"];
 function densityClass(density: "none" | "green" | "yellow" | "red") {
   switch (density) {
     case "green":
-      return "bg-emerald-50 hover:bg-emerald-100";
+      return "bg-emerald-50 dark:bg-emerald-500/10 hover:bg-emerald-100 dark:hover:bg-emerald-500/15";
     case "yellow":
-      return "bg-amber-50 hover:bg-amber-100";
+      return "bg-amber-50 dark:bg-amber-500/10 hover:bg-amber-100 dark:hover:bg-amber-500/15";
     case "red":
-      return "bg-red-50 hover:bg-red-100";
+      return "bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/15";
     default:
-      return "bg-white hover:bg-zinc-50";
+      return "bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800";
   }
 }
 
@@ -104,13 +104,13 @@ export default async function CalendarioPage({
           <div className="flex gap-2">
             <Link
               href={`/calendario?month=${prevMonth}`}
-              className="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm shadow-sm transition-colors hover:bg-zinc-50"
+              className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-1.5 text-sm shadow-sm transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800"
             >
               ← Precedente
             </Link>
             <Link
               href={`/calendario?month=${nextMonth}`}
-              className="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm shadow-sm transition-colors hover:bg-zinc-50"
+              className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-1.5 text-sm shadow-sm transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800"
             >
               Successivo →
             </Link>
@@ -118,7 +118,7 @@ export default async function CalendarioPage({
         }
       />
 
-      <div className="mb-2 grid grid-cols-7 text-center text-xs font-medium text-zinc-400">
+      <div className="mb-2 grid grid-cols-7 text-center text-xs font-medium text-zinc-400 dark:text-zinc-500">
         {WEEKDAYS.map((d) => (
           <div key={d}>{d}</div>
         ))}
@@ -133,7 +133,7 @@ export default async function CalendarioPage({
               key={dateStr}
               href={`/calendario/${dateStr}`}
               className={cn(
-                "flex min-h-20 flex-col rounded-lg border border-zinc-200/80 p-1.5 text-xs transition-colors",
+                "flex min-h-20 flex-col rounded-lg border border-zinc-200/80 dark:border-zinc-800/80 p-1.5 text-xs transition-colors",
                 densityClass(density(dateStr)),
                 !isSameMonth(day, monthDate) && "opacity-40"
               )}
@@ -141,7 +141,7 @@ export default async function CalendarioPage({
               <span
                 className={cn(
                   "font-medium",
-                  isToday(day) ? "flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-white" : "text-zinc-700"
+                  isToday(day) ? "flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-white" : "text-zinc-700 dark:text-zinc-300"
                 )}
               >
                 {format(day, "d")}
@@ -149,7 +149,7 @@ export default async function CalendarioPage({
               {dayEvents.map((e) => (
                 <span
                   key={e!.id}
-                  className="mt-1 flex items-center gap-1 truncate rounded bg-zinc-800 px-1 py-0.5 text-[10px] text-white"
+                  className="mt-1 flex items-center gap-1 truncate rounded bg-zinc-800 dark:bg-zinc-600 px-1 py-0.5 text-[10px] text-white"
                 >
                   <EventTypeIcon type={e!.type} className="h-2.5 w-2.5 shrink-0" />
                   <span className="truncate">{e!.title}</span>
@@ -160,7 +160,7 @@ export default async function CalendarioPage({
         })}
       </div>
 
-      <p className="mt-4 text-xs text-zinc-500">
+      <p className="mt-4 text-xs text-zinc-500 dark:text-zinc-400">
         🟩 tutti disponibili · 🟨 parziale · 🟥 pochi/nessuno disponibile · ⬜ nessuna risposta
       </p>
     </div>

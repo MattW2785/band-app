@@ -11,7 +11,7 @@ export function DeleteOriginalWorkButton({ workId }: { workId: string }) {
       }}
     >
       <input type="hidden" name="id" value={workId} />
-      <button type="submit" className="text-xs text-zinc-400 hover:text-red-500">
+      <button type="submit" className="text-xs text-zinc-400 dark:text-zinc-500 hover:text-red-500 dark:hover:text-red-400">
         Elimina dati SIAE
       </button>
     </form>

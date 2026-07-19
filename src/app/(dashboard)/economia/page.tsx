@@ -61,30 +61,30 @@ export default async function EconomiaPage({
 
       <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-3">
         <Card className="p-4">
-          <p className="text-xs font-medium text-zinc-400">Saldo totale</p>
-          <p className={`mt-1 text-xl font-semibold ${saldoTotale >= 0 ? "text-emerald-600" : "text-red-600"}`}>
+          <p className="text-xs font-medium text-zinc-400 dark:text-zinc-500">Saldo totale</p>
+          <p className={`mt-1 text-xl font-semibold ${saldoTotale >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
             {saldoTotale.toFixed(2)}€
           </p>
         </Card>
         <Card className="p-4">
-          <p className="text-xs font-medium text-zinc-400">Quota a testa</p>
-          <p className="mt-1 text-xl font-semibold text-zinc-900">{quotaATesta.toFixed(2)}€</p>
-          <p className="mt-0.5 text-xs text-zinc-500">su {members.length} membri</p>
+          <p className="text-xs font-medium text-zinc-400 dark:text-zinc-500">Quota a testa</p>
+          <p className="mt-1 text-xl font-semibold text-zinc-900 dark:text-zinc-100">{quotaATesta.toFixed(2)}€</p>
+          <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">su {members.length} membri</p>
         </Card>
         <Card className="p-4">
-          <p className="text-xs font-medium text-zinc-400">Movimenti registrati</p>
-          <p className="mt-1 text-xl font-semibold text-zinc-900">{all.length}</p>
+          <p className="text-xs font-medium text-zinc-400 dark:text-zinc-500">Movimenti registrati</p>
+          <p className="mt-1 text-xl font-semibold text-zinc-900 dark:text-zinc-100">{all.length}</p>
         </Card>
       </div>
 
       {marginePerEvento.size > 0 && (
         <Card className="mb-6">
-          <h2 className="mb-3 font-medium text-zinc-900">Margine per evento</h2>
+          <h2 className="mb-3 font-medium text-zinc-900 dark:text-zinc-100">Margine per evento</h2>
           <ul className="space-y-1.5 text-sm">
             {Array.from(marginePerEvento.entries()).map(([eventId, margine]) => (
               <li key={eventId} className="flex items-center justify-between">
-                <span className="text-zinc-700">{eventTitleById.get(eventId) ?? "Evento eliminato"}</span>
-                <span className={margine >= 0 ? "text-emerald-600" : "text-red-600"}>{margine.toFixed(2)}€</span>
+                <span className="text-zinc-700 dark:text-zinc-300">{eventTitleById.get(eventId) ?? "Evento eliminato"}</span>
+                <span className={margine >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}>{margine.toFixed(2)}€</span>
               </li>
             ))}
           </ul>
@@ -92,15 +92,15 @@ export default async function EconomiaPage({
       )}
 
       <Card className="mb-6">
-        <h2 className="mb-3 font-medium text-zinc-900">Nuovo movimento</h2>
+        <h2 className="mb-3 font-medium text-zinc-900 dark:text-zinc-100">Nuovo movimento</h2>
         <AddTransactionForm events={events ?? []} members={members} />
       </Card>
 
       <Card>
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-          <h2 className="font-medium text-zinc-900">Storico movimenti</h2>
+          <h2 className="font-medium text-zinc-900 dark:text-zinc-100">Storico movimenti</h2>
           <form className="flex gap-2 text-sm">
-            <select name="category" defaultValue={category ?? ""} className="rounded-lg border border-zinc-200 px-2 py-1">
+            <select name="category" defaultValue={category ?? ""} className="rounded-lg border border-zinc-200 dark:border-zinc-800 px-2 py-1">
               <option value="">Tutte le categorie</option>
               {Object.entries(CATEGORY_LABEL).map(([value, label]) => (
                 <option key={value} value={value}>
@@ -108,7 +108,7 @@ export default async function EconomiaPage({
                 </option>
               ))}
             </select>
-            <select name="event" defaultValue={eventFilter ?? ""} className="rounded-lg border border-zinc-200 px-2 py-1">
+            <select name="event" defaultValue={eventFilter ?? ""} className="rounded-lg border border-zinc-200 dark:border-zinc-800 px-2 py-1">
               <option value="">Tutti gli eventi</option>
               {events?.map((e) => (
                 <option key={e.id} value={e.id}>
@@ -116,23 +116,23 @@ export default async function EconomiaPage({
                 </option>
               ))}
             </select>
-            <button type="submit" className="rounded-lg border border-zinc-200 px-3 py-1 hover:bg-zinc-50">
+            <button type="submit" className="rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 py-1 hover:bg-zinc-50 dark:hover:bg-zinc-800">
               Filtra
             </button>
           </form>
         </div>
 
-        <ul className="divide-y divide-zinc-100 text-sm">
+        <ul className="divide-y divide-zinc-100 dark:divide-zinc-800 text-sm">
           {filtered.map((t) => (
             <li key={t.id} className="flex items-center justify-between gap-3 py-2">
               <div className="min-w-0">
-                <p className="truncate text-zinc-800">
+                <p className="truncate text-zinc-800 dark:text-zinc-200">
                   {t.description || CATEGORY_LABEL[t.category]}
                   {t.related_event_id && (
-                    <span className="text-zinc-400"> · {eventTitleById.get(t.related_event_id)}</span>
+                    <span className="text-zinc-400 dark:text-zinc-500"> · {eventTitleById.get(t.related_event_id)}</span>
                   )}
                 </p>
-                <p className="text-xs text-zinc-500">
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">
                   {format(parseISO(t.date), "d MMM yyyy", { locale: it })}
                   {" · "}
                   <Badge variant="neutral" className="align-middle">
@@ -142,7 +142,7 @@ export default async function EconomiaPage({
                 </p>
               </div>
               <div className="flex shrink-0 items-center gap-3">
-                <span className={t.type === "entrata" ? "text-emerald-600" : "text-red-600"}>
+                <span className={t.type === "entrata" ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}>
                   {t.type === "entrata" ? "+" : "−"}
                   {t.amount.toFixed(2)}€
                 </span>
@@ -151,7 +151,7 @@ export default async function EconomiaPage({
             </li>
           ))}
 
-          {filtered.length === 0 && <p className="py-2 text-sm text-zinc-500">Nessun movimento registrato.</p>}
+          {filtered.length === 0 && <p className="py-2 text-sm text-zinc-500 dark:text-zinc-400">Nessun movimento registrato.</p>}
         </ul>
       </Card>
     </div>

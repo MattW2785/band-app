@@ -57,19 +57,19 @@ export default async function MediaPage({ searchParams }: { searchParams: Promis
       <PageHeader title="Archivio media" description="Registrazioni, basi, foto/video e spartiti della band" />
 
       <Card className="mb-6">
-        <h2 className="mb-3 font-medium text-zinc-900">Carica un file</h2>
+        <h2 className="mb-3 font-medium text-zinc-900 dark:text-zinc-100">Carica un file</h2>
         <UploadMediaForm songs={songs} events={events} />
       </Card>
 
       <div className="mb-3 flex flex-wrap gap-2 text-sm">
-        <a href="/media" className={!typeFilter ? "font-medium text-indigo-600" : "text-zinc-500 hover:text-zinc-700"}>
+        <a href="/media" className={!typeFilter ? "font-medium text-indigo-600 dark:text-indigo-400" : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"}>
           Tutti
         </a>
         {Object.entries(TYPE_LABEL).map(([value, label]) => (
           <a
             key={value}
             href={`/media?type=${value}`}
-            className={typeFilter === value ? "font-medium text-indigo-600" : "text-zinc-500 hover:text-zinc-700"}
+            className={typeFilter === value ? "font-medium text-indigo-600 dark:text-indigo-400" : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"}
           >
             {label}
           </a>
@@ -81,8 +81,8 @@ export default async function MediaPage({ searchParams }: { searchParams: Promis
           <Card key={item.id}>
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className="font-medium text-zinc-900">{item.title}</p>
-                <p className="mt-0.5 text-xs text-zinc-500">
+                <p className="font-medium text-zinc-900 dark:text-zinc-100">{item.title}</p>
+                <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
                   <Badge variant="neutral" className="align-middle">
                     {TYPE_LABEL[item.type]}
                   </Badge>
@@ -91,8 +91,8 @@ export default async function MediaPage({ searchParams }: { searchParams: Promis
                   {item.related_song_id && ` · brano: ${songTitleById.get(item.related_song_id) ?? "eliminato"}`}
                   {item.related_event_id && ` · evento: ${eventTitleById.get(item.related_event_id) ?? "eliminato"}`}
                 </p>
-                <p className="mt-0.5 text-xs text-zinc-400">
-                  Caricato da <span className="font-medium text-zinc-500">{item.uploaded_by ? (nameById.get(item.uploaded_by) ?? "qualcuno") : "qualcuno"}</span>{" "}
+                <p className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-500">
+                  Caricato da <span className="font-medium text-zinc-500 dark:text-zinc-400">{item.uploaded_by ? (nameById.get(item.uploaded_by) ?? "qualcuno") : "qualcuno"}</span>{" "}
                   · {format(parseISO(item.uploaded_at), "d MMM yyyy 'alle' HH:mm", { locale: it })}
                 </p>
               </div>
@@ -100,8 +100,8 @@ export default async function MediaPage({ searchParams }: { searchParams: Promis
             </div>
 
             {item.url && (
-              <div className="mt-3 border-t border-zinc-100 pt-3">
-                <a href={item.url} download={item.file_name} className="text-sm font-medium text-indigo-600 hover:underline">
+              <div className="mt-3 border-t border-zinc-100 dark:border-zinc-800 pt-3">
+                <a href={item.url} download={item.file_name} className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:underline">
                   Scarica →
                 </a>
               </div>
@@ -109,7 +109,7 @@ export default async function MediaPage({ searchParams }: { searchParams: Promis
           </Card>
         ))}
 
-        {withUrls.length === 0 && <p className="text-sm text-zinc-500">Nessun file caricato ancora.</p>}
+        {withUrls.length === 0 && <p className="text-sm text-zinc-500 dark:text-zinc-400">Nessun file caricato ancora.</p>}
       </div>
     </div>
   );

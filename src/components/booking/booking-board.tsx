@@ -45,13 +45,13 @@ function BookingCard({ lead }: { lead: BookingCardData }) {
         transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
       }}
       className={cn(
-        "block cursor-grab touch-none rounded-lg border border-zinc-200/80 bg-white p-3 shadow-sm transition-shadow hover:shadow-md",
+        "block cursor-grab touch-none rounded-lg border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-900 p-3 shadow-sm transition-shadow hover:shadow-md",
         isDragging && "opacity-50 shadow-md"
       )}
     >
-      <p className="text-sm font-medium text-zinc-900">{lead.venueName}</p>
-      {lead.venueCity && <p className="text-xs text-zinc-500">{lead.venueCity}</p>}
-      <div className="mt-2 flex flex-wrap items-center gap-1.5 text-xs text-zinc-500">
+      <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{lead.venueName}</p>
+      {lead.venueCity && <p className="text-xs text-zinc-500 dark:text-zinc-400">{lead.venueCity}</p>}
+      <div className="mt-2 flex flex-wrap items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
         {lead.proposedDate && <span>{format(parseISO(lead.proposedDate), "d MMM", { locale: it })}</span>}
         {lead.feeProposed !== null && <span>· {lead.feeProposed}€</span>}
       </div>
@@ -71,12 +71,12 @@ function Column({ status, label, leads }: { status: BookingStatus; label: string
     <div
       ref={setNodeRef}
       className={cn(
-        "w-64 shrink-0 rounded-xl border border-zinc-200/80 bg-zinc-100/60 p-3 transition-colors",
+        "w-64 shrink-0 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-100/60 dark:bg-zinc-800/60 p-3 transition-colors",
         isOver && "border-indigo-200 bg-indigo-50/60"
       )}
     >
-      <h3 className="mb-3 text-sm font-semibold text-zinc-700">
-        {label} <span className="font-normal text-zinc-400">({leads.length})</span>
+      <h3 className="mb-3 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+        {label} <span className="font-normal text-zinc-400 dark:text-zinc-500">({leads.length})</span>
       </h3>
       <div className="space-y-2">
         {leads.map((lead) => (

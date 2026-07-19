@@ -59,7 +59,7 @@ export default async function TaskPage() {
       <PageHeader title="Task" description="Organizza il lavoro sporco della band" />
 
       <Card className="mb-6">
-        <h2 className="mb-3 font-medium text-zinc-900">Nuovo task</h2>
+        <h2 className="mb-3 font-medium text-zinc-900 dark:text-zinc-100">Nuovo task</h2>
         <AddTaskForm members={visibleMembers} events={events ?? []} />
       </Card>
 

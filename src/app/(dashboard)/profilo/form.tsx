@@ -18,8 +18,8 @@ export function ProfileForm({ fullName }: { fullName: string }) {
         <Label htmlFor="password">Nuova password (lascia vuoto per non cambiarla)</Label>
         <Input id="password" name="password" type="password" minLength={8} placeholder="••••••••" />
       </div>
-      {state?.error && <p className="text-sm text-red-600">{state.error}</p>}
-      {state?.success && <p className="text-sm text-emerald-600">{state.success}</p>}
+      {state?.error && <p className="text-sm text-red-600 dark:text-red-400">{state.error}</p>}
+      {state?.success && <p className="text-sm text-emerald-600 dark:text-emerald-400">{state.success}</p>}
       <Button type="submit" disabled={pending}>
         {pending ? "Salvataggio…" : "Salva modifiche"}
       </Button>

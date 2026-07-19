@@ -88,7 +88,7 @@ export function MainNav({ isAdmin, onNavigate }: { isAdmin: boolean; onNavigate?
       {allGroups.map((group) => (
         <div key={group.title ?? "root"} className="contents">
           {group.title && (
-            <p className="mt-4 mb-1 px-3 text-[11px] font-semibold uppercase tracking-wider text-zinc-400 first:mt-0">
+            <p className="mt-4 mb-1 px-3 text-[11px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 first:mt-0">
               {group.title}
             </p>
           )}
@@ -102,7 +102,7 @@ export function MainNav({ isAdmin, onNavigate }: { isAdmin: boolean; onNavigate?
                 onClick={onNavigate}
                 className={cn(
                   "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                  active ? "bg-indigo-600 text-white" : "text-zinc-600 hover:bg-zinc-100"
+                  active ? "bg-indigo-600 text-white" : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                 )}
               >
                 <Icon className="h-4 w-4 shrink-0" strokeWidth={2} />

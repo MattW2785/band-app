@@ -16,7 +16,7 @@ export function SuspendCheckbox({ memberId, suspended }: { memberId: string; sus
   return (
     <form action={formAction}>
       <label className="flex items-center gap-1.5">
-        <span className={cn("text-xs font-medium", checked ? "text-red-600" : "text-zinc-400")}>
+        <span className={cn("text-xs font-medium", checked ? "text-red-600 dark:text-red-400" : "text-zinc-400 dark:text-zinc-500")}>
           {checked ? "Bloccato" : "Attivo"}
         </span>
         <input type="hidden" name="member_id" value={memberId} />
@@ -31,7 +31,7 @@ export function SuspendCheckbox({ memberId, suspended }: { memberId: string; sus
           }}
         />
       </label>
-      {state?.error && <p className="mt-1 text-xs text-red-600">{state.error}</p>}
+      {state?.error && <p className="mt-1 text-xs text-red-600 dark:text-red-400">{state.error}</p>}
     </form>
   );
 }

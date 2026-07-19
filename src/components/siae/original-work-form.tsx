@@ -50,7 +50,7 @@ export function OriginalWorkForm({
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {members.map((m) => (
             <div key={m.id} className="flex items-center gap-1.5">
-              <span className="min-w-0 flex-1 truncate text-sm text-zinc-600">{m.full_name}</span>
+              <span className="min-w-0 flex-1 truncate text-sm text-zinc-600 dark:text-zinc-400">{m.full_name}</span>
               <Input
                 name={`split_${m.id}`}
                 type="number"
@@ -63,7 +63,7 @@ export function OriginalWorkForm({
             </div>
           ))}
         </div>
-        <p className={`mt-1.5 text-xs ${total === 100 ? "text-emerald-600" : "text-amber-600"}`}>
+        <p className={`mt-1.5 text-xs ${total === 100 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"}`}>
           Totale: {total}% {total !== 100 && "(dovrebbe essere 100%)"}
         </p>
       </div>
@@ -71,7 +71,7 @@ export function OriginalWorkForm({
         <Label htmlFor={`notes_${songId}`}>Note</Label>
         <Textarea id={`notes_${songId}`} name="notes" rows={2} defaultValue={initial?.notes ?? ""} />
       </div>
-      {state?.error && <p className="text-sm text-red-600 sm:col-span-2">{state.error}</p>}
+      {state?.error && <p className="text-sm text-red-600 dark:text-red-400 sm:col-span-2">{state.error}</p>}
       <div className="sm:col-span-2">
         <Button type="submit" disabled={pending}>
           {pending ? "Salvataggio…" : "Salva dati SIAE"}

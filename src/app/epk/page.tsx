@@ -13,7 +13,7 @@ export default async function PublicEpkPage() {
 
   if (!pressKit || (!pressKit.band_name && !pressKit.bio_short && !pressKit.bio_long)) {
     return (
-      <div className="flex min-h-full flex-1 items-center justify-center p-8 text-center text-zinc-500">
+      <div className="flex min-h-full flex-1 items-center justify-center p-8 text-center text-zinc-500 dark:text-zinc-400">
         <p>Press kit non ancora configurato.</p>
       </div>
     );
@@ -22,27 +22,27 @@ export default async function PublicEpkPage() {
   return (
     <div className="mx-auto max-w-2xl px-6 py-12 print:px-0 print:py-6">
       <div className="mb-6 flex items-center justify-between print:hidden">
-        <span className="text-xs uppercase tracking-wide text-zinc-400">Electronic Press Kit</span>
+        <span className="text-xs uppercase tracking-wide text-zinc-400 dark:text-zinc-500">Electronic Press Kit</span>
         <PrintButton />
       </div>
 
-      <h1 className="text-3xl font-bold tracking-tight text-zinc-900">{pressKit.band_name ?? "BandSpace"}</h1>
-      {pressKit.bio_short && <p className="mt-2 text-lg text-zinc-600">{pressKit.bio_short}</p>}
+      <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">{pressKit.band_name ?? "BandSpace"}</h1>
+      {pressKit.bio_short && <p className="mt-2 text-lg text-zinc-600 dark:text-zinc-400">{pressKit.bio_short}</p>}
 
       {pressKit.bio_long && (
         <section className="mt-8">
-          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-zinc-400">Bio</h2>
-          <p className="whitespace-pre-line text-zinc-700">{pressKit.bio_long}</p>
+          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500">Bio</h2>
+          <p className="whitespace-pre-line text-zinc-700 dark:text-zinc-300">{pressKit.bio_long}</p>
         </section>
       )}
 
       {pressKit.photo_urls.length > 0 && (
         <section className="mt-8">
-          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-zinc-400">Foto</h2>
+          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500">Foto</h2>
           <ul className="space-y-1 text-sm">
             {pressKit.photo_urls.map((url) => (
               <li key={url}>
-                <a href={url} target="_blank" rel="noreferrer" className="break-all text-indigo-600 hover:underline">
+                <a href={url} target="_blank" rel="noreferrer" className="break-all text-indigo-600 dark:text-indigo-400 hover:underline">
                   {url}
                 </a>
               </li>
@@ -53,12 +53,12 @@ export default async function PublicEpkPage() {
 
       {stagePlotItems && stagePlotItems.length > 0 && (
         <section className="mt-8">
-          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-zinc-400">Stage plot</h2>
-          <ul className="space-y-1 text-sm text-zinc-700">
+          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500">Stage plot</h2>
+          <ul className="space-y-1 text-sm text-zinc-700 dark:text-zinc-300">
             {stagePlotItems.map((item) => (
               <li key={item.id}>
                 {item.instrument} — {item.position}
-                {item.notes && <span className="text-zinc-500"> ({item.notes})</span>}
+                {item.notes && <span className="text-zinc-500 dark:text-zinc-400"> ({item.notes})</span>}
               </li>
             ))}
           </ul>
@@ -71,29 +71,29 @@ export default async function PublicEpkPage() {
         techRider?.notes ||
         (techRiderChannels && techRiderChannels.length > 0)) && (
         <section className="mt-8">
-          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-zinc-400">Rider tecnico</h2>
-          <dl className="space-y-2 text-sm text-zinc-700">
+          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500">Rider tecnico</h2>
+          <dl className="space-y-2 text-sm text-zinc-700 dark:text-zinc-300">
             {techRider?.pa_requirements && (
               <div>
-                <dt className="font-medium text-zinc-900">Impianto audio</dt>
+                <dt className="font-medium text-zinc-900 dark:text-zinc-100">Impianto audio</dt>
                 <dd className="whitespace-pre-line">{techRider.pa_requirements}</dd>
               </div>
             )}
             {techRider?.monitor_requirements && (
               <div>
-                <dt className="font-medium text-zinc-900">Monitor</dt>
+                <dt className="font-medium text-zinc-900 dark:text-zinc-100">Monitor</dt>
                 <dd className="whitespace-pre-line">{techRider.monitor_requirements}</dd>
               </div>
             )}
             {techRider?.power_requirements && (
               <div>
-                <dt className="font-medium text-zinc-900">Alimentazione</dt>
+                <dt className="font-medium text-zinc-900 dark:text-zinc-100">Alimentazione</dt>
                 <dd className="whitespace-pre-line">{techRider.power_requirements}</dd>
               </div>
             )}
             {techRider?.notes && (
               <div>
-                <dt className="font-medium text-zinc-900">Note</dt>
+                <dt className="font-medium text-zinc-900 dark:text-zinc-100">Note</dt>
                 <dd className="whitespace-pre-line">{techRider.notes}</dd>
               </div>
             )}
@@ -102,7 +102,7 @@ export default async function PublicEpkPage() {
           {techRiderChannels && techRiderChannels.length > 0 && (
             <table className="mt-4 w-full text-left text-sm">
               <thead>
-                <tr className="text-zinc-500">
+                <tr className="text-zinc-500 dark:text-zinc-400">
                   <th className="py-1 pr-2 font-normal">Ch.</th>
                   <th className="py-1 pr-2 font-normal">Sorgente</th>
                   <th className="py-1 pr-2 font-normal">Mic/DI</th>
@@ -112,12 +112,12 @@ export default async function PublicEpkPage() {
               </thead>
               <tbody>
                 {techRiderChannels.map((c) => (
-                  <tr key={c.id} className="border-t border-zinc-100">
-                    <td className="py-1 pr-2 text-zinc-700">{c.channel_number ?? "—"}</td>
-                    <td className="py-1 pr-2 text-zinc-700">{c.source}</td>
-                    <td className="py-1 pr-2 text-zinc-600">{c.mic_or_di ?? "—"}</td>
-                    <td className="py-1 pr-2 text-zinc-600">{c.stand ?? "—"}</td>
-                    <td className="py-1 text-zinc-600">{c.notes ?? "—"}</td>
+                  <tr key={c.id} className="border-t border-zinc-100 dark:border-zinc-800">
+                    <td className="py-1 pr-2 text-zinc-700 dark:text-zinc-300">{c.channel_number ?? "—"}</td>
+                    <td className="py-1 pr-2 text-zinc-700 dark:text-zinc-300">{c.source}</td>
+                    <td className="py-1 pr-2 text-zinc-600 dark:text-zinc-400">{c.mic_or_di ?? "—"}</td>
+                    <td className="py-1 pr-2 text-zinc-600 dark:text-zinc-400">{c.stand ?? "—"}</td>
+                    <td className="py-1 text-zinc-600 dark:text-zinc-400">{c.notes ?? "—"}</td>
                   </tr>
                 ))}
               </tbody>
@@ -128,11 +128,11 @@ export default async function PublicEpkPage() {
 
       {pressKit.audio_links.length > 0 && (
         <section className="mt-8">
-          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-zinc-400">Audio</h2>
+          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500">Audio</h2>
           <ul className="space-y-1 text-sm">
             {pressKit.audio_links.map((url) => (
               <li key={url}>
-                <a href={url} target="_blank" rel="noreferrer" className="break-all text-indigo-600 hover:underline">
+                <a href={url} target="_blank" rel="noreferrer" className="break-all text-indigo-600 dark:text-indigo-400 hover:underline">
                   {url}
                 </a>
               </li>
@@ -143,11 +143,11 @@ export default async function PublicEpkPage() {
 
       {pressKit.video_links.length > 0 && (
         <section className="mt-8">
-          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-zinc-400">Video</h2>
+          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500">Video</h2>
           <ul className="space-y-1 text-sm">
             {pressKit.video_links.map((url) => (
               <li key={url}>
-                <a href={url} target="_blank" rel="noreferrer" className="break-all text-indigo-600 hover:underline">
+                <a href={url} target="_blank" rel="noreferrer" className="break-all text-indigo-600 dark:text-indigo-400 hover:underline">
                   {url}
                 </a>
               </li>
@@ -157,9 +157,9 @@ export default async function PublicEpkPage() {
       )}
 
       {pressKit.contact_email && (
-        <section className="mt-10 border-t border-zinc-200 pt-6 text-sm text-zinc-600">
+        <section className="mt-10 border-t border-zinc-200 dark:border-zinc-800 pt-6 text-sm text-zinc-600 dark:text-zinc-400">
           Contatti:{" "}
-          <a href={`mailto:${pressKit.contact_email}`} className="text-indigo-600 hover:underline">
+          <a href={`mailto:${pressKit.contact_email}`} className="text-indigo-600 dark:text-indigo-400 hover:underline">
             {pressKit.contact_email}
           </a>
         </section>

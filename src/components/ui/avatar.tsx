@@ -1,12 +1,12 @@
 import { cn } from "@/lib/utils";
 
 const PALETTE = [
-  "bg-indigo-100 text-indigo-700",
-  "bg-emerald-100 text-emerald-700",
-  "bg-amber-100 text-amber-700",
-  "bg-rose-100 text-rose-700",
-  "bg-sky-100 text-sky-700",
-  "bg-violet-100 text-violet-700",
+  "bg-indigo-100 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-400",
+  "bg-emerald-100 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
+  "bg-amber-100 dark:bg-amber-500/15 text-amber-700 dark:text-amber-400",
+  "bg-rose-100 dark:bg-rose-500/15 text-rose-700 dark:text-rose-400",
+  "bg-sky-100 dark:bg-sky-500/15 text-sky-700 dark:text-sky-400",
+  "bg-violet-100 dark:bg-violet-500/15 text-violet-700 dark:text-violet-400",
 ];
 
 function colorFor(name: string) {

@@ -43,12 +43,12 @@ export default async function EventiPage() {
           <Link key={e.id} href={`/eventi/${e.id}`}>
             <Card className="flex items-center justify-between hover:border-indigo-200 hover:shadow-md">
               <div className="flex items-center gap-3">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-50 dark:bg-indigo-500/15 text-indigo-600 dark:text-indigo-400">
                   <EventTypeIcon type={e.type} className="h-4 w-4" />
                 </span>
                 <div>
-                  <p className="font-medium text-zinc-900">{e.title}</p>
-                  <p className="text-xs text-zinc-500">
+                  <p className="font-medium text-zinc-900 dark:text-zinc-100">{e.title}</p>
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
                     {format(parseISO(e.date), "EEEE d MMMM yyyy", { locale: it })}
                     {e.start_time && ` · ${e.start_time.slice(0, 5)}`}
                     {e.location && ` · ${e.location}`}
@@ -64,7 +64,7 @@ export default async function EventiPage() {
         ))}
 
         {events.length === 0 && (
-          <p className="text-sm text-zinc-500">Nessun evento in programma.</p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">Nessun evento in programma.</p>
         )}
       </div>
     </div>

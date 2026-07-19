@@ -151,21 +151,21 @@ export default async function StatistichePage() {
       <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
         {stats.map((s) => (
           <Card key={s.label} className="p-4">
-            <p className="text-xs font-medium text-zinc-400">{s.label}</p>
-            <p className="mt-1 text-xl font-semibold text-zinc-900">{s.value}</p>
-            {s.hint && <p className="mt-0.5 text-xs text-zinc-500">{s.hint}</p>}
+            <p className="text-xs font-medium text-zinc-400 dark:text-zinc-500">{s.label}</p>
+            <p className="mt-1 text-xl font-semibold text-zinc-900 dark:text-zinc-100">{s.value}</p>
+            {s.hint && <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">{s.hint}</p>}
           </Card>
         ))}
       </div>
 
       <Card className="mb-4">
-        <h2 className="mb-3 font-medium text-zinc-900">Concerti</h2>
+        <h2 className="mb-3 font-medium text-zinc-900 dark:text-zinc-100">Concerti</h2>
         <div className="flex items-center gap-6 text-sm">
           <div>
-            <p className="text-2xl font-semibold text-zinc-900">{concertiQuestAnno}</p>
-            <p className="text-xs text-zinc-500">nel {format(now, "yyyy")}</p>
+            <p className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">{concertiQuestAnno}</p>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">nel {format(now, "yyyy")}</p>
           </div>
-          <span className="text-zinc-400">
+          <span className="text-zinc-400 dark:text-zinc-500">
             {concertiQuestAnno >= concertiAnnoScorso ? "▲" : "▼"} rispetto a {concertiAnnoScorso} nel{" "}
             {format(subYears(now, 1), "yyyy")}
           </span>
@@ -173,16 +173,16 @@ export default async function StatistichePage() {
       </Card>
 
       <Card className="mb-4">
-        <h2 className="mb-3 font-medium text-zinc-900">Affidabilità disponibilità (ultimi 90 giorni)</h2>
+        <h2 className="mb-3 font-medium text-zinc-900 dark:text-zinc-100">Affidabilità disponibilità (ultimi 90 giorni)</h2>
         {affidabilita.length === 0 ? (
-          <p className="text-sm text-zinc-500">Nessun dato disponibile.</p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">Nessun dato disponibile.</p>
         ) : (
           <ul className="space-y-2">
             {affidabilita.map((a) => (
               <li key={a.name} className="flex items-center gap-3 text-sm">
                 <Avatar name={a.name ?? "?"} className="h-6 w-6 text-[10px]" />
-                <span className="flex-1 text-zinc-700">{a.name}</span>
-                <span className="text-zinc-500">{a.pct !== null ? `${a.pct.toFixed(0)}%` : "—"}</span>
+                <span className="flex-1 text-zinc-700 dark:text-zinc-300">{a.name}</span>
+                <span className="text-zinc-500 dark:text-zinc-400">{a.pct !== null ? `${a.pct.toFixed(0)}%` : "—"}</span>
               </li>
             ))}
           </ul>
@@ -191,17 +191,17 @@ export default async function StatistichePage() {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Card>
-          <h2 className="mb-3 font-medium text-zinc-900">Brani più suonati dal vivo</h2>
+          <h2 className="mb-3 font-medium text-zinc-900 dark:text-zinc-100">Brani più suonati dal vivo</h2>
           {topPlayed.length === 0 ? (
-            <p className="text-sm text-zinc-500">Nessuna scaletta ancora.</p>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">Nessuna scaletta ancora.</p>
           ) : (
             <ol className="space-y-1.5 text-sm">
               {topPlayed.map((s, i) => (
                 <li key={s.title + i} className="flex items-center justify-between">
-                  <span className="text-zinc-700">
+                  <span className="text-zinc-700 dark:text-zinc-300">
                     {i + 1}. {s.title}
                   </span>
-                  <span className="text-zinc-500">{s.count}×</span>
+                  <span className="text-zinc-500 dark:text-zinc-400">{s.count}×</span>
                 </li>
               ))}
             </ol>
@@ -209,17 +209,17 @@ export default async function StatistichePage() {
         </Card>
 
         <Card>
-          <h2 className="mb-3 font-medium text-zinc-900">Brani più votati</h2>
+          <h2 className="mb-3 font-medium text-zinc-900 dark:text-zinc-100">Brani più votati</h2>
           {topVoted.length === 0 ? (
-            <p className="text-sm text-zinc-500">Nessun voto ancora.</p>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">Nessun voto ancora.</p>
           ) : (
             <ol className="space-y-1.5 text-sm">
               {topVoted.map((s, i) => (
                 <li key={s.title + i} className="flex items-center justify-between">
-                  <span className="text-zinc-700">
+                  <span className="text-zinc-700 dark:text-zinc-300">
                     {i + 1}. {s.title}
                   </span>
-                  <span className="text-zinc-500">
+                  <span className="text-zinc-500 dark:text-zinc-400">
                     {s.avg.toFixed(1)} ({s.count})
                   </span>
                 </li>

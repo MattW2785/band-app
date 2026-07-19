@@ -54,12 +54,12 @@ export default async function SetlistDetailPage({ params }: { params: Promise<{ 
 
   return (
     <div className="max-w-2xl">
-      <Link href="/scalette" className="text-sm font-medium text-indigo-600 hover:text-indigo-700">
+      <Link href="/scalette" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300">
         ← Torna alle scalette
       </Link>
-      <h1 className="mb-1 mt-2 text-2xl font-semibold tracking-tight text-zinc-900">{setlist.title}</h1>
-      {eventTitle && <p className="text-sm text-zinc-500">evento: {eventTitle}</p>}
-      <LastEdited name={editorName} at={setlist.updated_at} className="mb-6 mt-1 text-xs text-zinc-400" />
+      <h1 className="mb-1 mt-2 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">{setlist.title}</h1>
+      {eventTitle && <p className="text-sm text-zinc-500 dark:text-zinc-400">evento: {eventTitle}</p>}
+      <LastEdited name={editorName} at={setlist.updated_at} className="mb-6 mt-1 text-xs text-zinc-400 dark:text-zinc-500" />
 
       <Card className="mb-4">
         <SetlistEditor
@@ -71,7 +71,7 @@ export default async function SetlistDetailPage({ params }: { params: Promise<{ 
       </Card>
 
       <Card className="mb-4">
-        <h2 className="mb-3 font-medium text-zinc-900">Aggiungi un brano</h2>
+        <h2 className="mb-3 font-medium text-zinc-900 dark:text-zinc-100">Aggiungi un brano</h2>
         <AddSongForm setlistId={id} availableSongs={availableSongs} />
       </Card>
 

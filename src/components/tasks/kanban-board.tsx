@@ -42,7 +42,7 @@ function TaskCard({ task, onDelete }: { task: KanbanTask; onDelete: (taskId: str
         transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
       }}
       className={cn(
-        "group relative cursor-grab touch-none rounded-lg border border-zinc-200/80 bg-white p-3 shadow-sm transition-shadow hover:shadow-md",
+        "group relative cursor-grab touch-none rounded-lg border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-900 p-3 shadow-sm transition-shadow hover:shadow-md",
         isDragging && "opacity-50 shadow-md"
       )}
     >
@@ -52,14 +52,14 @@ function TaskCard({ task, onDelete }: { task: KanbanTask; onDelete: (taskId: str
         onClick={() => {
           if (confirm("Eliminare questo task?")) onDelete(task.id);
         }}
-        className="absolute right-2 top-2 hidden text-xs text-zinc-300 hover:text-red-500 group-hover:block"
+        className="absolute right-2 top-2 hidden text-xs text-zinc-300 dark:text-zinc-600 hover:text-red-500 dark:hover:text-red-400 group-hover:block"
         aria-label="Elimina task"
       >
         ✕
       </button>
-      <p className="pr-4 text-sm font-medium text-zinc-900">{task.title}</p>
-      {task.description && <p className="mt-1 text-xs text-zinc-500">{task.description}</p>}
-      <div className="mt-2.5 flex items-center justify-between text-xs text-zinc-400">
+      <p className="pr-4 text-sm font-medium text-zinc-900 dark:text-zinc-100">{task.title}</p>
+      {task.description && <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{task.description}</p>}
+      <div className="mt-2.5 flex items-center justify-between text-xs text-zinc-400 dark:text-zinc-500">
         {task.assigneeName ? (
           <span className="flex items-center gap-1.5">
             <Avatar name={task.assigneeName} className="h-5 w-5 text-[10px]" />
@@ -70,7 +70,7 @@ function TaskCard({ task, onDelete }: { task: KanbanTask; onDelete: (taskId: str
         )}
         {task.due_date && <span>{format(parseISO(task.due_date), "dd-MM-yyyy")}</span>}
       </div>
-      <LastEdited name={task.updatedByName} at={task.updatedAt} className="mt-1.5 text-[11px] text-zinc-300" />
+      <LastEdited name={task.updatedByName} at={task.updatedAt} className="mt-1.5 text-[11px] text-zinc-300 dark:text-zinc-600" />
       <div onPointerDown={(e) => e.stopPropagation()} className="cursor-auto">
         <CollapsibleComments
           comments={task.comments}
@@ -109,12 +109,12 @@ function Column({
     <div
       ref={setNodeRef}
       className={cn(
-        "flex-1 rounded-xl border border-zinc-200/80 bg-zinc-100/60 p-3 transition-colors",
+        "flex-1 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-100/60 dark:bg-zinc-800/60 p-3 transition-colors",
         isOver && "border-indigo-200 bg-indigo-50/60"
       )}
     >
-      <h3 className="mb-3 text-sm font-semibold text-zinc-700">
-        {label} <span className="font-normal text-zinc-400">({tasks.length})</span>
+      <h3 className="mb-3 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+        {label} <span className="font-normal text-zinc-400 dark:text-zinc-500">({tasks.length})</span>
       </h3>
       <div className="space-y-2">
         {visible.map((t) => (
@@ -123,10 +123,10 @@ function Column({
       </div>
       {archived.length > 0 && (
         <details className="mt-2">
-          <summary className="cursor-pointer list-none text-xs font-medium text-zinc-500 hover:text-zinc-700">
+          <summary className="cursor-pointer list-none text-xs font-medium text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200">
             📦 Archivio ({archived.length})
           </summary>
-          <div className="mt-2 space-y-2 border-t border-zinc-200 pt-2">
+          <div className="mt-2 space-y-2 border-t border-zinc-200 dark:border-zinc-800 pt-2">
             {archived.map((t) => (
               <TaskCard key={t.id} task={t} onDelete={onDelete} />
             ))}
@@ -176,7 +176,7 @@ export function KanbanBoard({
   return (
     <div>
       <div className="mb-4 flex items-center gap-2">
-        <label className="text-sm text-zinc-600">Filtra per assegnatario:</label>
+        <label className="text-sm text-zinc-600 dark:text-zinc-400">Filtra per assegnatario:</label>
         <Select
           value={assigneeFilter}
           onChange={(e) => setAssigneeFilter(e.target.value)}

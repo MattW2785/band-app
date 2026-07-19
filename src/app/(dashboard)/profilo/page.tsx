@@ -25,8 +25,8 @@ export default async function ProfiloPage() {
         <div className="mb-6 flex items-center gap-3">
           <Avatar name={profile.full_name ?? "?"} className="h-12 w-12 text-base" />
           <div>
-            <p className="font-medium text-zinc-900">{profile.full_name}</p>
-            <p className="text-sm text-zinc-500">{email}</p>
+            <p className="font-medium text-zinc-900 dark:text-zinc-100">{profile.full_name}</p>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">{email}</p>
           </div>
           <Badge variant={profile.role === "admin" ? "indigo" : "neutral"} dot className="ml-auto">
             {profile.role}
@@ -36,8 +36,8 @@ export default async function ProfiloPage() {
       </Card>
 
       <Card>
-        <h2 className="mb-1 font-medium text-zinc-900">Preferenze notifiche</h2>
-        <p className="mb-4 text-xs text-zinc-500">
+        <h2 className="mb-1 font-medium text-zinc-900 dark:text-zinc-100">Preferenze notifiche</h2>
+        <p className="mb-4 text-xs text-zinc-500 dark:text-zinc-400">
           I promemoria su disponibilità e scadenze pagamenti non sono ancora attivi (richiedono un job schedulato);
           le altre notifiche sono già operative.
         </p>

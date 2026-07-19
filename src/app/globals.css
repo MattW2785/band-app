@@ -1,8 +1,15 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
 :root {
   --background: #fafafa;
   --foreground: #18181b;
+}
+
+[data-theme="dark"] {
+  --background: #09090b;
+  --foreground: #fafafa;
 }
 
 @theme inline {
@@ -33,4 +40,8 @@ body {
 * {
   scrollbar-width: thin;
   scrollbar-color: #d4d4d8 transparent;
+}
+
+[data-theme="dark"] * {
+  scrollbar-color: #3f3f46 transparent;
 }

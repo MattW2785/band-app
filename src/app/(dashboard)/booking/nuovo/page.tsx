@@ -16,16 +16,16 @@ export default async function NuovaTrattativaPage() {
 
   return (
     <div className="max-w-2xl">
-      <Link href="/booking" className="text-sm font-medium text-indigo-600 hover:text-indigo-700">
+      <Link href="/booking" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300">
         ← Torna al booking
       </Link>
-      <h1 className="mb-6 mt-2 text-2xl font-semibold tracking-tight text-zinc-900">Nuova trattativa</h1>
+      <h1 className="mb-6 mt-2 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">Nuova trattativa</h1>
 
       {venues && venues.length === 0 ? (
         <Card>
-          <p className="text-sm text-zinc-600">
+          <p className="text-sm text-zinc-600 dark:text-zinc-400">
             Devi prima censire almeno un locale.{" "}
-            <Link href="/locali/nuovo" className="text-indigo-600 hover:underline">
+            <Link href="/locali/nuovo" className="text-indigo-600 dark:text-indigo-400 hover:underline">
               Crea il primo locale →
             </Link>
           </p>

@@ -24,7 +24,7 @@ export function ProposeSongForm() {
         <Input id="duration" name="duration" placeholder="3:45" required />
       </div>
       <div className="sm:col-span-2">
-        <label className="flex items-center gap-2 text-sm text-zinc-700">
+        <label className="flex items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300">
           <input
             type="checkbox"
             name="is_original"
@@ -59,7 +59,7 @@ export function ProposeSongForm() {
         <Label htmlFor="notes">Note</Label>
         <Textarea id="notes" name="notes" rows={2} />
       </div>
-      {state?.error && <p className="text-sm text-red-600 sm:col-span-2">{state.error}</p>}
+      {state?.error && <p className="text-sm text-red-600 dark:text-red-400 sm:col-span-2">{state.error}</p>}
       <div className="sm:col-span-2">
         <Button type="submit" disabled={pending}>
           {pending ? "Salvataggio…" : "Proponi brano"}

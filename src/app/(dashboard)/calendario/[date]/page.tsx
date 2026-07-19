@@ -45,22 +45,22 @@ export default async function CalendarioDatePage({ params }: { params: Promise<{
 
   return (
     <div className="max-w-2xl">
-      <Link href="/calendario" className="text-sm font-medium text-indigo-600 hover:text-indigo-700">
+      <Link href="/calendario" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300">
         ← Torna al calendario
       </Link>
-      <h1 className="mb-6 mt-2 text-2xl font-semibold capitalize tracking-tight text-zinc-900">
+      <h1 className="mb-6 mt-2 text-2xl font-semibold capitalize tracking-tight text-zinc-900 dark:text-zinc-100">
         {format(parseISO(date), "EEEE d MMMM yyyy", { locale: it })}
       </h1>
 
       {events.length > 0 && (
         <Card className="mb-4">
-          <h2 className="mb-2 font-medium text-zinc-900">Eventi in questa data</h2>
+          <h2 className="mb-2 font-medium text-zinc-900 dark:text-zinc-100">Eventi in questa data</h2>
           <ul className="space-y-1 text-sm">
             {events.map((e) => (
               <li key={e.id} className="flex items-center gap-2">
-                <EventTypeIcon type={e.type} className="h-3.5 w-3.5 text-indigo-600" />
+                <EventTypeIcon type={e.type} className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" />
                 {e.title}
-                {e.start_time && <span className="text-zinc-500"> · {e.start_time.slice(0, 5)}</span>}
+                {e.start_time && <span className="text-zinc-500 dark:text-zinc-400"> · {e.start_time.slice(0, 5)}</span>}
               </li>
             ))}
           </ul>
@@ -69,14 +69,14 @@ export default async function CalendarioDatePage({ params }: { params: Promise<{
 
       <Card className="mb-4">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-medium text-zinc-900">Disponibilità dei membri</h2>
+          <h2 className="font-medium text-zinc-900 dark:text-zinc-100">Disponibilità dei membri</h2>
           <Link href={`/eventi/nuovo?date=${date}`}>
             <Button variant="secondary">+ Crea evento</Button>
           </Link>
         </div>
         <table className="w-full text-sm">
           <thead>
-            <tr className="text-left text-zinc-500">
+            <tr className="text-left text-zinc-500 dark:text-zinc-400">
               <th className="py-1 font-normal">Membro</th>
               <th className="py-1 font-normal">Mattina</th>
               <th className="py-1 font-normal">Pomeriggio</th>
@@ -87,8 +87,8 @@ export default async function CalendarioDatePage({ params }: { params: Promise<{
             {members.map((m) => {
               const statuses = byUser.get(m.id) ?? {};
               return (
-                <tr key={m.id} className="border-t border-zinc-100">
-                  <td className="py-1.5 text-zinc-800">{m.full_name ?? "—"}</td>
+                <tr key={m.id} className="border-t border-zinc-100 dark:border-zinc-800">
+                  <td className="py-1.5 text-zinc-800 dark:text-zinc-200">{m.full_name ?? "—"}</td>
                   {(["mattina", "pomeriggio", "sera"] as const).map((slot) => (
                     <td className="py-1.5" key={slot}>
                       {statuses[slot] ? (
@@ -96,7 +96,7 @@ export default async function CalendarioDatePage({ params }: { params: Promise<{
                           {STATUS_BADGE[statuses[slot]].label}
                         </Badge>
                       ) : (
-                        <span className="text-zinc-300">—</span>
+                        <span className="text-zinc-300 dark:text-zinc-600">—</span>
                       )}
                     </td>
                   ))}
@@ -108,7 +108,7 @@ export default async function CalendarioDatePage({ params }: { params: Promise<{
       </Card>
 
       <Card>
-        <h2 className="mb-3 font-medium text-zinc-900">La tua disponibilità</h2>
+        <h2 className="mb-3 font-medium text-zinc-900 dark:text-zinc-100">La tua disponibilità</h2>
         <AvailabilityForm
           date={date}
           initial={{

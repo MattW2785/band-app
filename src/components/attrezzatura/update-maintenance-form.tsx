@@ -11,7 +11,7 @@ export function UpdateMaintenanceForm({ equipmentId, value }: { equipmentId: str
         name="last_maintenance_date"
         defaultValue={value ?? ""}
         onChange={(e) => e.currentTarget.form?.requestSubmit()}
-        className="rounded-md border border-zinc-200 px-1.5 py-0.5 text-xs text-zinc-600"
+        className="rounded-md border border-zinc-200 dark:border-zinc-800 px-1.5 py-0.5 text-xs text-zinc-600 dark:text-zinc-400"
       />
     </form>
   );

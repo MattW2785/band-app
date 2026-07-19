@@ -36,8 +36,8 @@ export default async function SiaePage() {
             <Card key={song.id}>
               <details>
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3">
-                  <span className="font-medium text-zinc-900">
-                    {song.title} {song.artist && <span className="font-normal text-zinc-500">— {song.artist}</span>}
+                  <span className="font-medium text-zinc-900 dark:text-zinc-100">
+                    {song.title} {song.artist && <span className="font-normal text-zinc-500 dark:text-zinc-400">— {song.artist}</span>}
                   </span>
                   {work ? (
                     <Badge variant="success">Depositato SIAE</Badge>
@@ -45,7 +45,7 @@ export default async function SiaePage() {
                     <Badge variant="neutral">Nessun dato</Badge>
                   )}
                 </summary>
-                <div className="mt-3 border-t border-zinc-100 pt-3">
+                <div className="mt-3 border-t border-zinc-100 dark:border-zinc-800 pt-3">
                   <OriginalWorkForm
                     songId={song.id}
                     members={members}
@@ -72,9 +72,9 @@ export default async function SiaePage() {
         })}
 
         {songs.length === 0 && (
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
             Nessun brano proprio ancora. Marca un brano come &quot;Brano proprio&quot; da{" "}
-            <a href="/brani" className="text-indigo-600 hover:underline">
+            <a href="/brani" className="text-indigo-600 dark:text-indigo-400 hover:underline">
               /brani
             </a>{" "}
             per vederlo qui.

@@ -13,7 +13,7 @@ export function RestoreButton({ logId }: { logId: string }) {
       <Button type="submit" variant="secondary" disabled={pending}>
         {pending ? "Ripristino…" : "Ripristina"}
       </Button>
-      {state?.error && <p className="mt-1 text-xs text-red-600">{state.error}</p>}
+      {state?.error && <p className="mt-1 text-xs text-red-600 dark:text-red-400">{state.error}</p>}
     </form>
   );
 }

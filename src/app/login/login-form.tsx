@@ -59,23 +59,23 @@ export function LoginForm({ suspendedError }: { suspendedError?: string }) {
 
   if (status === "activating") {
     return (
-      <div className="flex min-h-full flex-1 items-center justify-center bg-zinc-50 p-4">
-        <p className="text-sm text-zinc-500">Attivazione dell&apos;invito in corso…</p>
+      <div className="flex min-h-full flex-1 items-center justify-center bg-zinc-50 dark:bg-zinc-800 p-4">
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">Attivazione dell&apos;invito in corso…</p>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-full flex-1 items-center justify-center bg-zinc-50 p-4">
+    <div className="flex min-h-full flex-1 items-center justify-center bg-zinc-50 dark:bg-zinc-800 p-4">
       <Card className="w-full max-w-sm">
         <div className="mb-6 flex items-center gap-2">
           <Image src="/logo.png" alt="BandSpace" width={32} height={32} className="h-8 w-8 rounded-lg object-contain" />
           <div>
-            <h1 className="text-lg font-semibold leading-tight text-zinc-900">BandSpace</h1>
-            <p className="text-xs text-zinc-500">Accedi con l&apos;account della tua band</p>
+            <h1 className="text-lg font-semibold leading-tight text-zinc-900 dark:text-zinc-100">BandSpace</h1>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">Accedi con l&apos;account della tua band</p>
           </div>
         </div>
-        {topError && <p className="mb-4 text-sm text-red-600">{topError}</p>}
+        {topError && <p className="mb-4 text-sm text-red-600 dark:text-red-400">{topError}</p>}
         <form action={formAction} className="space-y-4">
           <div>
             <Label htmlFor="email">Email</Label>
@@ -85,12 +85,12 @@ export function LoginForm({ suspendedError }: { suspendedError?: string }) {
             <Label htmlFor="password">Password</Label>
             <Input id="password" name="password" type="password" autoComplete="current-password" required />
           </div>
-          {state?.error && <p className="text-sm text-red-600">{state.error}</p>}
+          {state?.error && <p className="text-sm text-red-600 dark:text-red-400">{state.error}</p>}
           <Button type="submit" disabled={pending} className="w-full">
             {pending ? "Accesso in corso…" : "Accedi"}
           </Button>
         </form>
-        <p className="mt-6 text-xs text-zinc-400">
+        <p className="mt-6 text-xs text-zinc-400 dark:text-zinc-500">
           Non hai un account? Chiedi a un admin della band di invitarti.
         </p>
       </Card>

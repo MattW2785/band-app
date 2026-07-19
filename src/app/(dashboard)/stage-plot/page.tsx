@@ -25,38 +25,38 @@ export default async function StagePlotPage() {
     <div className="max-w-2xl">
       <PageHeader title="Stage Plot" description="Disposizione di strumenti e postazioni sul palco" />
 
-      <Card className="mb-6 bg-zinc-50 text-sm text-zinc-600">
+      <Card className="mb-6 bg-zinc-50 dark:bg-zinc-800 text-sm text-zinc-600 dark:text-zinc-400">
         Lo stage plot indica al fonico/organizzatore dove posizionare strumenti, amplificatori e microfoni sul
         palco prima del vostro arrivo. Elencate ogni strumento con la sua posizione (es. &quot;palco sinistra&quot;,
         &quot;centro&quot;, &quot;palco destra&quot;).
       </Card>
 
       <Card className="mb-6">
-        <h2 className="mb-3 font-medium text-zinc-900">Aggiungi un elemento</h2>
+        <h2 className="mb-3 font-medium text-zinc-900 dark:text-zinc-100">Aggiungi un elemento</h2>
         <AddStagePlotItemForm />
       </Card>
 
       <Card>
-        <h2 className="mb-3 font-medium text-zinc-900">Elenco</h2>
-        <ul className="divide-y divide-zinc-100">
+        <h2 className="mb-3 font-medium text-zinc-900 dark:text-zinc-100">Elenco</h2>
+        <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
           {items.map((item) => (
             <li key={item.id} className="flex items-start justify-between gap-3 py-3 text-sm">
               <div>
-                <p className="font-medium text-zinc-900">
-                  {item.instrument} <span className="font-normal text-zinc-500">— {item.position}</span>
+                <p className="font-medium text-zinc-900 dark:text-zinc-100">
+                  {item.instrument} <span className="font-normal text-zinc-500 dark:text-zinc-400">— {item.position}</span>
                 </p>
-                {item.notes && <p className="mt-0.5 text-xs text-zinc-500">{item.notes}</p>}
+                {item.notes && <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">{item.notes}</p>}
                 <LastEdited
                   name={item.updated_by ? (nameById.get(item.updated_by) ?? null) : null}
                   at={item.updated_at}
-                  className="mt-1 text-[11px] text-zinc-400"
+                  className="mt-1 text-[11px] text-zinc-400 dark:text-zinc-500"
                 />
               </div>
               <DeleteStagePlotItemButton id={item.id} />
             </li>
           ))}
         </ul>
-        {items.length === 0 && <p className="text-sm text-zinc-500">Nessun elemento aggiunto ancora.</p>}
+        {items.length === 0 && <p className="text-sm text-zinc-500 dark:text-zinc-400">Nessun elemento aggiunto ancora.</p>}
       </Card>
     </div>
   );

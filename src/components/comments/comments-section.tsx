@@ -28,21 +28,21 @@ function CommentsBody({ comments, parentType, parentId, revalidatePath }: Commen
           <li key={c.id} className="flex items-start gap-2 text-sm">
             <Avatar name={c.authorName ?? "?"} className="mt-0.5 h-6 w-6 shrink-0 text-[10px]" />
             <div className="min-w-0 flex-1">
-              <p className="text-zinc-800">{c.text}</p>
-              <p className="text-xs text-zinc-400">
+              <p className="text-zinc-800 dark:text-zinc-200">{c.text}</p>
+              <p className="text-xs text-zinc-400 dark:text-zinc-500">
                 {c.authorName ?? "Qualcuno"} · {format(parseISO(c.created_at), "d MMM 'alle' HH:mm", { locale: it })}
               </p>
             </div>
             <form action={deleteComment}>
               <input type="hidden" name="comment_id" value={c.id} />
               <input type="hidden" name="revalidate_path" value={revalidatePath} />
-              <button type="submit" className="shrink-0 text-xs text-zinc-300 hover:text-red-500">
+              <button type="submit" className="shrink-0 text-xs text-zinc-300 dark:text-zinc-600 hover:text-red-500 dark:hover:text-red-400">
                 ✕
               </button>
             </form>
           </li>
         ))}
-        {comments.length === 0 && <p className="text-sm text-zinc-500">Nessun commento ancora.</p>}
+        {comments.length === 0 && <p className="text-sm text-zinc-500 dark:text-zinc-400">Nessun commento ancora.</p>}
       </ul>
 
       <form action={addComment} className="mt-3 flex gap-2">
@@ -61,7 +61,7 @@ function CommentsBody({ comments, parentType, parentId, revalidatePath }: Commen
 export function CommentsSection({ title, ...body }: CommentsBodyProps & { title?: string }) {
   return (
     <div>
-      <h2 className="mb-3 font-medium text-zinc-900">{title ?? "Commenti"}</h2>
+      <h2 className="mb-3 font-medium text-zinc-900 dark:text-zinc-100">{title ?? "Commenti"}</h2>
       <CommentsBody {...body} />
     </div>
   );
@@ -70,10 +70,10 @@ export function CommentsSection({ title, ...body }: CommentsBodyProps & { title?
 export function CollapsibleComments(props: CommentsBodyProps) {
   return (
     <details className="mt-2 text-sm">
-      <summary className="cursor-pointer list-none text-xs text-zinc-400 hover:text-zinc-600">
+      <summary className="cursor-pointer list-none text-xs text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300">
         💬 {props.comments.length} {props.comments.length === 1 ? "commento" : "commenti"}
       </summary>
-      <div className="mt-2 border-t border-zinc-100 pt-2">
+      <div className="mt-2 border-t border-zinc-100 dark:border-zinc-800 pt-2">
         <CommentsBody {...props} />
       </div>
     </details>

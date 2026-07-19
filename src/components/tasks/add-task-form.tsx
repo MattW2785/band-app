@@ -50,7 +50,7 @@ export function AddTaskForm({
         <Label htmlFor="description">Descrizione</Label>
         <Textarea id="description" name="description" rows={2} />
       </div>
-      {state?.error && <p className="text-sm text-red-600 sm:col-span-2">{state.error}</p>}
+      {state?.error && <p className="text-sm text-red-600 dark:text-red-400 sm:col-span-2">{state.error}</p>}
       <div className="sm:col-span-2">
         <Button type="submit" disabled={pending}>
           {pending ? "Salvataggio…" : "Aggiungi task"}

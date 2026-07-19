@@ -60,11 +60,11 @@ export default async function EventoDetailPage({ params }: { params: Promise<{ i
 
   return (
     <div className="max-w-2xl">
-      <Link href="/eventi" className="text-sm font-medium text-indigo-600 hover:text-indigo-700">
+      <Link href="/eventi" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300">
         ← Torna agli eventi
       </Link>
       <div className="mb-6 mt-2 flex items-center gap-2">
-        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">{event.title}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">{event.title}</h1>
         <Badge variant={statusBadge.variant} dot>
           {statusBadge.label}
         </Badge>
@@ -73,7 +73,7 @@ export default async function EventoDetailPage({ params }: { params: Promise<{ i
       {bookingLead && (
         <Card className="mb-4">
           <div className="flex items-center justify-between">
-            <h2 className="font-medium text-zinc-900">Trattativa di booking collegata</h2>
+            <h2 className="font-medium text-zinc-900 dark:text-zinc-100">Trattativa di booking collegata</h2>
             <Link href={`/booking/${bookingLead.id}`}>
               <Button variant="secondary">Apri trattativa →</Button>
             </Link>
@@ -83,7 +83,7 @@ export default async function EventoDetailPage({ params }: { params: Promise<{ i
 
       <Card className="mb-4">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-medium text-zinc-900">Scaletta collegata</h2>
+          <h2 className="font-medium text-zinc-900 dark:text-zinc-100">Scaletta collegata</h2>
           {setlist ? (
             <Link href={`/scalette/${setlist.id}`}>
               <Button variant="secondary">Apri &quot;{setlist.title}&quot;</Button>
@@ -98,7 +98,7 @@ export default async function EventoDetailPage({ params }: { params: Promise<{ i
 
       <Card className="mb-4">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-medium text-zinc-900">Dettagli evento</h2>
+          <h2 className="font-medium text-zinc-900 dark:text-zinc-100">Dettagli evento</h2>
           <LastEdited name={editorName} at={event.updated_at} />
         </div>
         <EventForm action={updateEvent} initial={event} venues={venues} submitLabel="Salva modifiche" />

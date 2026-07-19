@@ -17,10 +17,10 @@ export function DeleteMemberButton({ memberId, memberName }: { memberId: string;
       }}
     >
       <input type="hidden" name="member_id" value={memberId} />
-      <Button type="submit" variant="ghost" className="text-red-500 hover:bg-red-50" disabled={pending}>
+      <Button type="submit" variant="ghost" className="text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10" disabled={pending}>
         {pending ? "…" : "Rimuovi"}
       </Button>
-      {state?.error && <p className="mt-1 text-xs text-red-600">{state.error}</p>}
+      {state?.error && <p className="mt-1 text-xs text-red-600 dark:text-red-400">{state.error}</p>}
     </form>
   );
 }

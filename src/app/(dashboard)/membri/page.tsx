@@ -26,18 +26,18 @@ export default async function MembriPage() {
       <PageHeader title="Membri" description="Gestisci l'accesso della band" />
 
       <Card className="mb-6">
-        <h2 className="mb-3 font-medium text-zinc-900">Invita un nuovo membro</h2>
+        <h2 className="mb-3 font-medium text-zinc-900 dark:text-zinc-100">Invita un nuovo membro</h2>
         <InviteMemberForm />
       </Card>
 
       <Card>
-        <h2 className="mb-3 font-medium text-zinc-900">Membri della band</h2>
-        <ul className="divide-y divide-zinc-100">
+        <h2 className="mb-3 font-medium text-zinc-900 dark:text-zinc-100">Membri della band</h2>
+        <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
           {members?.map((m) => (
             <li key={m.id} className="flex items-center justify-between py-2 text-sm">
               <div className="flex items-center gap-2.5">
                 <Avatar name={m.full_name ?? "?"} />
-                <span className="text-zinc-800">{m.full_name ?? "(invito in attesa)"}</span>
+                <span className="text-zinc-800 dark:text-zinc-200">{m.full_name ?? "(invito in attesa)"}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Badge variant={m.role === "admin" ? "indigo" : "neutral"} dot>

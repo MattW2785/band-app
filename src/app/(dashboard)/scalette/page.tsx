@@ -32,7 +32,7 @@ export default async function ScaletteePage() {
       <PageHeader title="Scalette" description="Genera la scaletta dai brani più votati e riordinala a mano" />
 
       <Card className="mb-6">
-        <h2 className="mb-3 font-medium text-zinc-900">Genera nuova scaletta</h2>
+        <h2 className="mb-3 font-medium text-zinc-900 dark:text-zinc-100">Genera nuova scaletta</h2>
         <GenerateSetlistForm events={visibleEvents} />
       </Card>
 
@@ -43,17 +43,17 @@ export default async function ScaletteePage() {
           return (
             <Card key={s.id} className="flex items-center justify-between">
               <div>
-                <Link href={`/scalette/${s.id}`} className="font-medium text-zinc-900 hover:underline">
+                <Link href={`/scalette/${s.id}`} className="font-medium text-zinc-900 dark:text-zinc-100 hover:underline">
                   {s.title}
                 </Link>
-                <p className="text-xs text-zinc-500">
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">
                   {itemCount} brani · target {s.target_duration_minutes} min
                   {eventTitle && ` · ${eventTitle}`}
                 </p>
                 <LastEdited
                   name={s.updated_by ? (nameById.get(s.updated_by) ?? null) : null}
                   at={s.updated_at}
-                  className="mt-0.5 text-[11px] text-zinc-400"
+                  className="mt-0.5 text-[11px] text-zinc-400 dark:text-zinc-500"
                 />
               </div>
               <div className="flex shrink-0 gap-2">
@@ -69,7 +69,7 @@ export default async function ScaletteePage() {
           );
         })}
 
-        {visibleSetlists.length === 0 && <p className="text-sm text-zinc-500">Nessuna scaletta creata ancora.</p>}
+        {visibleSetlists.length === 0 && <p className="text-sm text-zinc-500 dark:text-zinc-400">Nessuna scaletta creata ancora.</p>}
       </div>
     </div>
   );

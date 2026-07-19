@@ -30,7 +30,7 @@ export function GenerateSetlistForm({ events }: { events: { id: string; title: s
           ))}
         </Select>
       </div>
-      {state?.error && <p className="text-sm text-red-600 sm:col-span-3">{state.error}</p>}
+      {state?.error && <p className="text-sm text-red-600 dark:text-red-400 sm:col-span-3">{state.error}</p>}
       <div className="sm:col-span-3">
         <Button type="submit" disabled={pending}>
           {pending ? "Generazione…" : "Genera scaletta"}

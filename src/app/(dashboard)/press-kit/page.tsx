@@ -29,7 +29,7 @@ export default async function PressKitPage() {
           </Link>
         }
       />
-      {pressKit && <LastEdited name={editorName} at={pressKit.updated_at} className="mb-4 text-xs text-zinc-400" />}
+      {pressKit && <LastEdited name={editorName} at={pressKit.updated_at} className="mb-4 text-xs text-zinc-400 dark:text-zinc-500" />}
       <Card>
         <PressKitForm initial={pressKit} />
       </Card>

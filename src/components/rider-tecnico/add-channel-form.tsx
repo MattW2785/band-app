@@ -30,7 +30,7 @@ export function AddChannelForm() {
         <Label htmlFor="notes">Note</Label>
         <Input id="notes" name="notes" />
       </div>
-      {state?.error && <p className="col-span-2 text-sm text-red-600 sm:col-span-5">{state.error}</p>}
+      {state?.error && <p className="col-span-2 text-sm text-red-600 dark:text-red-400 sm:col-span-5">{state.error}</p>}
       <div className="col-span-2 sm:col-span-5">
         <Button type="submit" variant="secondary" disabled={pending}>
           {pending ? "Salvataggio…" : "Aggiungi canale"}

@@ -2,15 +2,15 @@ import { cn } from "@/lib/utils";
 import type { HTMLAttributes, ReactNode } from "react";
 
 const variants = {
-  neutral: "bg-zinc-100 text-zinc-600",
-  indigo: "bg-indigo-50 text-indigo-700",
-  success: "bg-emerald-50 text-emerald-700",
-  warning: "bg-amber-50 text-amber-700",
-  danger: "bg-red-50 text-red-600",
+  neutral: "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400",
+  indigo: "bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-400",
+  success: "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
+  warning: "bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400",
+  danger: "bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400",
 };
 
 const dotColors = {
-  neutral: "bg-zinc-400",
+  neutral: "bg-zinc-400 dark:bg-zinc-500",
   indigo: "bg-indigo-500",
   success: "bg-emerald-500",
   warning: "bg-amber-500",

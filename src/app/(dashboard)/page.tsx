@@ -85,9 +85,9 @@ export default async function HomePage() {
       <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
         {stats.map((s) => (
           <Card key={s.label} className="p-4">
-            <p className="text-xs font-medium text-zinc-400">{s.label}</p>
-            <p className="mt-1 text-xl font-semibold text-zinc-900">{s.value}</p>
-            <p className="mt-0.5 truncate text-xs text-zinc-500">{s.hint}</p>
+            <p className="text-xs font-medium text-zinc-400 dark:text-zinc-500">{s.label}</p>
+            <p className="mt-1 text-xl font-semibold text-zinc-900 dark:text-zinc-100">{s.value}</p>
+            <p className="mt-0.5 truncate text-xs text-zinc-500 dark:text-zinc-400">{s.hint}</p>
           </Card>
         ))}
       </div>
@@ -98,11 +98,11 @@ export default async function HomePage() {
           return (
             <Link key={m.href} href={m.href}>
               <Card className="h-full hover:border-indigo-200 hover:shadow-md">
-                <span className="mb-2 flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+                <span className="mb-2 flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 dark:bg-indigo-500/15 text-indigo-600 dark:text-indigo-400">
                   <Icon className="h-5 w-5" strokeWidth={2} />
                 </span>
-                <h2 className="font-medium text-zinc-900">{m.title}</h2>
-                <p className="mt-1 text-sm text-zinc-500">{m.description}</p>
+                <h2 className="font-medium text-zinc-900 dark:text-zinc-100">{m.title}</h2>
+                <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{m.description}</p>
               </Card>
             </Link>
           );

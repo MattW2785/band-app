@@ -18,19 +18,19 @@ export function NotificationPreferencesForm({ preferences }: { preferences: Noti
 
   return (
     <form action={formAction} className="space-y-3">
-      <label className="flex items-center gap-2 text-sm font-medium text-zinc-800">
+      <label className="flex items-center gap-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
         <input type="checkbox" name="email_enabled" defaultChecked={preferences?.email_enabled ?? true} />
         Ricevi notifiche via email
       </label>
-      <div className="ml-1 space-y-2 border-l border-zinc-200 pl-4">
+      <div className="ml-1 space-y-2 border-l border-zinc-200 dark:border-zinc-800 pl-4">
         {OPTIONS.map((o) => (
-          <label key={o.field} className="flex items-center gap-2 text-sm text-zinc-600">
+          <label key={o.field} className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
             <input type="checkbox" name={o.field} defaultChecked={preferences?.[o.field] ?? true} />
             {o.label}
           </label>
         ))}
       </div>
-      {state?.success && <p className="text-sm text-emerald-600">{state.success}</p>}
+      {state?.success && <p className="text-sm text-emerald-600 dark:text-emerald-400">{state.success}</p>}
       <Button type="submit" variant="secondary" disabled={pending}>
         {pending ? "Salvataggio…" : "Salva preferenze"}
       </Button>

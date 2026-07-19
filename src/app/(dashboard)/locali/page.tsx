@@ -31,8 +31,8 @@ export default async function LocaliPage() {
         {venues.map((v) => (
           <Link key={v.id} href={`/locali/${v.id}`}>
             <Card className="hover:border-indigo-200 hover:shadow-md">
-              <p className="font-medium text-zinc-900">{v.name}</p>
-              <p className="text-xs text-zinc-500">
+              <p className="font-medium text-zinc-900 dark:text-zinc-100">{v.name}</p>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">
                 {v.city && `${v.city}`}
                 {v.capacity && ` · capienza ${v.capacity}`}
                 {v.contact_name && ` · ${v.contact_name}`}
@@ -41,7 +41,7 @@ export default async function LocaliPage() {
           </Link>
         ))}
 
-        {venues.length === 0 && <p className="text-sm text-zinc-500">Nessun locale censito ancora.</p>}
+        {venues.length === 0 && <p className="text-sm text-zinc-500 dark:text-zinc-400">Nessun locale censito ancora.</p>}
       </div>
     </div>
   );
