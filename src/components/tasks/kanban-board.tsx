@@ -83,6 +83,8 @@ function TaskCard({ task, onDelete }: { task: KanbanTask; onDelete: (taskId: str
   );
 }
 
+const DONE_PREVIEW_COUNT = 3;
+
 function Column({
   status,
   label,
@@ -96,6 +98,13 @@ function Column({
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: status });
 
+  const isDone = status === "fatto";
+  const sorted = isDone
+    ? [...tasks].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+    : tasks;
+  const visible = isDone ? sorted.slice(0, DONE_PREVIEW_COUNT) : sorted;
+  const archived = isDone ? sorted.slice(DONE_PREVIEW_COUNT) : [];
+
   return (
     <div
       ref={setNodeRef}
@@ -108,10 +117,22 @@ function Column({
         {label} <span className="font-normal text-zinc-400">({tasks.length})</span>
       </h3>
       <div className="space-y-2">
-        {tasks.map((t) => (
+        {visible.map((t) => (
           <TaskCard key={t.id} task={t} onDelete={onDelete} />
         ))}
       </div>
+      {archived.length > 0 && (
+        <details className="mt-2">
+          <summary className="cursor-pointer list-none text-xs font-medium text-zinc-500 hover:text-zinc-700">
+            📦 Archivio ({archived.length})
+          </summary>
+          <div className="mt-2 space-y-2 border-t border-zinc-200 pt-2">
+            {archived.map((t) => (
+              <TaskCard key={t.id} task={t} onDelete={onDelete} />
+            ))}
+          </div>
+        </details>
+      )}
     </div>
   );
 }
