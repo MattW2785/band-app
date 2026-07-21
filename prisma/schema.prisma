@@ -1,0 +1,180 @@
+// Schema Prisma per il modulo Social (YouTube/Instagram). Queste tabelle sono
+// gestite SOLO da Prisma con connessione diretta a Postgres, mai dal client
+// Supabase browser-side: nessuna RLS, nessun accesso via @supabase/ssr.
+// Il resto del database (vedi supabase/schema.sql) resta gestito da Supabase.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Platform {
+  YOUTUBE
+  INSTAGRAM
+  TIKTOK
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+// DRAFT -> SCHEDULED -> CLAIMED -> (AWAITING_CONTAINER ->) PUBLISHING -> PUBLISHED
+//                                                                      -> FAILED
+//                                                                      -> NEEDS_REVIEW (richiede verifica manuale)
+enum TargetStatus {
+  DRAFT
+  SCHEDULED
+  CLAIMED
+  AWAITING_CONTAINER
+  PUBLISHING
+  PUBLISHED
+  FAILED
+  NEEDS_REVIEW
+  CANCELED
+}
+
+enum AccountStatus {
+  CONNECTED
+  NEEDS_REAUTH
+  ERROR
+}
+
+enum SavedTextKind {
+  CAPTION
+  COMMENT
+}
+
+model SavedText {
+  id        String        @id @default(cuid())
+  kind      SavedTextKind
+  title     String?
+  tags      String[]      @default([])
+  body      String
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([kind])
+}
+
+model Media {
+  id          String    @id @default(cuid())
+  url         String
+  storagePath String
+  type        MediaType
+  mimeType    String
+  fileSize    Int
+  width       Int?
+  height      Int?
+  durationSec Int?
+  createdAt   DateTime  @default(now())
+
+  postMedia PostMedia[]
+}
+
+model Post {
+  id           String   @id @default(cuid())
+  internalName String?
+  baseCaption  String?
+  scheduledAt  DateTime
+  archived     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  media   PostMedia[]
+  targets PlatformTarget[]
+}
+
+model PostMedia {
+  id      String @id @default(cuid())
+  postId  String
+  mediaId String
+  order   Int    @default(0)
+
+  post  Post  @relation(fields: [postId], references: [id], onDelete: Cascade)
+  media Media @relation(fields: [mediaId], references: [id])
+
+  @@unique([postId, mediaId])
+}
+
+model PlatformTarget {
+  id            String       @id @default(cuid())
+  postId        String
+  platform      Platform
+  status        TargetStatus @default(DRAFT)
+  scheduledAt   DateTime? // override rispetto a Post.scheduledAt, se impostato
+  title         String? // YouTube
+  description   String? // YouTube / caption override
+  tags          String[]     @default([])
+  privacyStatus String? // YouTube: private/public/unlisted
+  platformExtra Json? // dati specifici piattaforma (categoryId, containerId IG, ecc.)
+
+  firstComment         String? // Instagram: pubblicato come primo commento dopo la pubblicazione
+  firstCommentPostedAt DateTime?
+  firstCommentError    String?
+
+  externalPostId    String?
+  externalPermalink String?
+  publishedAt       DateTime?
+
+  attemptCount  Int       @default(0)
+  nextAttemptAt DateTime?
+  lastError     String?
+  claimedAt     DateTime?
+  claimedBy     String? // run id del cron che ha fatto il claim
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  post     Post             @relation(fields: [postId], references: [id], onDelete: Cascade)
+  attempts PublishAttempt[]
+
+  @@index([status, scheduledAt])
+  @@index([status, nextAttemptAt])
+}
+
+model PlatformAccount {
+  id                String        @id @default(cuid())
+  platform          Platform      @unique
+  displayName       String?
+  profileImageUrl   String?
+  externalAccountId String? // channel id / ig business id / tiktok open_id
+  accessTokenEnc    String // cifrato AES-256-GCM
+  refreshTokenEnc   String?
+  tokenExpiresAt    DateTime?
+  scopes            String?
+  status            AccountStatus @default(CONNECTED)
+  extra             Json? // es. facebookPageId collegata a IG
+  lastRefreshedAt   DateTime?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+}
+
+model PublishAttempt {
+  id               String    @id @default(cuid())
+  platformTargetId String
+  attemptNumber    Int
+  startedAt        DateTime  @default(now())
+  finishedAt       DateTime?
+  success          Boolean?
+  httpStatus       Int?
+  errorClass       String? // TRANSIENT | PERMANENT
+  errorMessage     String?
+  rawResponse      Json?
+
+  target PlatformTarget @relation(fields: [platformTargetId], references: [id], onDelete: Cascade)
+}
+
+model CronRunLog {
+  id             String    @id @default(cuid())
+  startedAt      DateTime  @default(now())
+  finishedAt     DateTime?
+  claimedCount   Int       @default(0)
+  publishedCount Int       @default(0)
+  failedCount    Int       @default(0)
+  errors         Json?
+}

@@ -3,8 +3,16 @@ import { NextResponse, type NextRequest } from "next/server";
 import type { Database } from "@/types/database";
 
 const PUBLIC_PATHS = ["/login", "/auth/callback", "/epk"];
+// Chiamate da un cron esterno (bearer CRON_SECRET, controllato nel route handler stesso),
+// non da un utente con sessione: vanno escluse dal check sessione Supabase qui sotto.
+const CRON_PATHS = ["/api/cron/publish", "/api/cron/refresh-tokens"];
 
 export async function proxy(request: NextRequest) {
+  const path = request.nextUrl.pathname;
+  if (CRON_PATHS.some((p) => path.startsWith(p))) {
+    return NextResponse.next();
+  }
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient<Database>(
@@ -46,10 +54,12 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  const path = request.nextUrl.pathname;
   const isPublic = PUBLIC_PATHS.some((p) => path.startsWith(p));
 
   if (!user && !isPublic) {
+    if (path.startsWith("/api/")) {
+      return NextResponse.json({ error: "Non autenticato" }, { status: 401 });
+    }
     return NextResponse.redirect(new URL("/login", request.url));
   }
 

@@ -5,7 +5,6 @@ import { signOut } from "@/lib/auth-actions";
 import { MainNav } from "@/components/nav/main-nav";
 import { MobileNav } from "@/components/nav/mobile-nav";
 import { Avatar } from "@/components/ui/avatar";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { profile } = await requireSessionProfile();
@@ -26,7 +25,6 @@ export default async function DashboardLayout({ children }: { children: React.Re
             <span className="truncate font-medium text-zinc-700 dark:text-zinc-300">{profile.full_name}</span>
           </Link>
           <div className="flex shrink-0 items-center gap-1">
-            <ThemeToggle className="flex h-8 w-8 items-center justify-center rounded-lg text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700 dark:text-zinc-500 dark:hover:bg-zinc-800 dark:hover:text-zinc-200" />
             <form action={signOut}>
               <button type="submit" className="text-zinc-400 dark:text-zinc-500 transition-colors hover:text-zinc-700 dark:hover:text-zinc-200">
                 Esci

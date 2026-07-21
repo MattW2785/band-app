@@ -547,3 +547,18 @@ create policy "original_works: full access autenticati" on original_works
 --   update public.profiles set role = 'admin', full_name = 'Il tuo nome'
 --   where id = '<uuid-utente>';
 -- ============================================================
+
+-- ============================================================
+-- Tabelle gestite da Prisma (modulo Social), NON da questo file:
+-- "PlatformAccount", "Post", "Media", "PostMedia", "PlatformTarget",
+-- "PublishAttempt", "CronRunLog", "SavedText" (nomi PascalCase tra virgolette,
+-- convenzione di default di Prisma, nessun @@map applicato).
+-- Fonte di verità: prisma/schema.prisma + prisma/migrations/
+-- (applicate con `npx prisma migrate deploy`, mai da qui).
+-- Accesso SOLO server-side via Prisma con connessione diretta a Postgres
+-- (DATABASE_URL/DIRECT_URL) — MAI tramite @supabase/ssr o @supabase/supabase-js.
+-- Niente RLS su queste tabelle: sono irraggiungibili da PostgREST/client Supabase
+-- per costruzione (non fanno parte dello schema esposto), quindi abilitare RLS
+-- senza policy le renderebbe solo inutilmente inaccessibili anche a Prisma in
+-- futuro con un ruolo Postgres privo di bypassrls.
+-- ============================================================

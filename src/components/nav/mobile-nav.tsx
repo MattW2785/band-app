@@ -6,7 +6,6 @@ import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import { MainNav } from "@/components/nav/main-nav";
 import { Avatar } from "@/components/ui/avatar";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { signOut } from "@/lib/auth-actions";
 
 export function MobileNav({ isAdmin, fullName }: { isAdmin: boolean; fullName: string | null }) {
@@ -25,7 +24,6 @@ export function MobileNav({ isAdmin, fullName }: { isAdmin: boolean; fullName: s
         </button>
         <Image src="/logo.png" alt="BandSpace" width={24} height={24} className="h-6 w-6 rounded-lg object-contain" />
         <span className="flex-1 text-base font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">BandSpace</span>
-        <ThemeToggle />
       </div>
 
       {open && (
@@ -52,7 +50,7 @@ export function MobileNav({ isAdmin, fullName }: { isAdmin: boolean; fullName: s
                 <X className="h-5 w-5" strokeWidth={2} />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex flex-1 flex-col overflow-y-auto">
               <MainNav isAdmin={isAdmin} onNavigate={() => setOpen(false)} />
             </div>
             <div className="mt-auto flex items-center justify-between gap-2 border-t border-zinc-100 dark:border-zinc-800 p-4 text-sm">
@@ -65,7 +63,6 @@ export function MobileNav({ isAdmin, fullName }: { isAdmin: boolean; fullName: s
                 <span className="truncate font-medium text-zinc-700 dark:text-zinc-300">{fullName}</span>
               </Link>
               <div className="flex shrink-0 items-center gap-1">
-                <ThemeToggle />
                 <form action={signOut}>
                   <button type="submit" className="text-zinc-400 dark:text-zinc-500 transition-colors hover:text-zinc-700 dark:hover:text-zinc-200">
                     Esci

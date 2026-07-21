@@ -24,6 +24,8 @@ export interface SetlistSongItem {
   title: string;
   artist: string | null;
   durationSeconds: number;
+  avgVote: number | null;
+  voteCount: number;
 }
 
 function formatDuration(totalSeconds: number) {
@@ -55,7 +57,15 @@ function SortableRow({ item, setlistId }: { item: SetlistSongItem; setlistId: st
           <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
             {item.title} {item.artist && <span className="font-normal text-zinc-500 dark:text-zinc-400">— {item.artist}</span>}
           </p>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">{formatDuration(item.durationSeconds)}</p>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400">
+            {formatDuration(item.durationSeconds)}
+            {item.voteCount > 0 && (
+              <>
+                {" · media "}
+                <span className="font-medium text-zinc-700 dark:text-zinc-300">{item.avgVote!.toFixed(1)}</span>
+              </>
+            )}
+          </p>
         </div>
       </div>
       <form action={removeSongFromSetlist}>
