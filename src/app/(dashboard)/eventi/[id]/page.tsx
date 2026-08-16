@@ -5,6 +5,7 @@ import { requireSessionProfile } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { BackLink } from "@/components/ui/back-link";
 import { EventForm } from "@/components/events/event-form";
 import { DeleteEventButton } from "@/components/events/delete-event-button";
 import { LastEdited } from "@/components/ui/last-edited";
@@ -60,9 +61,7 @@ export default async function EventoDetailPage({ params }: { params: Promise<{ i
 
   return (
     <div className="max-w-2xl">
-      <Link href="/eventi" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300">
-        ← Torna agli eventi
-      </Link>
+      <BackLink href="/eventi">Torna agli eventi</BackLink>
       <div className="mb-6 mt-2 flex items-center gap-2">
         <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">{event.title}</h1>
         <Badge variant={statusBadge.variant} dot>

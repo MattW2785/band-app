@@ -141,7 +141,7 @@ export default async function CalendarioPage({
               <span
                 className={cn(
                   "font-medium",
-                  isToday(day) ? "flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-white" : "text-zinc-700 dark:text-zinc-300"
+                  isToday(day) ? "flex h-5 w-5 items-center justify-center rounded-full bg-violet-600 text-white" : "text-zinc-700 dark:text-zinc-300"
                 )}
               >
                 {format(day, "d")}

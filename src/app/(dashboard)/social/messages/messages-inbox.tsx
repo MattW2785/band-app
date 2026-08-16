@@ -27,7 +27,7 @@ function formatRelativeTime(iso: string | null): string {
 
 function ErrorNotice({ message }: { message: string }) {
   return (
-    <div className="rounded-xl border border-amber-900/50 bg-amber-950/30 p-4 text-sm text-amber-300">
+    <div className="rounded-xl border border-amber-200 dark:border-amber-900/50 bg-amber-50 dark:bg-amber-950/30 p-4 text-sm text-amber-800 dark:text-amber-300">
       <p className="mb-2">Impossibile recuperare i messaggi: {message}</p>
       <p>
         Se manca il permesso per i messaggi,{" "}
@@ -131,14 +131,14 @@ export default function MessagesInbox({ canSend }: { canSend: boolean }) {
 
   return (
     <div className="flex min-h-0 flex-1 gap-4">
-      <div className="flex w-80 shrink-0 flex-col overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900/40">
-        <div className="border-b border-neutral-800 px-4 py-3">
-          <span className="text-sm font-medium text-neutral-200">Conversazioni Instagram</span>
+      <div className="flex w-80 shrink-0 flex-col overflow-hidden rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/60">
+        <div className="border-b border-zinc-100 dark:border-zinc-800 px-4 py-3">
+          <span className="text-sm font-medium text-zinc-700 dark:text-zinc-200">Conversazioni Instagram</span>
         </div>
         <div className="flex-1 overflow-y-auto">
-          {loadingConversations && <p className="px-4 py-6 text-center text-xs text-neutral-600">Caricamento...</p>}
+          {loadingConversations && <p className="px-4 py-6 text-center text-xs text-zinc-400 dark:text-zinc-600">Caricamento...</p>}
           {!loadingConversations && conversations?.length === 0 && (
-            <p className="px-4 py-6 text-center text-xs text-neutral-600">Nessuna conversazione trovata.</p>
+            <p className="px-4 py-6 text-center text-xs text-zinc-400 dark:text-zinc-600">Nessuna conversazione trovata.</p>
           )}
           {conversations?.map((c) => {
             const label = c.participantUsername ? `@${c.participantUsername}` : c.participantId ?? "Utente";
@@ -148,37 +148,37 @@ export default function MessagesInbox({ canSend }: { canSend: boolean }) {
                 key={c.id}
                 type="button"
                 onClick={() => loadMessages(c.id)}
-                className={`flex w-full flex-col items-start gap-0.5 border-b border-neutral-900 px-4 py-3 text-left transition-colors hover:bg-neutral-800 ${
-                  selected ? "bg-neutral-800/60" : ""
+                className={`flex w-full flex-col items-start gap-0.5 border-b border-zinc-100 dark:border-zinc-800/70 px-4 py-3 text-left transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800 ${
+                  selected ? "bg-violet-50 dark:bg-zinc-800/80" : ""
                 }`}
               >
                 <span className="flex w-full items-center justify-between gap-2">
-                  <span className="truncate text-sm font-medium text-neutral-100">{label}</span>
-                  <span className="shrink-0 text-[11px] text-neutral-600">{formatRelativeTime(c.updatedTime)}</span>
+                  <span className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-100">{label}</span>
+                  <span className="shrink-0 text-[11px] text-zinc-400 dark:text-zinc-600">{formatRelativeTime(c.updatedTime)}</span>
                 </span>
-                {c.snippet && <span className="line-clamp-1 text-xs text-neutral-500">{c.snippet}</span>}
+                {c.snippet && <span className="line-clamp-1 text-xs text-zinc-500 dark:text-zinc-500">{c.snippet}</span>}
               </button>
             );
           })}
         </div>
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900/40">
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/60">
         {!selectedId ? (
-          <div className="flex flex-1 items-center justify-center text-sm text-neutral-600">
+          <div className="flex flex-1 items-center justify-center text-sm text-zinc-400 dark:text-zinc-600">
             Seleziona una conversazione a sinistra per iniziare
           </div>
         ) : (
           <>
-            <div className="border-b border-neutral-800 px-4 py-3">
-              <span className="text-sm font-medium text-neutral-200">
+            <div className="border-b border-zinc-100 dark:border-zinc-800 px-4 py-3">
+              <span className="text-sm font-medium text-zinc-700 dark:text-zinc-200">
                 {selectedConversation?.participantUsername
                   ? `@${selectedConversation.participantUsername}`
                   : selectedConversation?.participantId ?? "Utente"}
               </span>
             </div>
             <div className="flex-1 overflow-y-auto p-4">
-              {loadingMessages && <p className="text-center text-xs text-neutral-600">Caricamento...</p>}
+              {loadingMessages && <p className="text-center text-xs text-zinc-400 dark:text-zinc-600">Caricamento...</p>}
               {messagesError && <ErrorNotice message={messagesError} />}
               {!loadingMessages && !messagesError && (
                 <div className="flex flex-col gap-2">
@@ -188,11 +188,13 @@ export default function MessagesInbox({ canSend }: { canSend: boolean }) {
                       <div key={m.id} className={`flex ${isOwn ? "justify-end" : "justify-start"}`}>
                         <div
                           className={`max-w-[75%] rounded-2xl px-3 py-2 text-sm ${
-                            isOwn ? "bg-indigo-600 text-white" : "bg-neutral-800 text-neutral-100"
+                            isOwn
+                              ? "bg-gradient-to-b from-violet-500 to-indigo-600 text-white"
+                              : "bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100"
                           }`}
                         >
                           <p className="whitespace-pre-wrap">{m.text}</p>
-                          <p className={`mt-0.5 text-[10px] ${isOwn ? "text-indigo-200" : "text-neutral-500"}`}>
+                          <p className={`mt-0.5 text-[10px] ${isOwn ? "text-violet-100" : "text-zinc-400 dark:text-zinc-500"}`}>
                             {formatRelativeTime(m.createdTime)}
                           </p>
                         </div>
@@ -202,10 +204,10 @@ export default function MessagesInbox({ canSend }: { canSend: boolean }) {
                 </div>
               )}
             </div>
-            <div className="border-t border-neutral-800 p-3">
+            <div className="border-t border-zinc-100 dark:border-zinc-800 p-3">
               {canSend ? (
                 <>
-                  {sendError && <p className="mb-2 text-xs text-red-400">{sendError}</p>}
+                  {sendError && <p className="mb-2 text-xs text-red-500 dark:text-red-400">{sendError}</p>}
                   <div className="flex items-end gap-2">
                     <textarea
                       value={replyText}
@@ -218,20 +220,20 @@ export default function MessagesInbox({ canSend }: { canSend: boolean }) {
                       }}
                       rows={1}
                       placeholder="Scrivi una risposta..."
-                      className="flex-1 resize-none rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm text-neutral-100 outline-none focus:border-indigo-500"
+                      className="flex-1 resize-none rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 outline-none focus:border-violet-500"
                     />
                     <button
                       type="button"
                       onClick={handleSend}
                       disabled={sending || !replyText.trim()}
-                      className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="rounded-lg bg-gradient-to-b from-violet-500 to-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:from-violet-400 hover:to-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {sending ? "Invio..." : "Invia"}
                     </button>
                   </div>
                 </>
               ) : (
-                <p className="text-center text-xs text-neutral-600">Solo l&apos;amministratore può rispondere ai messaggi</p>
+                <p className="text-center text-xs text-zinc-400 dark:text-zinc-600">Solo l&apos;amministratore può rispondere ai messaggi</p>
               )}
             </div>
           </>

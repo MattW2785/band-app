@@ -7,6 +7,7 @@ import { requireSessionProfile } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { BackLink } from "@/components/ui/back-link";
 import { EventTypeIcon } from "@/components/events/event-type-icon";
 import type { AvailabilityStatus } from "@/types/database";
 import { AvailabilityForm } from "./form";
@@ -45,9 +46,7 @@ export default async function CalendarioDatePage({ params }: { params: Promise<{
 
   return (
     <div className="max-w-2xl">
-      <Link href="/calendario" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300">
-        ← Torna al calendario
-      </Link>
+      <BackLink href="/calendario">Torna al calendario</BackLink>
       <h1 className="mb-6 mt-2 text-2xl font-semibold capitalize tracking-tight text-zinc-900 dark:text-zinc-100">
         {format(parseISO(date), "EEEE d MMMM yyyy", { locale: it })}
       </h1>
@@ -58,7 +57,7 @@ export default async function CalendarioDatePage({ params }: { params: Promise<{
           <ul className="space-y-1 text-sm">
             {events.map((e) => (
               <li key={e.id} className="flex items-center gap-2">
-                <EventTypeIcon type={e.type} className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" />
+                <EventTypeIcon type={e.type} className="h-3.5 w-3.5 text-violet-600 dark:text-violet-400" />
                 {e.title}
                 {e.start_time && <span className="text-zinc-500 dark:text-zinc-400"> · {e.start_time.slice(0, 5)}</span>}
               </li>

@@ -118,33 +118,33 @@ export default function EmojiPicker({
         onClick={() => setOpen((o) => !o)}
         aria-label={label}
         title={label}
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-neutral-700 bg-neutral-950 text-neutral-300 transition-colors hover:bg-neutral-900"
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800"
       >
         <EmojiIcon />
       </button>
 
       {open && (
-        <div className="absolute left-0 top-full z-30 mt-1 w-72 overflow-hidden rounded-xl border border-neutral-800 bg-neutral-900 shadow-xl">
-          <div className="border-b border-neutral-800 p-2">
+        <div className="absolute left-0 top-full z-30 mt-1 w-72 overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xl">
+          <div className="border-b border-zinc-100 dark:border-zinc-800 p-2">
             <input
               autoFocus
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Cerca"
-              className="w-full rounded-lg border border-neutral-700 bg-neutral-950 px-2.5 py-1.5 text-sm text-neutral-100 outline-none focus:border-indigo-500"
+              className="w-full rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-2.5 py-1.5 text-sm text-zinc-900 dark:text-zinc-100 outline-none focus:border-violet-500"
             />
           </div>
           <div className="max-h-64 overflow-y-auto p-2">
             {!trimmedQuery && recent.length > 0 && (
               <div className="mb-2">
-                <p className="mb-1 px-1 text-xs font-medium text-neutral-500">Usati di frequente</p>
+                <p className="mb-1 px-1 text-xs font-medium text-zinc-400 dark:text-zinc-500">Usati di frequente</p>
                 <div className="grid grid-cols-8 gap-0.5">
                   {recent.map((emoji, i) => (
                     <button
                       key={`recent-${i}`}
                       type="button"
                       onClick={() => handlePick(emoji)}
-                      className="flex h-8 w-8 items-center justify-center rounded-lg text-lg transition-colors hover:bg-neutral-800"
+                      className="flex h-8 w-8 items-center justify-center rounded-lg text-lg transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
                     >
                       {emoji}
                     </button>
@@ -154,14 +154,14 @@ export default function EmojiPicker({
             )}
             {filteredCategories.map((cat) => (
               <div key={cat.label} className="mb-2 last:mb-0">
-                <p className="mb-1 px-1 text-xs font-medium text-neutral-500">{cat.label}</p>
+                <p className="mb-1 px-1 text-xs font-medium text-zinc-400 dark:text-zinc-500">{cat.label}</p>
                 <div className="grid grid-cols-8 gap-0.5">
                   {cat.emojis.map((emoji, i) => (
                     <button
                       key={`${cat.label}-${i}`}
                       type="button"
                       onClick={() => handlePick(emoji)}
-                      className="flex h-8 w-8 items-center justify-center rounded-lg text-lg transition-colors hover:bg-neutral-800"
+                      className="flex h-8 w-8 items-center justify-center rounded-lg text-lg transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
                     >
                       {emoji}
                     </button>
@@ -170,7 +170,7 @@ export default function EmojiPicker({
               </div>
             ))}
             {trimmedQuery && filteredCategories[0].emojis.length === 0 && (
-              <p className="px-1 py-4 text-center text-xs text-neutral-600">Nessun risultato</p>
+              <p className="px-1 py-4 text-center text-xs text-zinc-400 dark:text-zinc-500">Nessun risultato</p>
             )}
           </div>
         </div>

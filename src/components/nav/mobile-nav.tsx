@@ -13,7 +13,7 @@ export function MobileNav({ isAdmin, fullName }: { isAdmin: boolean; fullName: s
 
   return (
     <div className="md:hidden">
-      <div className="flex items-center gap-2 border-b border-zinc-200/70 dark:border-zinc-800/70 bg-white dark:bg-zinc-900 px-3 py-3">
+      <div className="flex items-center gap-2 border-b border-zinc-200/70 dark:border-zinc-800/60 bg-white dark:bg-zinc-950/70 dark:backdrop-blur-md px-3 py-3">
         <button
           type="button"
           onClick={() => setOpen(true)}
@@ -22,24 +22,22 @@ export function MobileNav({ isAdmin, fullName }: { isAdmin: boolean; fullName: s
         >
           <Menu className="h-5 w-5" strokeWidth={2} />
         </button>
-        <Image src="/logo.png" alt="BandSpace" width={24} height={24} className="h-6 w-6 rounded-lg object-contain" />
-        <span className="flex-1 text-base font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">BandSpace</span>
+        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white p-1 shadow-sm ring-1 ring-black/5">
+          <Image src="/logo.png" alt="" width={20} height={20} className="h-full w-full object-contain" />
+        </span>
+        <span className="flex-1 text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-100">BandSpace</span>
       </div>
 
       {open && (
         <div className="fixed inset-0 z-50">
           <div className="absolute inset-0 bg-black/30" onClick={() => setOpen(false)} />
-          <div className="relative flex h-full w-72 max-w-[80vw] flex-col bg-white dark:bg-zinc-900 shadow-xl">
+          <div className="relative flex h-full w-72 max-w-[80vw] flex-col bg-white dark:bg-zinc-950 shadow-xl">
             <div className="flex items-center justify-between gap-2 px-4 pt-5 pb-2">
               <div className="flex items-center gap-2">
-                <Image
-                  src="/logo.png"
-                  alt="BandSpace"
-                  width={28}
-                  height={28}
-                  className="h-7 w-7 rounded-lg object-contain"
-                />
-                <span className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">BandSpace</span>
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white p-1 shadow-sm ring-1 ring-black/5">
+                  <Image src="/logo.png" alt="" width={24} height={24} className="h-full w-full object-contain" />
+                </span>
+                <span className="text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">BandSpace</span>
               </div>
               <button
                 type="button"

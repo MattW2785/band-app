@@ -41,9 +41,9 @@ export default async function EventiPage() {
       <div className="space-y-2">
         {events.map((e) => (
           <Link key={e.id} href={`/eventi/${e.id}`}>
-            <Card className="flex items-center justify-between hover:border-indigo-200 hover:shadow-md">
+            <Card className="flex items-center justify-between transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-200 dark:hover:border-violet-500/40 hover:shadow-lg hover:shadow-violet-600/10">
               <div className="flex items-center gap-3">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-50 dark:bg-indigo-500/15 text-indigo-600 dark:text-indigo-400">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-violet-50 dark:bg-violet-500/15 text-violet-600 dark:text-violet-400">
                   <EventTypeIcon type={e.type} className="h-4 w-4" />
                 </span>
                 <div>

@@ -90,9 +90,9 @@ export default function WeekDatePicker({
       <button
         type="button"
         onClick={toggleOpen}
-        className="flex items-center gap-2 rounded-lg border border-neutral-800 px-3 py-1.5 text-sm text-neutral-300 transition-colors hover:bg-neutral-900"
+        className="flex items-center gap-2 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 py-1.5 text-sm text-zinc-600 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-900"
       >
-        <svg viewBox="0 0 24 24" className="h-4 w-4 text-neutral-500" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg viewBox="0 0 24 24" className="h-4 w-4 text-zinc-400 dark:text-zinc-500" fill="none" stroke="currentColor" strokeWidth="2">
           <rect x="3" y="5" width="18" height="16" rx="2" />
           <path d="M3 10h18M8 3v4M16 3v4" strokeLinecap="round" />
         </svg>
@@ -100,28 +100,28 @@ export default function WeekDatePicker({
       </button>
 
       {open && (
-        <div className="absolute left-1/2 top-full z-30 mt-2 w-72 -translate-x-1/2 rounded-xl border border-neutral-800 bg-neutral-900 p-3 shadow-xl">
+        <div className="absolute left-1/2 top-full z-30 mt-2 w-72 -translate-x-1/2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-3 shadow-xl">
           <div className="mb-2 flex items-center justify-between">
             <button
               type="button"
               onClick={goPrevMonth}
               aria-label="Mese precedente"
-              className="rounded px-2 py-1 text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-neutral-200"
+              className="rounded px-2 py-1 text-zinc-400 dark:text-zinc-400 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-700 dark:hover:text-zinc-200"
             >
               ‹
             </button>
-            <span className="text-sm font-medium text-neutral-200">{monthLabel(year, month)}</span>
+            <span className="text-sm font-medium text-zinc-700 dark:text-zinc-200">{monthLabel(year, month)}</span>
             <button
               type="button"
               onClick={goNextMonth}
               aria-label="Mese successivo"
-              className="rounded px-2 py-1 text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-neutral-200"
+              className="rounded px-2 py-1 text-zinc-400 dark:text-zinc-400 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-700 dark:hover:text-zinc-200"
             >
               ›
             </button>
           </div>
 
-          <div className="grid grid-cols-7 text-center text-[11px] font-medium text-neutral-500">
+          <div className="grid grid-cols-7 text-center text-[11px] font-medium text-zinc-400 dark:text-zinc-500">
             {WEEKDAY_LABELS.map((label, i) => (
               <div key={i} className="py-1">
                 {label}
@@ -141,8 +141,8 @@ export default function WeekDatePicker({
                   onClick={() => selectDay(day)}
                   className={`mx-auto flex h-8 w-8 items-center justify-center rounded-full text-sm transition-colors ${
                     isSelected
-                      ? "bg-indigo-600 font-semibold text-white"
-                      : "text-neutral-200 hover:bg-neutral-800"
+                      ? "bg-violet-600 font-semibold text-white"
+                      : "text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                   }`}
                 >
                   {day}

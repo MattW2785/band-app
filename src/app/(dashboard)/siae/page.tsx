@@ -74,7 +74,7 @@ export default async function SiaePage() {
         {songs.length === 0 && (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
             Nessun brano proprio ancora. Marca un brano come &quot;Brano proprio&quot; da{" "}
-            <a href="/brani" className="text-indigo-600 dark:text-indigo-400 hover:underline">
+            <a href="/brani" className="text-violet-600 dark:text-violet-400 hover:underline">
               /brani
             </a>{" "}
             per vederlo qui.

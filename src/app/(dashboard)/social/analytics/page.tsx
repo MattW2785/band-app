@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireSessionProfile } from "@/lib/auth";
 import { prisma } from "@/lib/social/prisma";
+import { PageHeader } from "@/components/ui/page-header";
 import { formatInAppTimezone } from "@/lib/social/timezone";
 import { Platform, TargetStatus } from "@/generated/prisma/enums";
 import { fetchMediaMetrics, type MediaMetrics } from "@/lib/social/insights/instagram";
@@ -77,7 +78,7 @@ export default async function AnalyticsPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">Analytics</h1>
+      <PageHeader title="Analytics" />
 
       {targets.length === 0 ? (
         <div className="rounded-xl border border-dashed border-zinc-300 dark:border-zinc-800 py-16 text-center">

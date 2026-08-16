@@ -5,6 +5,7 @@ import { it } from "date-fns/locale";
 import { createClient } from "@/lib/supabase/server";
 import { requireSessionProfile } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
+import { BackLink } from "@/components/ui/back-link";
 import { LastEdited } from "@/components/ui/last-edited";
 import { VenueForm } from "@/components/venues/venue-form";
 import { DeleteVenueButton } from "@/components/venues/delete-venue-button";
@@ -36,9 +37,7 @@ export default async function LocaleDetailPage({ params }: { params: Promise<{ i
 
   return (
     <div className="max-w-2xl">
-      <Link href="/locali" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300">
-        ← Torna ai locali
-      </Link>
+      <BackLink href="/locali">Torna ai locali</BackLink>
       <h1 className="mb-1 mt-2 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">{venue.name}</h1>
       <LastEdited name={editorName} at={venue.updated_at} className="mb-6 text-xs text-zinc-400 dark:text-zinc-500" />
 

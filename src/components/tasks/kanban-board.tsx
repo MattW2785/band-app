@@ -110,7 +110,7 @@ function Column({
       ref={setNodeRef}
       className={cn(
         "flex-1 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-100/60 dark:bg-zinc-800/60 p-3 transition-colors",
-        isOver && "border-indigo-200 bg-indigo-50/60"
+        isOver && "border-violet-300 bg-violet-50/60 dark:border-violet-500/50 dark:bg-violet-500/10"
       )}
     >
       <h3 className="mb-3 text-sm font-semibold text-zinc-700 dark:text-zinc-300">

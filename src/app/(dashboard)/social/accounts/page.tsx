@@ -1,6 +1,7 @@
 import { requireSessionProfile } from "@/lib/auth";
 import { prisma } from "@/lib/social/prisma";
 import { Platform } from "@/generated/prisma/enums";
+import { PageHeader } from "@/components/ui/page-header";
 
 export const dynamic = "force-dynamic";
 
@@ -49,7 +50,7 @@ export default async function AccountsPage({
 
   return (
     <div className="max-w-xl">
-      <h1 className="mb-6 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">Account collegati</h1>
+      <PageHeader title="Account collegati" />
 
       {error && (
         <p className="mb-4 rounded-lg border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/60 px-3 py-2 text-sm text-red-700 dark:text-red-300">
@@ -96,7 +97,7 @@ export default async function AccountsPage({
               ) : connectHref ? (
                 <a
                   href={connectHref}
-                  className="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500"
+                  className="rounded-lg bg-gradient-to-b from-violet-500 to-indigo-600 px-3 py-2 text-sm font-medium text-white shadow-md shadow-indigo-600/25 transition-all hover:from-violet-400 hover:to-indigo-500 hover:shadow-lg hover:shadow-indigo-600/30"
                 >
                   {account ? "Riconnetti" : "Connetti"}
                 </a>

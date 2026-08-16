@@ -42,7 +42,7 @@ export default async function PublicEpkPage() {
           <ul className="space-y-1 text-sm">
             {pressKit.photo_urls.map((url) => (
               <li key={url}>
-                <a href={url} target="_blank" rel="noreferrer" className="break-all text-indigo-600 dark:text-indigo-400 hover:underline">
+                <a href={url} target="_blank" rel="noreferrer" className="break-all text-violet-600 dark:text-violet-400 hover:underline">
                   {url}
                 </a>
               </li>
@@ -132,7 +132,7 @@ export default async function PublicEpkPage() {
           <ul className="space-y-1 text-sm">
             {pressKit.audio_links.map((url) => (
               <li key={url}>
-                <a href={url} target="_blank" rel="noreferrer" className="break-all text-indigo-600 dark:text-indigo-400 hover:underline">
+                <a href={url} target="_blank" rel="noreferrer" className="break-all text-violet-600 dark:text-violet-400 hover:underline">
                   {url}
                 </a>
               </li>
@@ -147,7 +147,7 @@ export default async function PublicEpkPage() {
           <ul className="space-y-1 text-sm">
             {pressKit.video_links.map((url) => (
               <li key={url}>
-                <a href={url} target="_blank" rel="noreferrer" className="break-all text-indigo-600 dark:text-indigo-400 hover:underline">
+                <a href={url} target="_blank" rel="noreferrer" className="break-all text-violet-600 dark:text-violet-400 hover:underline">
                   {url}
                 </a>
               </li>
@@ -159,7 +159,7 @@ export default async function PublicEpkPage() {
       {pressKit.contact_email && (
         <section className="mt-10 border-t border-zinc-200 dark:border-zinc-800 pt-6 text-sm text-zinc-600 dark:text-zinc-400">
           Contatti:{" "}
-          <a href={`mailto:${pressKit.contact_email}`} className="text-indigo-600 dark:text-indigo-400 hover:underline">
+          <a href={`mailto:${pressKit.contact_email}`} className="text-violet-600 dark:text-violet-400 hover:underline">
             {pressKit.contact_email}
           </a>
         </section>

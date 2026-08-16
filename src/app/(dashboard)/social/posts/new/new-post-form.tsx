@@ -294,7 +294,7 @@ function ContentTypeDropdown<T extends string>({
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-1.5 rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-1.5 text-sm font-medium text-neutral-200 transition-colors hover:bg-neutral-900"
+        className="flex items-center gap-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-200 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-900"
       >
         <CurrentIcon />
         {current.label.toUpperCase()}
@@ -302,7 +302,7 @@ function ContentTypeDropdown<T extends string>({
       </button>
 
       {open && (
-        <div className="absolute left-0 top-full z-20 mt-1 w-80 overflow-hidden rounded-xl border border-neutral-800 bg-neutral-900 py-1 shadow-xl">
+        <div className="absolute left-0 top-full z-20 mt-1 w-80 overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 py-1 shadow-xl">
           {order.map((opt) => {
             const optInfo = info[opt];
             const Icon = optInfo.Icon;
@@ -318,18 +318,18 @@ function ContentTypeDropdown<T extends string>({
                   setOpen(false);
                 }}
                 className={`flex w-full items-start gap-3 px-3 py-2.5 text-left transition-colors ${
-                  disabledReason ? "cursor-not-allowed opacity-40" : "hover:bg-neutral-800"
-                } ${selected ? "bg-neutral-800/60" : ""}`}
+                  disabledReason ? "cursor-not-allowed opacity-40" : "hover:bg-zinc-50 dark:hover:bg-zinc-800"
+                } ${selected ? "bg-violet-50 dark:bg-zinc-800/60" : ""}`}
               >
-                <span className="mt-0.5 text-neutral-400">
+                <span className="mt-0.5 text-zinc-400 dark:text-zinc-400">
                   <Icon />
                 </span>
                 <span className="flex-1">
-                  <span className="block text-sm font-medium text-neutral-100">{optInfo.label}</span>
-                  <span className="block text-xs text-neutral-500">{disabledReason ?? optInfo.description}</span>
+                  <span className="block text-sm font-medium text-zinc-900 dark:text-zinc-100">{optInfo.label}</span>
+                  <span className="block text-xs text-zinc-400 dark:text-zinc-500">{disabledReason ?? optInfo.description}</span>
                 </span>
                 {selected && !disabledReason && (
-                  <span className="mt-0.5 text-indigo-400">
+                  <span className="mt-0.5 text-violet-600 dark:text-violet-400">
                     <CheckIcon />
                   </span>
                 )}
@@ -372,7 +372,7 @@ function SubmitSplitButton({
       <button
         type="submit"
         disabled={disabled || submitting}
-        className="rounded-l-lg bg-indigo-600 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+        className="rounded-l-lg bg-gradient-to-b from-violet-500 to-indigo-600 px-5 py-2 text-sm font-medium text-white shadow-sm transition-all hover:from-violet-400 hover:to-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {submitting ? "Attendi..." : current.label}
       </button>
@@ -381,13 +381,13 @@ function SubmitSplitButton({
         onClick={() => setOpen((o) => !o)}
         disabled={submitting}
         aria-label="Scegli modalità di pubblicazione"
-        className="rounded-r-lg border-l border-indigo-500 bg-indigo-600 px-2 py-2 text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+        className="rounded-r-lg border-l border-indigo-400/50 bg-gradient-to-b from-violet-500 to-indigo-600 px-2 py-2 text-white shadow-sm transition-all hover:from-violet-400 hover:to-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <ChevronDownIcon />
       </button>
 
       {open && (
-        <div className="absolute bottom-full right-0 z-30 mb-2 w-72 overflow-hidden rounded-xl border border-neutral-800 bg-neutral-900 py-1 shadow-xl">
+        <div className="absolute bottom-full right-0 z-30 mb-2 w-72 overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 py-1 shadow-xl">
           {SUBMIT_MODE_ORDER.map((m) => {
             const info = SUBMIT_MODE_INFO[m];
             const selected = m === mode;
@@ -399,16 +399,16 @@ function SubmitSplitButton({
                   onModeChange(m);
                   setOpen(false);
                 }}
-                className={`flex w-full items-start justify-between gap-3 px-3 py-2.5 text-left transition-colors hover:bg-neutral-800 ${
-                  selected ? "bg-neutral-800/60" : ""
+                className={`flex w-full items-start justify-between gap-3 px-3 py-2.5 text-left transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800 ${
+                  selected ? "bg-violet-50 dark:bg-zinc-800/60" : ""
                 }`}
               >
                 <span>
-                  <span className="block text-sm font-medium text-neutral-100">{info.label}</span>
-                  <span className="block text-xs text-neutral-500">{info.description}</span>
+                  <span className="block text-sm font-medium text-zinc-900 dark:text-zinc-100">{info.label}</span>
+                  <span className="block text-xs text-zinc-400 dark:text-zinc-500">{info.description}</span>
                 </span>
                 {selected && (
-                  <span className="mt-0.5 shrink-0 text-indigo-400">
+                  <span className="mt-0.5 shrink-0 text-violet-600 dark:text-violet-400">
                     <CheckIcon />
                   </span>
                 )}
@@ -812,21 +812,21 @@ export default function NewPostForm({
   return (
     <div className="mx-auto max-w-5xl">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold tracking-tight">Crea nuovo post</h1>
-        <Link href="/social/posts" className="text-sm text-neutral-400 transition-colors hover:text-neutral-200">
+        <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Crea nuovo post</h1>
+        <Link href="/social/posts" className="text-sm text-zinc-400 dark:text-zinc-400 transition-colors hover:text-zinc-700 dark:hover:text-zinc-200">
           ✕ Chiudi
         </Link>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-6 lg:flex-row lg:items-start">
-        <div className="flex-1 rounded-2xl border border-neutral-800 bg-neutral-900/40 p-5">
+        <div className="flex-1 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/60 p-5 shadow-sm">
           <div className="mb-1 flex items-center justify-between">
-            <div className="inline-flex rounded-lg border border-neutral-800 bg-neutral-950 p-1 text-sm">
+            <div className="inline-flex rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 p-1 text-sm">
               <button
                 type="button"
                 onClick={() => setPlatform("INSTAGRAM")}
                 className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 font-medium transition-colors ${
-                  platform === "INSTAGRAM" ? "bg-purple-600 text-white" : "text-neutral-400 hover:text-neutral-200"
+                  platform === "INSTAGRAM" ? "bg-purple-600 text-white" : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
                 }`}
               >
                 <CameraIcon /> Instagram
@@ -835,19 +835,19 @@ export default function NewPostForm({
                 type="button"
                 onClick={() => setPlatform("YOUTUBE")}
                 className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 font-medium transition-colors ${
-                  platform === "YOUTUBE" ? "bg-red-600 text-white" : "text-neutral-400 hover:text-neutral-200"
+                  platform === "YOUTUBE" ? "bg-red-600 text-white" : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
                 }`}
               >
                 <PlayIcon /> YouTube
               </button>
             </div>
           </div>
-          <p className="mb-4 text-xs text-neutral-600">
+          <p className="mb-4 text-xs text-zinc-400 dark:text-zinc-600">
             Un post può essere pubblicato su una sola piattaforma. Per pubblicare lo stesso contenuto altrove, crea un
             altro post.
           </p>
 
-          <label className="relative mb-4 flex aspect-video w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-neutral-700 bg-neutral-950 transition-colors hover:border-neutral-600">
+          <label className="relative mb-4 flex aspect-video w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 transition-colors hover:border-violet-300 dark:hover:border-zinc-600">
             {mediaPreviewUrl ? (
               isVideo ? (
                 <video src={mediaPreviewUrl} muted playsInline autoPlay loop className="h-full w-full object-contain" />
@@ -856,7 +856,7 @@ export default function NewPostForm({
                 <img src={mediaPreviewUrl} alt="" className="h-full w-full object-contain" />
               )
             ) : (
-              <span className="flex flex-col items-center gap-2 text-neutral-500">
+              <span className="flex flex-col items-center gap-2 text-zinc-400 dark:text-zinc-500">
                 <UploadIcon />
                 <span className="text-sm">Carica immagine o video</span>
               </span>
@@ -871,7 +871,7 @@ export default function NewPostForm({
 
           {platform === "YOUTUBE" && (
             <div className="mb-4">
-              <span className="mb-1 block text-sm text-neutral-400">Tipo contenuto</span>
+              <span className="mb-1 block text-sm text-zinc-500 dark:text-zinc-400">Tipo contenuto</span>
               <ContentTypeDropdown
                 value={youtubeContentType}
                 order={YOUTUBE_CONTENT_TYPE_ORDER}
@@ -883,37 +883,37 @@ export default function NewPostForm({
 
           {platform === "YOUTUBE" && (
             <div className="mb-4">
-              <label className="mb-1 block text-sm text-neutral-400">Miniatura YouTube (opzionale)</label>
+              <label className="mb-1 block text-sm text-zinc-500 dark:text-zinc-400">Miniatura YouTube (opzionale)</label>
               <input
                 type="file"
                 accept="image/*"
                 onChange={handleThumbnailChange}
-                className="block w-full text-sm text-neutral-300 file:mr-3 file:rounded-lg file:border-0 file:bg-neutral-800 file:px-3 file:py-2 file:text-sm file:font-medium file:text-neutral-200 hover:file:bg-neutral-700"
+                className="block w-full text-sm text-zinc-600 dark:text-zinc-300 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-100 dark:file:bg-zinc-800 file:px-3 file:py-2 file:text-sm file:font-medium file:text-zinc-700 dark:file:text-zinc-200 hover:file:bg-zinc-200 dark:hover:file:bg-zinc-700"
               />
-              {thumbnailUploading && <p className="mt-1 text-xs text-indigo-300">Caricamento in corso...</p>}
-              {thumbnailStoragePath && <p className="mt-1 text-xs text-emerald-400">Miniatura caricata</p>}
+              {thumbnailUploading && <p className="mt-1 text-xs text-violet-600 dark:text-violet-300">Caricamento in corso...</p>}
+              {thumbnailStoragePath && <p className="mt-1 text-xs text-emerald-600 dark:text-emerald-400">Miniatura caricata</p>}
             </div>
           )}
 
           {platform === "YOUTUBE" && (
-            <div className="mb-4 overflow-hidden rounded-xl border border-neutral-800">
+            <div className="mb-4 overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800">
               <button
                 type="button"
                 onClick={() => setPresetsOpen((o) => !o)}
-                className="flex w-full items-center justify-between bg-neutral-900/60 px-4 py-3 text-left"
+                className="flex w-full items-center justify-between bg-zinc-50 dark:bg-zinc-900/60 px-4 py-3 text-left"
               >
-                <span className="flex items-center gap-2 text-sm font-medium text-neutral-100">
+                <span className="flex items-center gap-2 text-sm font-medium text-zinc-900 dark:text-zinc-100">
                   <YoutubeBadgeIcon /> Preimpostazioni YouTube
                 </span>
-                <span className={`text-neutral-400 transition-transform ${presetsOpen ? "rotate-180" : ""}`}>
+                <span className={`text-zinc-400 transition-transform ${presetsOpen ? "rotate-180" : ""}`}>
                   <ChevronDownIcon />
                 </span>
               </button>
 
               {presetsOpen && (
-                <div className="grid grid-cols-1 gap-4 border-t border-neutral-800 p-4 sm:grid-cols-2">
+                <div className="grid grid-cols-1 gap-4 border-t border-zinc-200 dark:border-zinc-800 p-4 sm:grid-cols-2">
                   <div>
-                    <label className="mb-1 block text-sm text-neutral-400" htmlFor="title">
+                    <label className="mb-1 block text-sm text-zinc-500 dark:text-zinc-400" htmlFor="title">
                       Video o titolo breve
                     </label>
                     <input
@@ -921,20 +921,20 @@ export default function NewPostForm({
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                       maxLength={100}
-                      className="w-full rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 text-neutral-100 outline-none transition-colors focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30"
+                      className="w-full rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-2 text-zinc-900 dark:text-zinc-100 outline-none transition-colors focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
                     />
-                    <p className="mt-1 text-right text-xs text-neutral-600">{title.length} / 100</p>
+                    <p className="mt-1 text-right text-xs text-zinc-400 dark:text-zinc-600">{title.length} / 100</p>
                   </div>
 
                   <div>
-                    <label className="mb-1 block text-sm text-neutral-400" htmlFor="madeForKids">
+                    <label className="mb-1 block text-sm text-zinc-500 dark:text-zinc-400" htmlFor="madeForKids">
                       Configurazione del pubblico
                     </label>
                     <select
                       id="madeForKids"
                       value={madeForKids === null ? "" : madeForKids ? "yes" : "no"}
                       onChange={(e) => setMadeForKids(e.target.value === "" ? null : e.target.value === "yes")}
-                      className="w-full rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 text-neutral-100 outline-none transition-colors focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30"
+                      className="w-full rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-2 text-zinc-900 dark:text-zinc-100 outline-none transition-colors focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
                     >
                       <option value="">Seleziona...</option>
                       <option value="no">Non è impostato per un pubblico di bambini</option>
@@ -943,34 +943,34 @@ export default function NewPostForm({
                   </div>
 
                   <div>
-                    <label className="mb-1 block text-sm text-neutral-400" htmlFor="privacyStatus">
+                    <label className="mb-1 block text-sm text-zinc-500 dark:text-zinc-400" htmlFor="privacyStatus">
                       Configurazione della privacy
                     </label>
                     <select
                       id="privacyStatus"
                       value={privacyStatus}
                       onChange={(e) => setPrivacyStatus(e.target.value as "public" | "unlisted" | "private")}
-                      className="w-full rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 text-neutral-100 outline-none transition-colors focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30"
+                      className="w-full rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-2 text-zinc-900 dark:text-zinc-100 outline-none transition-colors focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
                     >
                       <option value="public">Pubblico</option>
                       <option value="unlisted">Non in elenco</option>
                       <option value="private">Privato</option>
                     </select>
-                    <p className="mt-1 text-xs text-neutral-600">
+                    <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-600">
                       La configurazione dello stato della privacy può essere modificata su YouTube dopo la
                       pubblicazione del video o dello short.
                     </p>
                   </div>
 
                   <div>
-                    <label className="mb-1 block text-sm text-neutral-400" htmlFor="categoryId">
+                    <label className="mb-1 block text-sm text-zinc-500 dark:text-zinc-400" htmlFor="categoryId">
                       Categoria
                     </label>
                     <select
                       id="categoryId"
                       value={categoryId}
                       onChange={(e) => setCategoryId(e.target.value)}
-                      className="w-full rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 text-neutral-100 outline-none transition-colors focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30"
+                      className="w-full rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-2 text-zinc-900 dark:text-zinc-100 outline-none transition-colors focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
                     >
                       <option value="">Nessuna categoria</option>
                       {YOUTUBE_CATEGORIES.map((c) => (
@@ -982,7 +982,7 @@ export default function NewPostForm({
                   </div>
 
                   <div>
-                    <label className="mb-1 block text-sm text-neutral-400" htmlFor="playlistId">
+                    <label className="mb-1 block text-sm text-zinc-500 dark:text-zinc-400" htmlFor="playlistId">
                       Aggiungi alla playlist
                     </label>
                     <div className="flex gap-2">
@@ -991,7 +991,7 @@ export default function NewPostForm({
                         value={playlistId}
                         onChange={(e) => setPlaylistId(e.target.value)}
                         disabled={playlistsLoading}
-                        className="w-full flex-1 rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 text-neutral-100 outline-none transition-colors focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 disabled:opacity-50"
+                        className="w-full flex-1 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-2 text-zinc-900 dark:text-zinc-100 outline-none transition-colors focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 disabled:opacity-50"
                       >
                         <option value="">Nessuna playlist</option>
                         {playlists.map((p) => (
@@ -1005,16 +1005,16 @@ export default function NewPostForm({
                         onClick={fetchPlaylists}
                         disabled={playlistsLoading}
                         aria-label="Aggiorna playlist"
-                        className="shrink-0 rounded-lg border border-neutral-700 bg-neutral-950 px-2.5 text-neutral-300 transition-colors hover:bg-neutral-900 disabled:opacity-50"
+                        className="shrink-0 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-2.5 text-zinc-600 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-900 disabled:opacity-50"
                       >
                         <RefreshIcon spinning={playlistsLoading} />
                       </button>
                     </div>
-                    {playlistsError && <p className="mt-1 text-xs text-red-400">{playlistsError}</p>}
+                    {playlistsError && <p className="mt-1 text-xs text-red-500 dark:text-red-400">{playlistsError}</p>}
                   </div>
 
                   <div>
-                    <label className="mb-1 block text-sm text-neutral-400" htmlFor="tags">
+                    <label className="mb-1 block text-sm text-zinc-500 dark:text-zinc-400" htmlFor="tags">
                       Etichette
                     </label>
                     <div className="flex gap-2">
@@ -1022,13 +1022,13 @@ export default function NewPostForm({
                         id="tags"
                         value={tags}
                         onChange={(e) => setTags(e.target.value)}
-                        className="w-full flex-1 rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 text-neutral-100 outline-none transition-colors focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30"
+                        className="w-full flex-1 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-2 text-zinc-900 dark:text-zinc-100 outline-none transition-colors focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
                       />
                       <button
                         type="button"
                         onClick={handleCopyTags}
                         aria-label="Copia etichette"
-                        className="shrink-0 rounded-lg border border-neutral-700 bg-neutral-950 px-2.5 text-neutral-300 transition-colors hover:bg-neutral-900"
+                        className="shrink-0 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-2.5 text-zinc-600 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-900"
                       >
                         <CopyIcon />
                       </button>
@@ -1041,7 +1041,7 @@ export default function NewPostForm({
 
           {platform === "INSTAGRAM" && (
             <div className="mb-4">
-              <span className="mb-1 block text-sm text-neutral-400">Tipo contenuto</span>
+              <span className="mb-1 block text-sm text-zinc-500 dark:text-zinc-400">Tipo contenuto</span>
               <ContentTypeDropdown
                 value={instagramContentType}
                 order={CONTENT_TYPE_ORDER}
@@ -1059,7 +1059,7 @@ export default function NewPostForm({
           )}
 
           <div className="mb-4">
-            <label className="mb-1 block text-sm text-neutral-400" htmlFor="caption">
+            <label className="mb-1 block text-sm text-zinc-500 dark:text-zinc-400" htmlFor="caption">
               {platform === "INSTAGRAM" ? "Caption" : "Descrizione"}
             </label>
             <textarea
@@ -1069,14 +1069,14 @@ export default function NewPostForm({
               onChange={(e) => setCaption(e.target.value)}
               rows={5}
               maxLength={captionLimit}
-              className="w-full rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 text-neutral-100 outline-none transition-colors focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30"
+              className="w-full rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-2 text-zinc-900 dark:text-zinc-100 outline-none transition-colors focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
             />
             <div className="mt-1.5 flex items-center justify-between">
               <div className="flex items-center gap-1.5">
                 <EmojiPicker onSelect={insertIntoCaption} />
                 <SavedTextsPicker kind="CAPTION" onInsert={insertIntoCaption} />
               </div>
-              <p className="text-xs text-neutral-600">
+              <p className="text-xs text-zinc-400 dark:text-zinc-600">
                 {caption.length} / {captionLimit}
               </p>
             </div>
@@ -1087,16 +1087,16 @@ export default function NewPostForm({
               <button
                 type="button"
                 onClick={() => setFirstCommentModalOpen(true)}
-                className="flex w-full items-center justify-between rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2.5 text-left text-sm transition-colors hover:bg-neutral-900"
+                className="flex w-full items-center justify-between rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-2.5 text-left text-sm transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-900"
               >
-                <span className="flex items-center gap-2 text-neutral-200">
+                <span className="flex items-center gap-2 text-zinc-700 dark:text-zinc-200">
                   <CommentIcon />
                   {firstComment.trim() ? "Primo commento aggiunto" : "Aggiungi il primo commento"}
                 </span>
-                <span className="text-xs text-neutral-500">{firstComment.trim() ? "Modifica" : "Facoltativo"}</span>
+                <span className="text-xs text-zinc-400 dark:text-zinc-500">{firstComment.trim() ? "Modifica" : "Facoltativo"}</span>
               </button>
               {firstComment.trim() && (
-                <p className="mt-1 line-clamp-1 text-xs text-neutral-600">{firstComment.trim()}</p>
+                <p className="mt-1 line-clamp-1 text-xs text-zinc-400 dark:text-zinc-600">{firstComment.trim()}</p>
               )}
             </div>
           )}
@@ -1112,11 +1112,11 @@ export default function NewPostForm({
           />
 
           {activeErrors.length > 0 && (
-            <div className="mb-4 rounded-xl border border-amber-900/50 bg-amber-950/30 p-3">
-              <div className="mb-1 flex items-center gap-2 text-sm font-medium text-amber-300">
+            <div className="mb-4 rounded-xl border border-amber-200 dark:border-amber-900/50 bg-amber-50 dark:bg-amber-950/30 p-3">
+              <div className="mb-1 flex items-center gap-2 text-sm font-medium text-amber-800 dark:text-amber-300">
                 <WarningIcon /> {activeErrors.length} {activeErrors.length === 1 ? "errore" : "errori"}
               </div>
-              <ul className="ml-6 list-disc space-y-0.5 text-xs text-amber-200/90">
+              <ul className="ml-6 list-disc space-y-0.5 text-xs text-amber-700/90 dark:text-amber-200/90">
                 {activeErrors.map((err) => (
                   <li key={err}>{err}</li>
                 ))}
@@ -1124,19 +1124,19 @@ export default function NewPostForm({
             </div>
           )}
 
-          {submitError && <p className="mb-4 text-sm text-red-400">{submitError}</p>}
+          {submitError && <p className="mb-4 text-sm text-red-600 dark:text-red-400">{submitError}</p>}
 
           {!canPublish && (
-            <p className="mb-4 text-xs text-neutral-500">
+            <p className="mb-4 text-xs text-zinc-400 dark:text-zinc-500">
               Puoi salvare il post come bozza. Solo l&apos;amministratore può programmarlo o pubblicarlo.
             </p>
           )}
 
-          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-neutral-800 pt-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-zinc-200 dark:border-zinc-800 pt-4">
             <button
               type="button"
               onClick={() => router.push("/social/posts")}
-              className="rounded-lg border border-neutral-700 px-4 py-2 text-sm text-neutral-300 transition-colors hover:bg-neutral-800"
+              className="rounded-lg border border-zinc-200 dark:border-zinc-800 px-4 py-2 text-sm text-zinc-600 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800"
             >
               Annulla
             </button>
@@ -1155,7 +1155,7 @@ export default function NewPostForm({
                 <button
                   type="submit"
                   disabled={uploading || submitting}
-                  className="rounded-lg bg-indigo-600 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="rounded-lg bg-gradient-to-b from-violet-500 to-indigo-600 px-5 py-2 text-sm font-medium text-white shadow-sm transition-all hover:from-violet-400 hover:to-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {submitting ? "Attendi..." : "Salva come bozza"}
                 </button>
@@ -1166,8 +1166,8 @@ export default function NewPostForm({
 
         <div className="w-full shrink-0 lg:w-[340px]">
           <div className="flex flex-col gap-4 lg:sticky lg:top-4">
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900/40 p-4">
-              <p className="mb-3 text-xs font-medium uppercase tracking-wide text-neutral-500">Anteprima</p>
+            <div className="rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/60 p-4 shadow-sm">
+              <p className="mb-3 text-xs font-medium uppercase tracking-wide text-zinc-400 dark:text-zinc-500">Anteprima</p>
               {platform === "INSTAGRAM" ? (
                 <InstagramPreviewCard
                   accountName={instagramAccountName}
@@ -1187,7 +1187,7 @@ export default function NewPostForm({
                 />
               )}
             </div>
-            <div className="flex items-start gap-2 rounded-xl border border-indigo-900/40 bg-indigo-950/20 p-3 text-xs text-indigo-300">
+            <div className="flex items-start gap-2 rounded-xl border border-violet-200 dark:border-indigo-900/40 bg-violet-50 dark:bg-indigo-950/20 p-3 text-xs text-violet-700 dark:text-indigo-300">
               <InfoIcon />
               <p>
                 Le anteprime sono un&apos;approssimazione di come apparirà il tuo post quando pubblicato. Il risultato

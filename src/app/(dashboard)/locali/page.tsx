@@ -30,7 +30,7 @@ export default async function LocaliPage() {
       <div className="space-y-2">
         {venues.map((v) => (
           <Link key={v.id} href={`/locali/${v.id}`}>
-            <Card className="hover:border-indigo-200 hover:shadow-md">
+            <Card className="transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-200 dark:hover:border-violet-500/40 hover:shadow-lg hover:shadow-violet-600/10">
               <p className="font-medium text-zinc-900 dark:text-zinc-100">{v.name}</p>
               <p className="text-xs text-zinc-500 dark:text-zinc-400">
                 {v.city && `${v.city}`}

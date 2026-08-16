@@ -135,8 +135,10 @@ export function MainNav({ isAdmin, onNavigate }: { isAdmin: boolean; onNavigate?
                     href={item.href}
                     onClick={onNavigate}
                     className={cn(
-                      "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                      active ? "bg-indigo-600 text-white" : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                      "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-150",
+                      active
+                        ? "bg-gradient-to-r from-violet-500 to-indigo-600 text-white shadow-sm shadow-indigo-600/30"
+                        : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 hover:text-zinc-900 dark:hover:text-zinc-100"
                     )}
                   >
                     <Icon className="h-4 w-4 shrink-0" strokeWidth={2} />
@@ -181,8 +183,10 @@ export function MainNav({ isAdmin, onNavigate }: { isAdmin: boolean; onNavigate?
                     href={item.href}
                     onClick={onNavigate}
                     className={cn(
-                      "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                      active ? "bg-indigo-600 text-white" : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                      "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-150",
+                      active
+                        ? "bg-gradient-to-r from-violet-500 to-indigo-600 text-white shadow-sm shadow-indigo-600/30"
+                        : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 hover:text-zinc-900 dark:hover:text-zinc-100"
                     )}
                   >
                     <Icon className="h-4 w-4 shrink-0" strokeWidth={2} />

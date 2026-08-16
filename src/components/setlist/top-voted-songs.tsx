@@ -23,7 +23,7 @@ export function TopVotedSongs({ setlistId, songs }: { setlistId: string; songs: 
                 href={song.referenceLink}
                 target="_blank"
                 rel="noreferrer"
-                className="text-indigo-600 dark:text-indigo-400 hover:underline"
+                className="text-violet-600 dark:text-violet-400 hover:underline"
                 title="Ascolta il brano"
               >
                 {song.title}

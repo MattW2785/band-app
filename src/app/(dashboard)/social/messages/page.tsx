@@ -2,6 +2,7 @@ import Link from "next/link";
 import { requireSessionProfile } from "@/lib/auth";
 import { prisma } from "@/lib/social/prisma";
 import { AccountStatus, Platform } from "@/generated/prisma/enums";
+import { PageHeader } from "@/components/ui/page-header";
 import MessagesInbox from "./messages-inbox";
 
 export const dynamic = "force-dynamic";
@@ -13,12 +14,12 @@ export default async function MessagesPage() {
 
   return (
     <div className="flex h-full flex-col">
-      <h1 className="mb-6 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">Messaggi</h1>
+      <PageHeader title="Messaggi" />
 
       {!account ? (
-        <div className="rounded-xl border border-dashed border-zinc-300 dark:border-neutral-800 py-16 text-center">
-          <p className="mb-2 text-zinc-500 dark:text-neutral-500">Nessun account Instagram collegato.</p>
-          <Link href="/social/accounts" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 underline">
+        <div className="rounded-xl border border-dashed border-zinc-300 dark:border-zinc-800 py-16 text-center">
+          <p className="mb-2 text-zinc-500 dark:text-zinc-500">Nessun account Instagram collegato.</p>
+          <Link href="/social/accounts" className="text-sm font-medium text-violet-600 dark:text-violet-400 underline">
             Collega un account
           </Link>
         </div>

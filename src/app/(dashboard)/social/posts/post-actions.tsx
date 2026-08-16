@@ -33,7 +33,7 @@ export default function PostActions({ postId, editable }: { postId: string; edit
       {editable && (
         <Link
           href={`/social/posts/${postId}/edit`}
-          className="text-xs font-medium text-neutral-400 transition-colors hover:text-indigo-300"
+          className="text-xs font-medium text-zinc-500 dark:text-zinc-400 transition-colors hover:text-violet-600 dark:hover:text-violet-300"
         >
           Modifica
         </Link>
@@ -41,7 +41,7 @@ export default function PostActions({ postId, editable }: { postId: string; edit
       <button
         onClick={handleDelete}
         disabled={deleting}
-        className="text-xs font-medium text-red-400/80 transition-colors hover:text-red-400 disabled:opacity-50"
+        className="text-xs font-medium text-red-500/80 dark:text-red-400/80 transition-colors hover:text-red-600 dark:hover:text-red-400 disabled:opacity-50"
       >
         {deleting ? "Eliminazione..." : "Elimina"}
       </button>

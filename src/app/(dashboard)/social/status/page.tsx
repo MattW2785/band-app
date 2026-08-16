@@ -1,6 +1,7 @@
 import { requireSessionProfile } from "@/lib/auth";
 import { prisma } from "@/lib/social/prisma";
 import { formatInAppTimezone } from "@/lib/social/timezone";
+import { PageHeader } from "@/components/ui/page-header";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +17,7 @@ export default async function StatusPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">Stato cron di pubblicazione</h1>
+      <PageHeader title="Stato cron di pubblicazione" />
 
       {runs.length === 0 ? (
         <p className="text-zinc-500 dark:text-zinc-400">

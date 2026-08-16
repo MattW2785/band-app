@@ -5,7 +5,7 @@ interface SwitchProps extends InputHTMLAttributes<HTMLInputElement> {
   activeClassName?: string;
 }
 
-export function Switch({ className, activeClassName = "peer-checked:bg-indigo-600", ...props }: SwitchProps) {
+export function Switch({ className, activeClassName = "peer-checked:bg-violet-600", ...props }: SwitchProps) {
   return (
     <label className={cn("relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center", className)}>
       <input type="checkbox" className="peer sr-only" {...props} />

@@ -95,7 +95,7 @@ export default async function BraniPage() {
                       {song.reference_links.map((link, i) => (
                         <span key={link}>
                           {i > 0 && " · "}
-                          <a href={link} target="_blank" rel="noreferrer" className="text-indigo-600 dark:text-indigo-400 hover:underline">
+                          <a href={link} target="_blank" rel="noreferrer" className="text-violet-600 dark:text-violet-400 hover:underline">
                             riferimento {song.reference_links.length > 1 ? i + 1 : ""}
                           </a>
                         </span>

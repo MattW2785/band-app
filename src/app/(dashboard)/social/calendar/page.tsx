@@ -96,7 +96,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
         <div className="flex flex-wrap justify-center gap-2 sm:flex-nowrap sm:justify-end">
           <Link
             href="/social/posts/new"
-            className="rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-indigo-500"
+            className="rounded-lg bg-gradient-to-b from-violet-500 to-indigo-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm transition-all hover:from-violet-400 hover:to-indigo-500"
           >
             + Nuovo post
           </Link>
@@ -114,11 +114,11 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
       )}
 
       <div className="mb-3 flex flex-wrap items-start justify-between gap-x-6 gap-y-2">
-        <p className="max-w-xl text-xs text-zinc-500 dark:text-neutral-600">
+        <p className="max-w-xl text-xs text-zinc-500 dark:text-zinc-500">
           Clicca su una cella vuota per programmare un nuovo post in quell&apos;orario. Il colore di sfondo indica il
           periodo migliore (follower online) su Instagram. Orari in {APP_TIMEZONE}.
         </p>
-        <div className="flex items-center gap-4 text-xs text-zinc-500 dark:text-neutral-500">
+        <div className="flex items-center gap-4 text-xs text-zinc-500 dark:text-zinc-500">
           <span className="flex items-center gap-1.5">
             <span className="h-2.5 w-2.5 rounded-full bg-purple-600"></span> Instagram
           </span>
@@ -131,16 +131,16 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-neutral-800">
+      <div className="overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-800">
         <table className="w-full min-w-[720px] border-collapse text-xs">
           <thead>
             <tr>
-              <th className="w-16 border-b border-neutral-800 bg-neutral-900/80 p-2"></th>
+              <th className="w-16 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/80 p-2"></th>
               {weekDates.map((dateKey, i) => (
                 <th
                   key={dateKey}
-                  className={`border-b border-l border-neutral-800 bg-neutral-900/80 px-2 py-2 font-medium ${
-                    dateKey === todayKey ? "text-indigo-300" : "text-neutral-400"
+                  className={`border-b border-l border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/80 px-2 py-2 font-medium ${
+                    dateKey === todayKey ? "text-violet-600 dark:text-violet-300" : "text-zinc-500 dark:text-zinc-400"
                   }`}
                 >
                   {WEEKDAY_LABELS[i]} {Number(dateKey.slice(8, 10))}
@@ -151,18 +151,18 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
           <tbody>
             {HOURS.map((hour) => (
               <tr key={hour}>
-                <td className="border-b border-neutral-900 px-2 py-1 text-right align-top text-neutral-500">
+                <td className="border-b border-zinc-100 dark:border-zinc-900 px-2 py-1 text-right align-top text-zinc-400 dark:text-zinc-500">
                   {pad2(hour)}:00
                 </td>
                 {weekDates.map((dateKey, dayIdx) => {
                   const value = grid?.[dayIdx]?.[hour] ?? null;
                   const items = itemsByCell.get(`${dateKey}T${pad2(hour)}`) ?? [];
-                  const bg = value != null ? `rgba(99, 102, 241, ${Math.max(value, 4) / 200})` : undefined;
+                  const bg = value != null ? `rgba(139, 92, 246, ${Math.max(value, 4) / 200})` : undefined;
 
                   return (
                     <td
                       key={dateKey}
-                      className="relative min-h-[40px] border-b border-l border-neutral-900 p-0 align-top"
+                      className="relative min-h-[40px] border-b border-l border-zinc-100 dark:border-zinc-900 p-0 align-top"
                       style={{ backgroundColor: bg }}
                     >
                       <Link
@@ -171,14 +171,14 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
                         className="absolute inset-0 z-0"
                       />
                       {value != null && (
-                        <span className="pointer-events-none absolute right-1 top-0.5 z-[1] text-[10px] text-neutral-500">
+                        <span className="pointer-events-none absolute right-1 top-0.5 z-[1] text-[10px] text-zinc-400 dark:text-zinc-500">
                           {value}%
                         </span>
                       )}
                       <div className="pointer-events-none relative z-10 flex min-h-[40px] flex-wrap content-start gap-1 p-1">
                         {items.map(({ post, target }) => {
                           const badgeClassName = `pointer-events-auto inline-flex shrink-0 items-center justify-center rounded-full px-1.5 py-0.5 text-[10px] font-semibold leading-none ${
-                            PLATFORM_COLOR[target.platform] ?? "bg-neutral-800 text-neutral-200"
+                            PLATFORM_COLOR[target.platform] ?? "bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200"
                           }`;
                           const badgeTitle = `${PLATFORM_INITIAL[target.platform] ?? target.platform} · ${post.baseCaption || "(senza caption)"} · ${target.status}`;
                           return isAdmin ? (

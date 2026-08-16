@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { requireSessionProfile } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
+import { BackLink } from "@/components/ui/back-link";
 import { LastEdited } from "@/components/ui/last-edited";
 import { SetlistEditor, type SetlistSongItem } from "@/components/setlist/setlist-editor";
 import { AddSongForm } from "@/components/setlist/add-song-form";
@@ -90,9 +90,7 @@ export default async function SetlistDetailPage({ params }: { params: Promise<{ 
 
   return (
     <div className="max-w-5xl">
-      <Link href="/scalette" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300">
-        ← Torna alle scalette
-      </Link>
+      <BackLink href="/scalette">Torna alle scalette</BackLink>
       <h1 className="mb-1 mt-2 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">{setlist.title}</h1>
       {eventTitle && <p className="text-sm text-zinc-500 dark:text-zinc-400">evento: {eventTitle}</p>}
       <LastEdited name={editorName} at={setlist.updated_at} className="mb-6 mt-1 text-xs text-zinc-400 dark:text-zinc-500" />

@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { UserPlus } from "lucide-react";
 import { login } from "./actions";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -59,23 +60,40 @@ export function LoginForm({ suspendedError }: { suspendedError?: string }) {
 
   if (status === "activating") {
     return (
-      <div className="flex min-h-full flex-1 items-center justify-center bg-zinc-50 dark:bg-zinc-800 p-4">
+      <div className="flex min-h-full flex-1 items-center justify-center bg-zinc-50 dark:bg-zinc-950 p-4">
         <p className="text-sm text-zinc-500 dark:text-zinc-400">Attivazione dell&apos;invito in corso…</p>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-full flex-1 items-center justify-center bg-zinc-50 dark:bg-zinc-800 p-4">
-      <Card className="w-full max-w-sm">
-        <div className="mb-6 flex items-center gap-2">
-          <Image src="/logo.png" alt="BandSpace" width={32} height={32} className="h-8 w-8 rounded-lg object-contain" />
-          <div>
-            <h1 className="text-lg font-semibold leading-tight text-zinc-900 dark:text-zinc-100">BandSpace</h1>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">Accedi con l&apos;account della tua band</p>
-          </div>
+    <div className="relative flex min-h-full flex-1 items-center justify-center overflow-hidden bg-zinc-50 dark:bg-zinc-950 p-4">
+      <div aria-hidden className="pointer-events-none absolute inset-0 opacity-0 dark:bg-starfield dark:opacity-100" />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-32 -left-24 h-80 w-80 rounded-full bg-violet-500/25 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-40 right-0 h-72 w-72 rounded-full bg-cyan-400/15 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-24 -bottom-32 h-80 w-80 rounded-full bg-fuchsia-500/15 blur-3xl"
+      />
+      <Card className="animate-fade-in relative w-full max-w-sm shadow-xl shadow-black/5 dark:shadow-black/40">
+        <div className="mb-8 flex flex-col items-center text-center">
+          <Image src="/logo.png" alt="" width={64} height={64} className="mb-3 h-16 w-16 object-contain" />
+          <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">BandSpace</h1>
+          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">Accedi con l&apos;account della tua band</p>
         </div>
-        {topError && <p className="mb-4 text-sm text-red-600 dark:text-red-400">{topError}</p>}
+
+        {topError && (
+          <p className="mb-5 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-400">
+            {topError}
+          </p>
+        )}
+
         <form action={formAction} className="space-y-4">
           <div>
             <Label htmlFor="email">Email</Label>
@@ -85,14 +103,25 @@ export function LoginForm({ suspendedError }: { suspendedError?: string }) {
             <Label htmlFor="password">Password</Label>
             <Input id="password" name="password" type="password" autoComplete="current-password" required />
           </div>
-          {state?.error && <p className="text-sm text-red-600 dark:text-red-400">{state.error}</p>}
+          {state?.error && (
+            <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-400">
+              {state.error}
+            </p>
+          )}
           <Button type="submit" disabled={pending} className="w-full">
             {pending ? "Accesso in corso…" : "Accedi"}
           </Button>
         </form>
-        <p className="mt-6 text-xs text-zinc-400 dark:text-zinc-500">
-          Non hai un account? Chiedi a un admin della band di invitarti.
-        </p>
+
+        <div className="mt-6 flex items-start gap-2.5 rounded-lg border border-zinc-100 bg-zinc-50/80 px-3.5 py-3 dark:border-zinc-800/70 dark:bg-zinc-800/30">
+          <UserPlus className="mt-0.5 h-4 w-4 shrink-0 text-zinc-400 dark:text-zinc-500" strokeWidth={2} />
+          <p className="text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
+            Non hai un account?
+            <br />
+            <span className="font-medium text-zinc-700 dark:text-zinc-300">Chiedi a un admin della band</span> di
+            invitarti.
+          </p>
+        </div>
       </Card>
     </div>
   );

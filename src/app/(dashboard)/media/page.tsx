@@ -3,6 +3,7 @@ import { it } from "date-fns/locale";
 import { createClient } from "@/lib/supabase/server";
 import { requireSessionProfile } from "@/lib/auth";
 import { getMediaSignedUrl } from "@/lib/storage";
+import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/ui/page-header";
@@ -61,15 +62,28 @@ export default async function MediaPage({ searchParams }: { searchParams: Promis
         <UploadMediaForm songs={songs} events={events} />
       </Card>
 
-      <div className="mb-3 flex flex-wrap gap-2 text-sm">
-        <a href="/media" className={!typeFilter ? "font-medium text-indigo-600 dark:text-indigo-400" : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"}>
+      <div className="mb-3 flex flex-wrap gap-1.5">
+        <a
+          href="/media"
+          className={cn(
+            "rounded-full px-3 py-1 text-xs font-medium transition-colors",
+            !typeFilter
+              ? "bg-violet-600 text-white shadow-sm"
+              : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          )}
+        >
           Tutti
         </a>
         {Object.entries(TYPE_LABEL).map(([value, label]) => (
           <a
             key={value}
             href={`/media?type=${value}`}
-            className={typeFilter === value ? "font-medium text-indigo-600 dark:text-indigo-400" : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"}
+            className={cn(
+              "rounded-full px-3 py-1 text-xs font-medium transition-colors",
+              typeFilter === value
+                ? "bg-violet-600 text-white shadow-sm"
+                : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+            )}
           >
             {label}
           </a>
@@ -101,7 +115,7 @@ export default async function MediaPage({ searchParams }: { searchParams: Promis
 
             {item.url && (
               <div className="mt-3 border-t border-zinc-100 dark:border-zinc-800 pt-3">
-                <a href={item.url} download={item.file_name} className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:underline">
+                <a href={item.url} download={item.file_name} className="text-sm font-medium text-violet-600 dark:text-violet-400 hover:underline">
                   Scarica →
                 </a>
               </div>

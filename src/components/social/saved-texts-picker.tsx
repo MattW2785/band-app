@@ -141,32 +141,32 @@ export default function SavedTextsPicker({
         onClick={() => setOpen((o) => !o)}
         aria-label={label}
         title={label}
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-neutral-700 bg-neutral-950 text-neutral-300 transition-colors hover:bg-neutral-900"
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800"
       >
         <FolderIcon />
       </button>
 
       {open && (
-        <div className="absolute left-0 top-full z-30 mt-1 w-80 overflow-hidden rounded-xl border border-neutral-800 bg-neutral-900 shadow-xl">
+        <div className="absolute left-0 top-full z-30 mt-1 w-80 overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xl">
           {view === "list" ? (
             <div className="flex max-h-96 flex-col">
-              <div className="flex items-center justify-between border-b border-neutral-800 px-3 py-2.5">
-                <span className="text-sm font-medium text-neutral-100">{label}</span>
+              <div className="flex items-center justify-between border-b border-zinc-100 dark:border-zinc-800 px-3 py-2.5">
+                <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{label}</span>
                 <button
                   type="button"
                   onClick={() => setView("create")}
-                  className="rounded-md bg-indigo-600 px-2.5 py-1 text-xs font-medium text-white transition-colors hover:bg-indigo-500"
+                  className="rounded-md bg-violet-600 px-2.5 py-1 text-xs font-medium text-white transition-colors hover:bg-violet-500"
                 >
                   Nuovo testo
                 </button>
               </div>
               <div className="overflow-y-auto p-2">
-                {loading && <p className="px-2 py-4 text-center text-xs text-neutral-600">Caricamento...</p>}
-                {error && <p className="px-2 py-2 text-xs text-red-400">{error}</p>}
+                {loading && <p className="px-2 py-4 text-center text-xs text-zinc-400 dark:text-zinc-600">Caricamento...</p>}
+                {error && <p className="px-2 py-2 text-xs text-red-600 dark:text-red-400">{error}</p>}
                 {!loading && items && items.length === 0 && (
                   <div className="flex flex-col items-center gap-2 px-3 py-6 text-center">
                     <FolderIcon />
-                    <p className="text-xs text-neutral-500">
+                    <p className="text-xs text-zinc-400 dark:text-zinc-500">
                       Salva i testi che usi regolarmente e accedi rapidamente ad essi.
                     </p>
                   </div>
@@ -174,7 +174,7 @@ export default function SavedTextsPicker({
                 {items?.map((item) => (
                   <div
                     key={item.id}
-                    className="group flex items-start gap-2 rounded-lg px-2 py-2 transition-colors hover:bg-neutral-800"
+                    className="group flex items-start gap-2 rounded-lg px-2 py-2 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
                   >
                     <button
                       type="button"
@@ -182,11 +182,11 @@ export default function SavedTextsPicker({
                       className="min-w-0 flex-1 text-left"
                     >
                       {item.title && (
-                        <p className="truncate text-sm font-medium text-neutral-100">{item.title}</p>
+                        <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-100">{item.title}</p>
                       )}
-                      <p className="line-clamp-2 text-xs text-neutral-400">{item.body}</p>
+                      <p className="line-clamp-2 text-xs text-zinc-500 dark:text-zinc-400">{item.body}</p>
                       {item.tags.length > 0 && (
-                        <p className="mt-0.5 truncate text-[11px] text-neutral-600">
+                        <p className="mt-0.5 truncate text-[11px] text-zinc-400 dark:text-zinc-600">
                           {item.tags.map((t) => `#${t}`).join(" ")}
                         </p>
                       )}
@@ -195,7 +195,7 @@ export default function SavedTextsPicker({
                       type="button"
                       onClick={() => handleDelete(item.id)}
                       aria-label="Elimina"
-                      className="mt-0.5 shrink-0 text-neutral-600 opacity-0 transition-opacity hover:text-red-400 group-hover:opacity-100"
+                      className="mt-0.5 shrink-0 text-zinc-400 dark:text-zinc-600 opacity-0 transition-opacity hover:text-red-500 dark:hover:text-red-400 group-hover:opacity-100"
                     >
                       <TrashIcon />
                     </button>
@@ -210,30 +210,30 @@ export default function SavedTextsPicker({
                   type="button"
                   onClick={() => setView("list")}
                   aria-label="Indietro"
-                  className="text-neutral-400 transition-colors hover:text-neutral-200"
+                  className="text-zinc-400 dark:text-zinc-500 transition-colors hover:text-zinc-700 dark:hover:text-zinc-200"
                 >
                   <BackIcon />
                 </button>
-                <span className="text-sm font-medium text-neutral-100">Nuovo testo</span>
+                <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Nuovo testo</span>
               </div>
               <input
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
                 placeholder="Titolo"
-                className="mb-2 rounded-lg border border-neutral-700 bg-neutral-950 px-2.5 py-1.5 text-sm text-neutral-100 outline-none focus:border-indigo-500"
+                className="mb-2 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-2.5 py-1.5 text-sm text-zinc-900 dark:text-zinc-100 outline-none focus:border-violet-500"
               />
               <input
                 value={newTags}
                 onChange={(e) => setNewTags(e.target.value)}
                 placeholder="Etichette (separate da virgola)"
-                className="mb-2 rounded-lg border border-neutral-700 bg-neutral-950 px-2.5 py-1.5 text-sm text-neutral-100 outline-none focus:border-indigo-500"
+                className="mb-2 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-2.5 py-1.5 text-sm text-zinc-900 dark:text-zinc-100 outline-none focus:border-violet-500"
               />
               <textarea
                 value={newBody}
                 onChange={(e) => setNewBody(e.target.value)}
                 placeholder="Descrizione"
                 rows={4}
-                className="mb-2 rounded-lg border border-neutral-700 bg-neutral-950 px-2.5 py-1.5 text-sm text-neutral-100 outline-none focus:border-indigo-500"
+                className="mb-2 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-2.5 py-1.5 text-sm text-zinc-900 dark:text-zinc-100 outline-none focus:border-violet-500"
               />
               <div className="flex items-center justify-between">
                 <EmojiPicker onSelect={(emoji) => setNewBody((prev) => prev + emoji)} />
@@ -241,12 +241,12 @@ export default function SavedTextsPicker({
                   type="button"
                   onClick={handleSave}
                   disabled={saving || !newBody.trim()}
-                  className="rounded-md bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="rounded-md bg-violet-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {saving ? "Salvataggio..." : "Salva"}
                 </button>
               </div>
-              {error && <p className="mt-2 text-xs text-red-400">{error}</p>}
+              {error && <p className="mt-2 text-xs text-red-600 dark:text-red-400">{error}</p>}
             </div>
           )}
         </div>

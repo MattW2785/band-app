@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { requireSessionProfile } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { BackLink } from "@/components/ui/back-link";
 import { LastEdited } from "@/components/ui/last-edited";
 import { BookingLeadForm } from "@/components/booking/booking-lead-form";
 import { BookingStatusSelect } from "@/components/booking/booking-status-select";
@@ -52,9 +53,7 @@ export default async function BookingLeadDetailPage({ params }: { params: Promis
 
   return (
     <div className="max-w-2xl">
-      <Link href="/booking" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300">
-        ← Torna al booking
-      </Link>
+      <BackLink href="/booking">Torna al booking</BackLink>
       <h1 className="mb-1 mt-2 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">{venueName}</h1>
       <LastEdited name={editorName} at={lead.updated_at} className="mb-6 text-xs text-zinc-400 dark:text-zinc-500" />
 
