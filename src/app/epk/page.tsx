@@ -100,28 +100,30 @@ export default async function PublicEpkPage() {
           </dl>
 
           {techRiderChannels && techRiderChannels.length > 0 && (
-            <table className="mt-4 w-full text-left text-sm">
-              <thead>
-                <tr className="text-zinc-500 dark:text-zinc-400">
-                  <th className="py-1 pr-2 font-normal">Ch.</th>
-                  <th className="py-1 pr-2 font-normal">Sorgente</th>
-                  <th className="py-1 pr-2 font-normal">Mic/DI</th>
-                  <th className="py-1 pr-2 font-normal">Asta</th>
-                  <th className="py-1 font-normal">Note</th>
-                </tr>
-              </thead>
-              <tbody>
-                {techRiderChannels.map((c) => (
-                  <tr key={c.id} className="border-t border-zinc-100 dark:border-zinc-800">
-                    <td className="py-1 pr-2 text-zinc-700 dark:text-zinc-300">{c.channel_number ?? "—"}</td>
-                    <td className="py-1 pr-2 text-zinc-700 dark:text-zinc-300">{c.source}</td>
-                    <td className="py-1 pr-2 text-zinc-600 dark:text-zinc-400">{c.mic_or_di ?? "—"}</td>
-                    <td className="py-1 pr-2 text-zinc-600 dark:text-zinc-400">{c.stand ?? "—"}</td>
-                    <td className="py-1 text-zinc-600 dark:text-zinc-400">{c.notes ?? "—"}</td>
+            <div className="mt-4 overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="text-zinc-500 dark:text-zinc-400">
+                    <th className="py-1 pr-2 font-normal">Ch.</th>
+                    <th className="py-1 pr-2 font-normal">Sorgente</th>
+                    <th className="py-1 pr-2 font-normal">Mic/DI</th>
+                    <th className="py-1 pr-2 font-normal">Asta</th>
+                    <th className="py-1 font-normal">Note</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {techRiderChannels.map((c) => (
+                    <tr key={c.id} className="border-t border-zinc-100 dark:border-zinc-800">
+                      <td className="py-1 pr-2 text-zinc-700 dark:text-zinc-300">{c.channel_number ?? "—"}</td>
+                      <td className="py-1 pr-2 text-zinc-700 dark:text-zinc-300">{c.source}</td>
+                      <td className="py-1 pr-2 text-zinc-600 dark:text-zinc-400">{c.mic_or_di ?? "—"}</td>
+                      <td className="py-1 pr-2 text-zinc-600 dark:text-zinc-400">{c.stand ?? "—"}</td>
+                      <td className="py-1 text-zinc-600 dark:text-zinc-400">{c.notes ?? "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </section>
       )}

@@ -135,7 +135,7 @@ export function MainNav({ isAdmin, onNavigate }: { isAdmin: boolean; onNavigate?
                     href={item.href}
                     onClick={onNavigate}
                     className={cn(
-                      "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-150",
+                      "flex items-center gap-2.5 rounded-lg px-3 py-2.5 sm:py-2 text-sm font-medium transition-all duration-150",
                       active
                         ? "bg-gradient-to-r from-violet-500 to-indigo-600 text-white shadow-sm shadow-indigo-600/30"
                         : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 hover:text-zinc-900 dark:hover:text-zinc-100"
@@ -166,7 +166,7 @@ export function MainNav({ isAdmin, onNavigate }: { isAdmin: boolean; onNavigate?
               isAdminGroup && "mt-auto border-t border-zinc-100 pt-4 dark:border-zinc-800"
             )}
           >
-            <summary className="flex cursor-pointer list-none items-center justify-between px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300">
+            <summary className="flex cursor-pointer list-none items-center justify-between px-3 py-2 sm:py-1 text-[11px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300">
               {title}
               <ChevronRight
                 className={cn("h-3.5 w-3.5 transition-transform duration-200", isOpen && "rotate-90")}
@@ -183,7 +183,7 @@ export function MainNav({ isAdmin, onNavigate }: { isAdmin: boolean; onNavigate?
                     href={item.href}
                     onClick={onNavigate}
                     className={cn(
-                      "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-150",
+                      "flex items-center gap-2.5 rounded-lg px-3 py-2.5 sm:py-2 text-sm font-medium transition-all duration-150",
                       active
                         ? "bg-gradient-to-r from-violet-500 to-indigo-600 text-white shadow-sm shadow-indigo-600/30"
                         : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 hover:text-zinc-900 dark:hover:text-zinc-100"

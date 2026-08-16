@@ -18,13 +18,11 @@ export function MobileNav({ isAdmin, fullName }: { isAdmin: boolean; fullName: s
           type="button"
           onClick={() => setOpen(true)}
           aria-label="Apri il menu"
-          className="flex h-9 w-9 items-center justify-center rounded-lg text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          className="flex h-11 w-11 items-center justify-center rounded-lg text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
         >
           <Menu className="h-5 w-5" strokeWidth={2} />
         </button>
-        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white p-1 shadow-sm ring-1 ring-black/5">
-          <Image src="/logo.png" alt="" width={20} height={20} className="h-full w-full object-contain" />
-        </span>
+        <Image src="/logo.png" alt="" width={28} height={28} className="h-7 w-7 shrink-0 object-contain" />
         <span className="flex-1 text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-100">BandSpace</span>
       </div>
 
@@ -34,16 +32,14 @@ export function MobileNav({ isAdmin, fullName }: { isAdmin: boolean; fullName: s
           <div className="relative flex h-full w-72 max-w-[80vw] flex-col bg-white dark:bg-zinc-950 shadow-xl">
             <div className="flex items-center justify-between gap-2 px-4 pt-5 pb-2">
               <div className="flex items-center gap-2">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white p-1 shadow-sm ring-1 ring-black/5">
-                  <Image src="/logo.png" alt="" width={24} height={24} className="h-full w-full object-contain" />
-                </span>
+                <Image src="/logo.png" alt="" width={32} height={32} className="h-8 w-8 shrink-0 object-contain" />
                 <span className="text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">BandSpace</span>
               </div>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label="Chiudi il menu"
-                className="flex h-9 w-9 items-center justify-center rounded-lg text-zinc-400 dark:text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-700 dark:hover:text-zinc-200"
+                className="flex h-11 w-11 items-center justify-center rounded-lg text-zinc-400 dark:text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-700 dark:hover:text-zinc-200"
               >
                 <X className="h-5 w-5" strokeWidth={2} />
               </button>

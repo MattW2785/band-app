@@ -73,37 +73,39 @@ export default async function CalendarioDatePage({ params }: { params: Promise<{
             <Button variant="secondary">+ Crea evento</Button>
           </Link>
         </div>
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-left text-zinc-500 dark:text-zinc-400">
-              <th className="py-1 font-normal">Membro</th>
-              <th className="py-1 font-normal">Mattina</th>
-              <th className="py-1 font-normal">Pomeriggio</th>
-              <th className="py-1 font-normal">Sera</th>
-            </tr>
-          </thead>
-          <tbody>
-            {members.map((m) => {
-              const statuses = byUser.get(m.id) ?? {};
-              return (
-                <tr key={m.id} className="border-t border-zinc-100 dark:border-zinc-800">
-                  <td className="py-1.5 text-zinc-800 dark:text-zinc-200">{m.full_name ?? "—"}</td>
-                  {(["mattina", "pomeriggio", "sera"] as const).map((slot) => (
-                    <td className="py-1.5" key={slot}>
-                      {statuses[slot] ? (
-                        <Badge variant={STATUS_BADGE[statuses[slot]].variant} dot>
-                          {STATUS_BADGE[statuses[slot]].label}
-                        </Badge>
-                      ) : (
-                        <span className="text-zinc-300 dark:text-zinc-600">—</span>
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-left text-zinc-500 dark:text-zinc-400">
+                <th className="py-1 font-normal">Membro</th>
+                <th className="py-1 font-normal">Mattina</th>
+                <th className="py-1 font-normal">Pomeriggio</th>
+                <th className="py-1 font-normal">Sera</th>
+              </tr>
+            </thead>
+            <tbody>
+              {members.map((m) => {
+                const statuses = byUser.get(m.id) ?? {};
+                return (
+                  <tr key={m.id} className="border-t border-zinc-100 dark:border-zinc-800">
+                    <td className="py-1.5 text-zinc-800 dark:text-zinc-200 whitespace-nowrap">{m.full_name ?? "—"}</td>
+                    {(["mattina", "pomeriggio", "sera"] as const).map((slot) => (
+                      <td className="py-1.5 whitespace-nowrap" key={slot}>
+                        {statuses[slot] ? (
+                          <Badge variant={STATUS_BADGE[statuses[slot]].variant} dot>
+                            {STATUS_BADGE[statuses[slot]].label}
+                          </Badge>
+                        ) : (
+                          <span className="text-zinc-300 dark:text-zinc-600">—</span>
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </Card>
 
       <Card>

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -15,6 +15,13 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "BandSpace",
   description: "Spazio di lavoro condiviso per la gestione della band",
+};
+
+// data-theme is forced to "dark" on <html> below, so the mobile browser chrome
+// (address bar / status bar) should match the app's near-black starry background.
+export const viewport: Viewport = {
+  themeColor: "#09090b",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({
